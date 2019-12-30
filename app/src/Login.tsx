@@ -50,15 +50,10 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
 
     render() {
         return (
-            <div className="container-fluid bg-info">
+            <div className="container-fluid" style={{backgroundColor: "rgba(240, 240, 255)"}}>
                 <div className="row align-items-center" style={{ height: this.state.height }}>
-                    <div className="d-sm-block d-none col-6">
-                        <div className="col-6 mx-auto">
-                            <h1 className="text-white">TodoList</h1>
-                        </div>
-                    </div>
-                    <div className="col-sm-6 col-12">
-                        <div className="col-md-12 col-lg-8 p-3 mx-auto">
+                    <div className="col-12">
+                        <div className="col-sm-12 col-lg-4 p-3 mx-auto">
                             <form className="px-3 py-4 rounded shadow bg-light" onSubmit={this.submitLogin.bind(this)}>
                                 <h3 className="pb-1 border-bottom">Login</h3>
                                 <label htmlFor="usernameInput" className="input-group-prepend">
