@@ -50,12 +50,16 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
 
     render() {
         return (
-            <div className="container-fluid" style={{backgroundColor: "rgba(240, 240, 255)"}}>
+            <div className="container-fluid" style={{
+                background: "linear-gradient(125deg, rgb(52, 58, 64), rgb(23, 162, 184))"
+            }}>
                 <div className="row align-items-center" style={{ height: this.state.height }}>
                     <div className="col-12">
-                        <div className="col-sm-12 col-lg-4 p-3 mx-auto">
+                        <div className="col-12 col-md-6 col-lg-4 col-xl-3 p-3 mx-auto">
                             <form className="px-3 py-4 rounded shadow bg-light" onSubmit={this.submitLogin.bind(this)}>
-                                <h3 className="pb-1 border-bottom">Login</h3>
+                                <h3 className="d-inline">Login</h3>
+                                <span className="float-right">Leet<span className="text-info">Block</span></span>
+                                <hr className="mt-1" />
                                 <label htmlFor="usernameInput" className="input-group-prepend">
                                     <span className="">Username:</span>
                                 </label>
@@ -78,7 +82,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                                     onChange={this.inputChange.bind(this, "password")}
                                     required />
                                 <div className="text-danger pt-1">{this.props.message && this.props.message}</div>
-                                <input type="submit" className="btn btn-primary py-1 mt-3" value="Login" />
+                                <input type="submit" className="btn btn-info py-1 mt-3" value="Login" />
                             </form>
                         </div>
                     </div>
@@ -89,16 +93,12 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
 
 }
 
-const mapStateToProps = (state: IRootState) => {
-    return {
-        message: state.auth.message
-    };
-};
+const mapStateToProps = (state: IRootState) => ({
+    message: state.auth.message
+});
 
-const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
-    return {
-        login: (username: string, password: string) => dispatch(login(username, password))
-    };
-};
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
+    login: (username: string, password: string) => dispatch(login(username, password))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

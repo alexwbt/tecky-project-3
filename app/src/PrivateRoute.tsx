@@ -28,6 +28,9 @@ const PurePrivateRoute = ({ component, authenticated, ...rest }: IPrivateRoutePr
     return <Route {...rest} render={render} />
 };
 
-export const PrivateRoute = connect((state: IRootState) => ({
+const mapStateToProps = (state: IRootState) => ({
     authenticated: state.auth.authenticated
-}))(PurePrivateRoute);
+});
+
+const PrivateRoute = connect(mapStateToProps)(PurePrivateRoute);
+export default PrivateRoute;
