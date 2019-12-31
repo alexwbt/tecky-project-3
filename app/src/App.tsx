@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import store, { history } from './store';
-import 'bootstrap/dist/css/bootstrap.css';
 
 import { ConnectedRouter } from 'connected-react-router';
 import { Switch, Route } from 'react-router-dom';
@@ -18,9 +17,9 @@ const App: React.FC = () => {
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <Switch>
-          <Route path="/login" component={Login} />
+          <Route path="/login" exact={true} component={Login} />
           <PrivateRoute path="/" exact={true} component={Home} />
-          <PrivateRoute path="/profile" exact={true} component={Profile} />
+          <PrivateRoute path="/profile/:username" component={Profile} />
           <PrivateRoute path="/leaderBoard" exact={true} component={LeaderBoard} />
           <Route component={PageNotFound} />
         </Switch>
