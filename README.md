@@ -1,4 +1,4 @@
-# **LeetBlock --Final Project**
+# **```LeetBlock --Final Project```**
 # Pages
 ### 1. Login/Register Page
 ### 2. Home Page
@@ -9,7 +9,6 @@
 * User Level/Experience
 ### 4. Leader Board Page
 * View User Ranking
----
 ## Blockly
 ### 5. Problem Editer Page
 * Create/Edit Problems
@@ -25,4 +24,3 @@
 * Rate Problems
 * View Solution
 * View/Leave Comments *(tentative)*
----
