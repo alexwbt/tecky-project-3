@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { IRootState, ReduxThunkDispatch } from "./store";
-import NavBar from "./NavBar";
+import { IRootState, ReduxThunkDispatch } from "../store";
+import NavBar from "../components/NavBar";
 
 
-class Home extends React.Component {
+class LeaderBoard extends React.Component {
 
     render() {
         return <div>
@@ -18,4 +18,4 @@ const mapStateToState = (state: IRootState) => ({});
 
 const mapDispatchToState = (dispatch: ReduxThunkDispatch) => ({});
 
-export default connect(mapStateToState, mapDispatchToState)(Home);
+export default connect(mapStateToState, mapDispatchToState)(LeaderBoard);

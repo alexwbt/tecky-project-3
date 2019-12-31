@@ -1,6 +1,10 @@
-import IAuthState from "./state";
-import { AuthActions } from "./actions";
+import { AuthActions } from "../actions/authActions";
 
+
+export interface IAuthState {
+    authenticated: boolean;
+    message: string;
+}
 
 const initialState = {
     authenticated: !!localStorage.getItem("token"),

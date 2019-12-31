@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { AuthActions, loginSuccess, logoutSuccess, loginFailed } from "./actions";
+import { AuthActions, loginSuccess, logoutSuccess, loginFailed } from "../actions/authActions";
 import { push } from "connected-react-router";
 
 
@@ -11,7 +11,6 @@ export function login(username: string, password: string) {
         const res = await fetch(`${REACT_APP_API_SERVER}/user/login`, {
             method: "POST",
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ username, password })
@@ -19,7 +18,8 @@ export function login(username: string, password: string) {
         const result = await res.json();
 
         if (res.status === 200 && result.result) {
-            localStorage.setItem('token',result.token);
+            localStorage.setItem('token', result.token);
+            localStorage.setItem('username', username);
             dispatch(loginSuccess());
             dispatch(push("/"));
         } else {
@@ -31,6 +31,7 @@ export function login(username: string, password: string) {
 export function logout() {
     return async (dispatch: Dispatch<AuthActions>) => {
         localStorage.removeItem('token');
+        localStorage.removeItem('username');
         dispatch(logoutSuccess());
         dispatch(push("/"));
     };

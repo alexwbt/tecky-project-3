@@ -5,12 +5,12 @@ import store, { history } from './store';
 import { ConnectedRouter } from 'connected-react-router';
 import { Switch, Route } from 'react-router-dom';
 
-import PrivateRoute from './PrivateRoute';
-import Login from './Login';
-import Home from './Home';
-import Profile from './Profile';
-import LeaderBoard from './LeaderBoard';
-import PageNotFound from "./PageNotFound";
+import PrivateRoute from './components/PrivateRoute';
+import Login from './containers/Login';
+import Home from './containers/Home';
+import Profile from './containers/Profile';
+import LeaderBoard from './containers/LeaderBoard';
+import PageNotFound from "./containers/PageNotFound";
 
 const App: React.FC = () => {
   return (

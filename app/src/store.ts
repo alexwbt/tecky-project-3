@@ -1,17 +1,16 @@
 import { createStore, combineReducers, compose, applyMiddleware } from "redux";
 import thunk, { ThunkDispatch } from "redux-thunk";
 
-import IAuthState from "./auth/state";
-import authReducer from "./auth/reducer";
-import { AuthActions } from "./auth/actions";
+import authReducer, { IAuthState } from "./reducers/authReducer";
+import { AuthActions } from "./actions/authActions";
 
 import { routerMiddleware, connectRouter, RouterState } from 'connected-react-router';
 import { createBrowserHistory } from "history";
 export const history = createBrowserHistory();
 
 export interface IRootState {
-    auth: IAuthState,
-    router: RouterState
+    auth: IAuthState;
+    router: RouterState;
 }
 
 type RootActions = AuthActions;

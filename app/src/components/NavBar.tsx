@@ -1,14 +1,15 @@
-import React from "react";
+import React, { memo } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { history } from "./store";
+import { history } from "../store";
 import { Navbar, Nav } from "react-bootstrap";
-import { logout } from "./auth/thunks";
+import { logout } from "../thunks/authThunks";
 
 
 const NavBar: React.FC = () => {
     const path = history.location.pathname;
     const dispatch = useDispatch();
+    const username = localStorage.getItem("username");
     return <Navbar bg="dark" expand="md" className="py-0">
         <Navbar.Brand className="text-white">
             Leet<span className="text-info">Block</span>
@@ -23,9 +24,9 @@ const NavBar: React.FC = () => {
                     Home
                 </Link>
                 <Link
-                    to="/profile"
-                    className={`btn btn-dark rounded-0 text-white ${path === "/profile" && "shadow"}`}
-                    style={{backgroundColor: path === "/profile" ? "rgb(25, 25, 30)" : ""}}>
+                    to={`/profile/${username}`}
+                    className={`btn btn-dark rounded-0 text-white ${path === `/profile/${username}` && "shadow"}`}
+                    style={{backgroundColor: path === `/profile/${username}` ? "rgb(25, 25, 30)" : ""}}>
                     Profile
                 </Link>
                 <Link
@@ -39,4 +40,4 @@ const NavBar: React.FC = () => {
         </Navbar.Collapse>
     </Navbar>
 };
-export default NavBar;
+export default memo(NavBar);

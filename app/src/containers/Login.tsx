@@ -1,7 +1,7 @@
 import React from "react";
-import { ReduxThunkDispatch, IRootState } from "./store";
+import { ReduxThunkDispatch, IRootState } from "../store";
 import { connect } from "react-redux";
-import { login } from "./auth/thunks";
+import { login } from "../thunks/authThunks";
 
 interface ILoginProps {
     login: (username: string, password: string) => void;

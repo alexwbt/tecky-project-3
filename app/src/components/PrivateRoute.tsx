@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteProps, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IRootState } from './store';
+import { IRootState } from '../store';
 
 interface IPrivateRouteProps extends RouteProps {
     authenticated: boolean;
