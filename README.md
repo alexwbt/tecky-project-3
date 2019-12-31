@@ -21,6 +21,7 @@
 * View/Solve Problems
     * show proble title, discription, rating
     * list of custom block that creator has chosen for user
+    * blockly editor for user to solve problem
 * Rate Problems
 * View Solution
 * View/Leave Comments *(tentative)*
