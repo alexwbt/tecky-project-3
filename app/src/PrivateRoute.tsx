@@ -7,23 +7,19 @@ interface IPrivateRouteProps extends RouteProps {
     authenticated: boolean;
 }
 
-const PurePrivateRoute = ({ component, authenticated, ...rest }: IPrivateRouteProps) => {
+const PrivateRoute = ({ component, authenticated, ...rest }: IPrivateRouteProps) => {
     const Component = component;
     if (Component == null) {
         return null;
     }
-    let render: (props: any) => JSX.Element
+    let render: (props: any) => JSX.Element;
     if (authenticated) {
-        render = (props: any) => (
-            <Component {...props} />
-        )
+        render = (props: any) => <Component {...props} />
     } else {
-        render = (props: any) => (
-            <Redirect to={{
-                pathname: '/login',
-                state: { from: props.location }
-            }} />
-        )
+        render = (props: any) => <Redirect to={{
+            pathname: '/login',
+            state: { from: props.location }
+        }} />
     }
     return <Route {...rest} render={render} />
 };
@@ -31,6 +27,4 @@ const PurePrivateRoute = ({ component, authenticated, ...rest }: IPrivateRoutePr
 const mapStateToProps = (state: IRootState) => ({
     authenticated: state.auth.authenticated
 });
-
-const PrivateRoute = connect(mapStateToProps)(PurePrivateRoute);
-export default PrivateRoute;
+export default connect(mapStateToProps)(PrivateRoute);

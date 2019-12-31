@@ -11,6 +11,7 @@ import Login from './Login';
 import Home from './Home';
 import Profile from './Profile';
 import LeaderBoard from './LeaderBoard';
+import PageNotFound from "./PageNotFound";
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const App: React.FC = () => {
           <PrivateRoute path="/" exact={true} component={Home} />
           <PrivateRoute path="/profile" exact={true} component={Profile} />
           <PrivateRoute path="/leaderBoard" exact={true} component={LeaderBoard} />
+          <Route component={PageNotFound} />
         </Switch>
       </ConnectedRouter>
     </Provider>

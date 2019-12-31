@@ -6,7 +6,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { logout } from "./auth/thunks";
 
 
-const NavBar: React.FC<{}> = () => {
+const NavBar: React.FC = () => {
     const path = history.location.pathname;
     const dispatch = useDispatch();
     return <Navbar bg="dark" expand="md" className="py-0">
