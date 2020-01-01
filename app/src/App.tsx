@@ -10,6 +10,7 @@ import Login from './containers/Login';
 import Home from './containers/Home';
 import Profile from './containers/Profile';
 import LeaderBoard from './containers/LeaderBoard';
+import Solver from './containers/Solver';
 import PageNotFound from "./containers/PageNotFound";
 
 const App: React.FC = () => {
@@ -21,6 +22,7 @@ const App: React.FC = () => {
           <PrivateRoute path="/" exact={true} component={Home} />
           <PrivateRoute path="/profile/:username" component={Profile} />
           <PrivateRoute path="/leaderBoard" exact={true} component={LeaderBoard} />
+          <PrivateRoute path="/problem/:problemId" exact={true} component={Solver} />
           <Route component={PageNotFound} />
         </Switch>
       </ConnectedRouter>
