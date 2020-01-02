@@ -1,8 +1,7 @@
 import React from 'react';
 import BlocklyComponent, { Block, Value, Field, Shadow, Category } from "./BlocklyComponent"
+import 'blockly/blocks';
 import "./customBlocks.ts";
-
-const BlocklyJS = require("blockly/javascript");
 
 
 interface IBlocklyAreaProps {
@@ -11,20 +10,10 @@ interface IBlocklyAreaProps {
 
 export default class BlocklyArea extends React.Component<IBlocklyAreaProps> {
 
-    private simpleWorkspace: any;
+    private simpleWorkspace: BlocklyComponent | null = null;
 
-    generateCode() {
-        var code = BlocklyJS.workspaceToCode(this.simpleWorkspace.workspace);
-        console.log(code);
-        try {
-            (function (code: string) {
-                eval(code);
-            }).call({
-                testing: () => console.log("test")
-            }, code);
-        } catch (err) {
-            console.log(err.message);
-        }
+    get workspace() {
+        return this.simpleWorkspace ? this.simpleWorkspace.workspace : null;
     }
 
     render() {

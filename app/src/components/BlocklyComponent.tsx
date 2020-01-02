@@ -1,6 +1,5 @@
 import React from 'react';
 
-import 'blockly/blocks';
 const Blockly = require('blockly/core');
 const locale = require('blockly/msg/en');
 
@@ -14,8 +13,8 @@ interface IBlocklyProps {
 export default class BlocklyComponent extends React.Component<IBlocklyProps> {
 
     private primaryWorkspace: any;
-    private blocklyDiv: any;
-    private toolbox: any;
+    private blocklyDiv: HTMLDivElement | null = null;
+    private toolbox: HTMLDivElement | null = null;
 
     componentDidMount() {
         const { initialXml, children, ...rest } = this.props;
@@ -44,7 +43,7 @@ export default class BlocklyComponent extends React.Component<IBlocklyProps> {
             <div
                 is="blockly"
                 style={{ display: 'none' }}
-                ref={(toolbox: any) => this.toolbox = toolbox}>
+                ref={e => this.toolbox = e}>
                 {children}
             </div>
         </React.Fragment>;
