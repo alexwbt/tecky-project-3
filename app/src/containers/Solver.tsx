@@ -4,6 +4,7 @@ import { IRootState, ReduxThunkDispatch } from "../store";
 
 import NavBar from "../components/NavBar";
 import BlocklyArea from "../components/BlocklyArea";
+import Canvas from "../components/Canvas";
 
 const BlocklyJS = require("blockly/javascript");
 
@@ -67,6 +68,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
             <NavBar />
             <div className="row w-100 m-0" style={{ height: this.state.height }}>
                 <div className="col-4 p-1">
+                    <Canvas size={400} />
                     <button onClick={this.generateCode.bind(this)}>run</button>
                 </div>
                 <BlocklyArea ref={this.blocklyArea} height={this.state.height} className="col-8 p-0" />
@@ -76,8 +78,8 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
 
 }
 
-const mapStateToState = (state: IRootState) => ({});
+const mapStateToProps = (state: IRootState) => ({});
 
-const mapDispatchToState = (dispatch: ReduxThunkDispatch) => ({});
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({});
 
-export default connect(mapStateToState, mapDispatchToState)(Solver);
+export default connect(mapStateToProps, mapDispatchToProps)(Solver);

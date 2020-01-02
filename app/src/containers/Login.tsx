@@ -139,7 +139,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                     <div className="col-12 col-md-6 p-3 mx-auto" style={{ maxWidth: 500}}>
                         <form className="px-3 py-4 rounded shadow bg-light" onSubmit={this.submitForm.bind(this)}>
                             <h3 className="d-inline">{this.state.register ? "Register" : "Login"}</h3>
-                            <span className="float-right">Leet<span className="text-info">Block</span></span>
+                            <span className="float-right">Block<span className="text-info">Dojo</span></span>
                             <hr className="mt-1" />
                             {this.state.register ? this.renderRegisterForm() : this.renderLoginForm()}
                         </form>

@@ -12,7 +12,7 @@ const NavBar: React.FC = () => {
     const username = localStorage.getItem("username");
     return <Navbar bg="dark" expand="md" className="py-0" id="navagation-bar">
         <Navbar.Brand className="text-white">
-            Leet<span className="text-info">Block</span>
+            Block<span className="text-info">Dojo</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="border-0" />
         <Navbar.Collapse id="basic-navbar-nav">

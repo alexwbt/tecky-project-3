@@ -23,8 +23,8 @@ class Profile extends React.Component<IProfileProps> {
 
 }
 
-const mapStateToState = (state: IRootState) => ({});
+const mapStateToProps = (state: IRootState) => ({});
 
-const mapDispatchToState = (dispatch: ReduxThunkDispatch) => ({});
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({});
 
-export default connect(mapStateToState, mapDispatchToState)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

@@ -14,8 +14,8 @@ class Home extends React.Component {
 
 }
 
-const mapStateToState = (state: IRootState) => ({});
+const mapStateToProps = (state: IRootState) => ({});
 
-const mapDispatchToState = (dispatch: ReduxThunkDispatch) => ({});
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({});
 
-export default connect(mapStateToState, mapDispatchToState)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

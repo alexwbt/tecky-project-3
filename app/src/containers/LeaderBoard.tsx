@@ -14,8 +14,8 @@ class LeaderBoard extends React.Component {
 
 }
 
-const mapStateToState = (state: IRootState) => ({});
+const mapStateToProps = (state: IRootState) => ({});
 
-const mapDispatchToState = (dispatch: ReduxThunkDispatch) => ({});
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({});
 
-export default connect(mapStateToState, mapDispatchToState)(LeaderBoard);
+export default connect(mapStateToProps, mapDispatchToProps)(LeaderBoard);
