@@ -12,7 +12,7 @@ export default class UserService {
     constructor(private knex: Knex) { }
 
     async getUserWithUsername(username: string): Promise<User> {
-        return (await this.knex.raw(`SELECT * FROM users WHERE username = ?`, username)).rows[0];
+        return (await this.knex.queryBuilder<User>().select().from<User>("user").where("username", username))[0];
     }
 
 }
