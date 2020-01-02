@@ -10,7 +10,7 @@ const NavBar: React.FC = () => {
     const path = history.location.pathname;
     const dispatch = useDispatch();
     const username = localStorage.getItem("username");
-    return <Navbar bg="dark" expand="md" className="py-0">
+    return <Navbar bg="dark" expand="md" className="py-0" id="navagation-bar">
         <Navbar.Brand className="text-white">
             Leet<span className="text-info">Block</span>
         </Navbar.Brand>
