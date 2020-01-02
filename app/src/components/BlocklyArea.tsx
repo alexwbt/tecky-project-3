@@ -6,6 +6,7 @@ import "./customBlocks.ts";
 
 interface IBlocklyAreaProps {
     className: string;
+    height: number;
 }
 
 export default class BlocklyArea extends React.Component<IBlocklyAreaProps> {

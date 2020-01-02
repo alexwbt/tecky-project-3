@@ -22,26 +22,19 @@ interface ISolverStates {
 
 class Solver extends React.Component<ISolverProps, ISolverStates> {
 
-    private blocklyArea: BlocklyArea | null = null;
+    private blocklyArea: React.RefObject<BlocklyArea>;
 
     constructor(props: ISolverProps) {
         super(props);
         this.state = {
             height: 0
         };
+        this.blocklyArea = React.createRef();
     }
 
     updateHeight() {
-        const nav = document.querySelector("#navagation-bar");
-        if (nav) {
-            const styles = window.getComputedStyle(nav);
-            const margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
-            this.setState({ ...this.state, height: window.innerHeight - (nav.clientHeight + margin)});
-        }
-    }
-
-    componentDidUpdate() {
-        this.blocklyArea?.forceUpdate();
+        const nav = document.getElementById("navagation-bar");
+        this.setState({ ...this.state, height: window.innerHeight - (nav ? nav.clientHeight : 0)});
     }
 
     componentDidMount() {
@@ -54,8 +47,8 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     }
 
     generateCode() {
-        if (this.blocklyArea) {
-            var code = BlocklyJS.workspaceToCode(this.blocklyArea.workspace);
+        if (this.blocklyArea.current) {
+            var code = BlocklyJS.workspaceToCode(this.blocklyArea.current.workspace);
             console.log(code);
             try {
                 (function (code: string) {
@@ -76,7 +69,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                 <div className="col-4 p-1">
                     <button onClick={this.generateCode.bind(this)}>run</button>
                 </div>
-                <BlocklyArea ref={e => this.blocklyArea = e} className="col-8 p-0" />
+                <BlocklyArea ref={this.blocklyArea} height={this.state.height} className="col-8 p-0" />
             </div>
         </div>
     }

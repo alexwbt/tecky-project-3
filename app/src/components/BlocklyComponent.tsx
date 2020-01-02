@@ -13,18 +13,28 @@ interface IBlocklyProps {
 export default class BlocklyComponent extends React.Component<IBlocklyProps> {
 
     private primaryWorkspace: any;
-    private blocklyDiv: HTMLDivElement | null = null;
-    private toolbox: HTMLDivElement | null = null;
+    private blocklyDiv: React.RefObject<HTMLDivElement>;
+    private toolbox: React.RefObject<HTMLDivElement>;
+
+    constructor(props: IBlocklyProps) {
+        super(props);
+        this.blocklyDiv = React.createRef();
+        this.toolbox = React.createRef();
+    }
 
     componentDidMount() {
         const { initialXml, children, ...rest } = this.props;
-        this.primaryWorkspace = Blockly.inject(this.blocklyDiv, {
-            toolbox: this.toolbox,
+        this.primaryWorkspace = Blockly.inject(this.blocklyDiv.current, {
+            toolbox: this.toolbox.current,
             ...rest
         });
         if (initialXml) {
             Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), this.primaryWorkspace);
         }
+    }
+
+    componentDidUpdate() {
+        Blockly.svgResize(this.primaryWorkspace);
     }
 
     get workspace() {
@@ -36,15 +46,13 @@ export default class BlocklyComponent extends React.Component<IBlocklyProps> {
     }
 
     render() {
-        const { children, className } = this.props;
-
         return <React.Fragment>
-            <div ref={e => this.blocklyDiv = e} className={className} />
+            <div ref={this.blocklyDiv} className={this.props.className} />
             <div
                 is="blockly"
                 style={{ display: 'none' }}
-                ref={e => this.toolbox = e}>
-                {children}
+                ref={this.toolbox}>
+                {this.props.children}
             </div>
         </React.Fragment>;
     }
