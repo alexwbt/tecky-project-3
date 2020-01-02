@@ -4,7 +4,6 @@ import { IRootState, ReduxThunkDispatch } from "../store";
 
 import NavBar from "../components/NavBar";
 import BlocklyArea from "../components/BlocklyArea";
-import { Navbar } from "react-bootstrap";
 
 const BlocklyJS = require("blockly/javascript");
 
