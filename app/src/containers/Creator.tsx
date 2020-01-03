@@ -78,15 +78,21 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             <div id="navagation-bar">
                 <NavBar />
                 <TabSelect tabs={[
-                    { name: "Description", active: this.state.currentTab === "Description", callback: this.selectTab.bind(this, "Description") },
-                    { name: "Canvas", active: this.state.currentTab === "Canvas", callback: this.selectTab.bind(this, "Canvas") },
-                    { name: "Code", active: this.state.currentTab === "Code", callback: this.selectTab.bind(this, "Code") }
-                ]} />
+                    "Description" as Tab,
+                    "Canvas" as Tab,
+                    "Code" as Tab
+                ].map((name: Tab) => ({
+                    name: name as string,
+                    active: this.state.currentTab === name,
+                    callback: this.selectTab.bind(this, name)
+                }))} />
             </div>
 
             <div className="row w-100 m-0" style={{ height: this.state.height }}>
                 {
-                    this.state.currentTab === "Description" && <div className="col-6 pt-3"><DescriptionForm /></div>
+                    this.state.currentTab === "Description" && <div className="col-6 pt-3">
+                        <DescriptionForm />
+                    </div>
                 }
                 {
                     this.state.currentTab === "Canvas" && <div className="col-4 p-1">
