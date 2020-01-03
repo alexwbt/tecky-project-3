@@ -1,4 +1,4 @@
-# **LeetBlock --Final Project**
+# **BlockDojo --Final Project**
 ## Pages
 #### 1. Login/Register Page
 #### 2. Home Page
