@@ -15,10 +15,10 @@ const TabSelect: React.FC<ITabSelectProps> = (props: ITabSelectProps) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="border-0" />
         <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-                {props.tabs.map((tab) => <button
+                {props.tabs.map((tab, i) => <button
+                    key={i}
                     className={`btn rounded-0 ${tab.active ? "shadow btn-light" : "btn-info"}`}
-                    onClick={tab.callback}
-                    >
+                    onClick={tab.callback}>
                     {tab.name}
                 </button>)}
             </Nav>

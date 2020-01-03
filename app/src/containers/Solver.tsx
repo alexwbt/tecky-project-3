@@ -21,6 +21,7 @@ interface ISolverStates {
     height: number;
 }
 
+/* eslint no-eval: 0 */
 class Solver extends React.Component<ISolverProps, ISolverStates> {
 
     private blocklyArea: React.RefObject<BlocklyArea>;

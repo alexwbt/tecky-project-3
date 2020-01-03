@@ -3,7 +3,7 @@ const SIZE = 16;
 const SPRITE_SIZE = 8;
 
 // Tiles
-const GRASS = 0;
+// const GRASS = 0;
 const ROAD = 1;
 
 const FOUR = [
@@ -33,7 +33,7 @@ export default class CanvasContent {
         for (let x = 0; x < this.size; x++) {
             for (let y = 0; y < this.size; y++) {
                 switch (this.terrain[x][y]) {
-                    case 1:
+                    case ROAD:
                         this.renderRoad(ctx, x, y, width, height);
                         break;
                     default:
@@ -65,6 +65,7 @@ export default class CanvasContent {
                 if (near[0] !== ROAD) angle = -90;
                 else if (near[1] !== ROAD) angle = 90;
                 else if (near[3] !== ROAD) angle = 180;
+                break;
             default:
         }
         return { angle, offset };

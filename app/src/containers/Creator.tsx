@@ -26,6 +26,7 @@ interface ICreatorStates {
     currentTab: Tab;
 }
 
+/* eslint no-eval: 0 */
 class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     private blocklyArea: React.RefObject<BlocklyArea>;

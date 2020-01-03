@@ -30,7 +30,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
     // canvas
     start() {
         if (this.spriteImg.current) {
-            const size = 12;
+            const size = 8;
             let terrain: number[][] = [];
             for (let x = 0; x < size; x++) {
                 terrain.push([]);

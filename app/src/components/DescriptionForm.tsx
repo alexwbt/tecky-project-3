@@ -48,7 +48,7 @@ export default class DescriptionForm extends React.Component<IDescriptionFormPro
             </label>
             <textarea
                 id="descriptionInput"
-                rows={8}
+                rows={5}
                 className="form-control"
                 placeholder="Description"
                 value={this.state.description}

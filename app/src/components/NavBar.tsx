@@ -1,4 +1,4 @@
-import React, { memo, ReactChild } from "react";
+import React, { memo } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { history } from "../store";
