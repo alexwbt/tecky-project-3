@@ -4,6 +4,7 @@ import sprite from "../sprite.png";
 
 interface ICanvasProps {
     size: number;
+    terrain: number[][] | "empty";
 }
 
 export default class Canvas extends React.Component<ICanvasProps> {
@@ -37,7 +38,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
                     terrain[x].push(Math.floor(Math.random() * 2));
                 }
             }
-            this.content = new CanvasContent(size, terrain, this.spriteImg.current);
+            this.content = new CanvasContent(size, this.props.terrain === "empty" ? terrain : this.props.terrain, this.spriteImg.current);
         }
 
         this.fpsStartTime = this.renderStartTime = performance.now();

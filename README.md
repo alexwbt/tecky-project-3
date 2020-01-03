@@ -13,7 +13,7 @@
 * Create/Edit Problem
     * list of custom block for creator to choose
     * blockly editor for creator to write test case and solution with blockly
-    * text area for problem discription
+    * text area for problem description
     * input for title
 * Canvas
     * canvas require toggle
@@ -22,7 +22,7 @@
 #### 6. Problem Solving Page
 * View/Solve Problem
     * show canvas if required
-    * show proble title, discription, rating
+    * show proble title, description, rating
     * list of custom block that creator has chosen for user
     * blockly editor for user to solve problem
 * Show Canvas If Required
