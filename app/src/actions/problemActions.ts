@@ -2,9 +2,9 @@ import { CanvasContentExport } from "../components/CanvasContent";
 
 
 
-export function saveProblem(title: string, description: string, canvas: CanvasContentExport, code: string) {
+export function setProblem(title: string, description: string, canvas: CanvasContentExport, code: string) {
     return {
-        type: "SAVE" as "SAVE",
+        type: "SET_PROBLEM" as "SET_PROBLEM",
         title,
         description,
         canvas,
@@ -13,6 +13,6 @@ export function saveProblem(title: string, description: string, canvas: CanvasCo
 }
 
 
-type ActionCreators = typeof saveProblem;
+type ActionCreators = typeof setProblem;
 type Actions = ReturnType<ActionCreators>;
 export default Actions;
