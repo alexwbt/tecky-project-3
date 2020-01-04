@@ -22,11 +22,11 @@ export default class DescriptionForm extends React.Component<IDescriptionFormPro
         };
     }
 
-    inputChange(field: "title" | "description", event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    private inputChange(field: "title" | "description", event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         this.setState({ ...this.state, [field]: event.target.value });
     }
 
-    checkBoxChange(field: "publish", event: React.ChangeEvent<HTMLInputElement>) {
+    private checkBoxChange(field: "publish", event: React.ChangeEvent<HTMLInputElement>) {
         this.setState({ ...this.state, [field]: event.target.checked });
     }
 

@@ -28,7 +28,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
     }
 
     // canvas
-    start() {
+    private start() {
         if (this.spriteImg.current) {
             const size = 8;
             let terrain: number[][] = [];
@@ -42,10 +42,10 @@ export default class Canvas extends React.Component<ICanvasProps> {
         }
 
         this.fpsStartTime = this.renderStartTime = performance.now();
-        this.animationFrameRequestId = window.requestAnimationFrame(this.gameloop.bind(this));
+        this.animationFrameRequestId = window.requestAnimationFrame(this.gameloop);
     }
 
-    gameloop(timestamp: number) {
+    private gameloop = (timestamp: number) => {
         this.renderDelta += (timestamp - this.renderStartTime) / (1000 / 30);
         this.renderStartTime = timestamp;
 
@@ -72,20 +72,36 @@ export default class Canvas extends React.Component<ICanvasProps> {
             this.fps = 0;
         }
 
-        this.animationFrameRequestId = window.requestAnimationFrame(this.gameloop.bind(this));
-    }
+        this.animationFrameRequestId = window.requestAnimationFrame(this.gameloop);
+    };
+
+    private mouseMove = (event: MouseEvent) => {
+        console.log("mousemove");
+    };
+
+    private mouseDown = (event: MouseEvent) => {
+        console.log("mousedown");
+    };
+
+    private mouseUp = (event: MouseEvent) => {
+
+    };
 
     // react component
     componentDidMount() {
         if (this.canvas.current) {
             this.ctx = this.canvas.current.getContext("2d");
+            this.canvas.current.addEventListener("mousemove", this.mouseMove);
+            this.canvas.current.addEventListener("mousedown", this.mouseDown);
             this.start();
         }
     }
 
     componentWillUnmount() {
-        if (this.animationFrameRequestId !== null) {
+        if (this.canvas.current && this.animationFrameRequestId !== null) {
             cancelAnimationFrame(this.animationFrameRequestId);
+            this.canvas.current.removeEventListener("mousemove", this.mouseMove);
+            this.canvas.current.removeEventListener("mousedown", this.mouseDown);
         }
     }
 

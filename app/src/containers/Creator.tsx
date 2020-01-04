@@ -47,18 +47,18 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         this.blocklyArea = React.createRef();
     }
 
-    updateHeight() {
+    updateHeight = () => {
         const nav = document.getElementById("navagation-bar");
         this.setState({ ...this.state, height: window.innerHeight - (nav ? nav.clientHeight : 0) });
     }
 
     componentDidMount() {
-        window.addEventListener('resize', this.updateHeight.bind(this));
+        window.addEventListener('resize', this.updateHeight);
         this.updateHeight();
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.updateHeight.bind(this));
+        window.removeEventListener('resize', this.updateHeight);
     }
 
     generateCode() {

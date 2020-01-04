@@ -29,31 +29,31 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
         };
     }
 
-    updateHeight() {
+    private updateHeight = () => {
         this.setState({ ...this.state, height: window.innerHeight });
     }
 
+    private toggleRegister = () => {
+        this.setState({ ...this.state, register: !this.state.register });
+    }
+
     componentDidMount() {
-        window.addEventListener('resize', this.updateHeight.bind(this));
+        window.addEventListener('resize', this.updateHeight);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.updateHeight.bind(this));
+        window.removeEventListener('resize', this.updateHeight);
     }
 
-    inputChange(field: "username" | "password" | "cpassword", event: React.ChangeEvent<HTMLInputElement>) {
+    private inputChange(field: "username" | "password" | "cpassword", event: React.ChangeEvent<HTMLInputElement>) {
         this.setState({ ...this.state, [field]: event.target.value });
     }
 
-    submitForm(event: React.FormEvent<HTMLFormElement>) {
+    private submitForm(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (this.state.username && this.state.password) {
             this.props.login(this.state.username, this.state.password);
         }
-    }
-
-    toggleRegister() {
-        this.setState({ ...this.state, register: !this.state.register });
     }
 
     renderLoginForm() {
@@ -83,7 +83,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                 required />
             <div className="text-danger pt-1">{this.props.message && this.props.message}</div>
             <input type="submit" className="btn btn-info py-1 mt-3" value="Login" />
-            <button className="btn btn-link text-info mt-3" onClick={this.toggleRegister.bind(this)}>Register</button>
+            <button className="btn btn-link text-info mt-3" onClick={this.toggleRegister}>Register</button>
         </>
     }
 
@@ -126,7 +126,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                 required />
             <div className="text-danger pt-1">{this.props.message && this.props.message}</div>
             <input type="submit" className="btn btn-info py-1 mt-3" value="Register" />
-            <button className="btn btn-link text-info mt-3" onClick={this.toggleRegister.bind(this)}>Login</button>
+            <button className="btn btn-link text-info mt-3" onClick={this.toggleRegister}>Login</button>
         </>
     }
 
@@ -137,7 +137,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
             <div className="row align-items-center" style={{ height: this.state.height }}>
                 <div className="col-12">
                     <div className="col-12 col-md-6 p-3 mx-auto" style={{ maxWidth: 500}}>
-                        <form className="px-3 py-4 rounded shadow bg-light" onSubmit={this.submitForm.bind(this)}>
+                        <form className="px-3 py-4 rounded shadow bg-light" onSubmit={this.submitForm}>
                             <h3 className="d-inline">{this.state.register ? "Register" : "Login"}</h3>
                             <span className="float-right">Block<span className="text-info">Dojo</span></span>
                             <hr className="mt-1" />

@@ -29,7 +29,7 @@ export default class CanvasContent {
         this.spriteImg = spriteImg;
     }
 
-    exportContent() {
+    get exportContent() {
         return {
             terrain: this.terrain
         };

@@ -34,21 +34,12 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
         this.blocklyArea = React.createRef();
     }
 
-    updateHeight() {
+    private updateHeight = () => {
         const nav = document.getElementById("navagation-bar");
         this.setState({ ...this.state, height: window.innerHeight - (nav ? nav.clientHeight : 0) });
-    }
+    };
 
-    componentDidMount() {
-        window.addEventListener('resize', this.updateHeight.bind(this));
-        this.updateHeight();
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateHeight.bind(this));
-    }
-
-    generateCode() {
+    private generateCode = () => {
         if (this.blocklyArea.current) {
             var code = BlocklyJS.workspaceToCode(this.blocklyArea.current.workspace);
             console.log(code);
@@ -62,6 +53,15 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                 console.log(err.message);
             }
         }
+    };
+
+    componentDidMount() {
+        window.addEventListener('resize', this.updateHeight);
+        this.updateHeight();
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateHeight);
     }
 
     render() {
@@ -70,7 +70,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
             <div className="row w-100 m-0" style={{ height: this.state.height }}>
                 <div className="col-4 p-1">
                     <Canvas size={16 * 100} terrain="empty" />
-                    <button onClick={this.generateCode.bind(this)}>run</button>
+                    <button onClick={this.generateCode}>run</button>
                 </div>
                 <BlocklyArea ref={this.blocklyArea} height={this.state.height} className="col-8 p-0" />
             </div>
