@@ -13,6 +13,10 @@ const FOUR = [
     [0, 1]
 ];
 
+export interface CanvasContentExport {
+    terrain?: number[][];
+}
+
 export default class CanvasContent {
 
     private size: number;
@@ -23,6 +27,12 @@ export default class CanvasContent {
         this.size = size;
         this.terrain = terrain;
         this.spriteImg = spriteImg;
+    }
+
+    exportContent() {
+        return {
+            terrain: this.terrain
+        };
     }
 
     renderTerrain(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {

@@ -74,10 +74,13 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         this.setState({ ...this.state, currentTab: tab });
     }
 
+    uploadProblem() {
+        window.alert("saved");
+    }
+
     render() {
         return <div className="container-fluid p-0">
-            <div id="navagation-bar">
-                <NavBar />
+            <NavBar>
                 <TabSelect tabs={[
                     "Description" as Tab,
                     "Canvas" as Tab,
@@ -86,8 +89,13 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     name: name as string,
                     active: this.state.currentTab === name,
                     callback: this.selectTab.bind(this, name)
-                }))} />
-            </div>
+                }))} buttons={[
+                    {
+                        name: "Save",
+                        callback: this.uploadProblem.bind(this)
+                    }
+                ]} />
+            </NavBar>
 
             <div className="row w-100 m-0" style={{ height: this.state.height }}>
                 {
@@ -105,7 +113,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     this.state.currentTab === "Code" && <BlocklyArea
                         ref={this.blocklyArea}
                         height={this.state.height}
-                        className="col-8 p-0" />
+                        className="col-12 p-0" />
                 }
             </div>
         </div>

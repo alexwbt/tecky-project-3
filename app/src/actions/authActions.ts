@@ -19,5 +19,6 @@ export function logoutSuccess() {
     };
 }
 
-type AuthActionCreators = typeof loginSuccess | typeof loginFailed | typeof logoutSuccess;
-export type AuthActions = ReturnType<AuthActionCreators> | CallHistoryMethodAction;
+type ActionCreators = typeof loginSuccess | typeof loginFailed | typeof logoutSuccess;
+type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
+export default Actions;

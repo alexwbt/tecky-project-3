@@ -65,7 +65,6 @@ export default class DescriptionForm extends React.Component<IDescriptionFormPro
                 checked={this.state.publish}
                 onChange={this.checkBoxChange.bind(this, "publish")}
                 required /> */}
-            <input type="submit" className="btn btn-info py-1 mt-3" value="Save" />
         </form>
     }
 

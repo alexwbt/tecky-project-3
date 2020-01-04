@@ -8,19 +8,32 @@ interface ITabSelectProps {
         active: boolean;
         callback: () => void;
     }[];
+    buttons: {
+        name: string;
+        callback: () => void;
+    }[];
 }
 
-const TabSelect: React.FC<ITabSelectProps> = (props: ITabSelectProps) => {
+const TabSelect: React.FC<ITabSelectProps> = (props) => {
     return <Navbar bg="info" expand="md" className="py-0">
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="border-0" />
         <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
+            <Nav className="w-100">
                 {props.tabs.map((tab, i) => <button
                     key={i}
-                    className={`btn rounded-0 ${tab.active ? "shadow btn-light" : "btn-info"}`}
+                    className={`btn rounded-0 ${tab.active ? "btn-light" : "btn-info"}`}
                     onClick={tab.callback}>
                     {tab.name}
                 </button>)}
+                {props.children}
+                <div className="ml-auto">
+                    {props.buttons.map((btn, i) => <button
+                        key={i}
+                        className={"btn btn-info rounded-0"}
+                        onClick={btn.callback}>
+                        {btn.name}
+                    </button>)}
+                </div>
             </Nav>
         </Navbar.Collapse>
     </Navbar>

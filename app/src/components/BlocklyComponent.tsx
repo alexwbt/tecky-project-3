@@ -46,7 +46,7 @@ export default class BlocklyComponent extends React.Component<IBlocklyProps> {
     }
 
     render() {
-        return <React.Fragment>
+        return <>
             <div ref={this.blocklyDiv} className={this.props.className} />
             <div
                 is="blockly"
@@ -54,7 +54,7 @@ export default class BlocklyComponent extends React.Component<IBlocklyProps> {
                 ref={this.toolbox}>
                 {this.props.children}
             </div>
-        </React.Fragment>;
+        </>;
     }
 }
 

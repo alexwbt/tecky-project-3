@@ -2,7 +2,9 @@ import { createStore, combineReducers, compose, applyMiddleware } from "redux";
 import thunk, { ThunkDispatch } from "redux-thunk";
 
 import authReducer, { IAuthState } from "./reducers/authReducer";
-import { AuthActions } from "./actions/authActions";
+import AuthActions from "./actions/authActions";
+import problemReducer, { IProblemState } from "./reducers/problemReducer";
+import ProblemActions from "./actions/problemActions";
 
 import { routerMiddleware, connectRouter, RouterState } from 'connected-react-router';
 import { createBrowserHistory } from "history";
@@ -10,13 +12,15 @@ export const history = createBrowserHistory();
 
 export interface IRootState {
     auth: IAuthState;
+    problem: IProblemState;
     router: RouterState;
 }
 
-type RootActions = AuthActions;
+type RootActions = AuthActions | ProblemActions;
 
 const rootReducer = combineReducers<IRootState>({
     auth: authReducer,
+    problem: problemReducer,
     router: connectRouter(history)
 });
 

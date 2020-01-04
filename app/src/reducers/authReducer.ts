@@ -1,4 +1,4 @@
-import { AuthActions } from "../actions/authActions";
+import AuthActions from "../actions/authActions";
 
 
 export interface IAuthState {

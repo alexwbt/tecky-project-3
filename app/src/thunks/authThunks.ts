@@ -1,10 +1,9 @@
 import { Dispatch } from "react";
-import { AuthActions, loginSuccess, logoutSuccess, loginFailed } from "../actions/authActions";
+import AuthActions, { loginSuccess, logoutSuccess, loginFailed } from "../actions/authActions";
 import { push } from "connected-react-router";
 
 
 const { REACT_APP_API_SERVER } = process.env;
-// const REACT_APP_API_SERVER = "http://192.168.0.101:8080";
 
 export function login(username: string, password: string) {
     return async (dispatch: Dispatch<AuthActions>) => {

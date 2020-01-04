@@ -66,7 +66,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
 
     render() {
         return <div className="container-fluid p-0">
-            <div id="navagation-bar"><NavBar /></div>
+            <NavBar />
             <div className="row w-100 m-0" style={{ height: this.state.height }}>
                 <div className="col-4 p-1">
                     <Canvas size={16 * 100} terrain="empty" />
