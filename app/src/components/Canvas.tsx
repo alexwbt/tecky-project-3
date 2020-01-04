@@ -5,6 +5,8 @@ import sprite from "../sprite.png";
 interface ICanvasProps {
     size: number;
     terrain: number[][] | "empty";
+
+    editable: boolean;
 }
 
 export default class Canvas extends React.Component<ICanvasProps> {
@@ -17,6 +19,9 @@ export default class Canvas extends React.Component<ICanvasProps> {
     private renderDelta: number = 0;
     private fpsStartTime: number = 0;
     private fps: number = 0;
+
+    private buttons = [false, false, false];
+    private mouse = { x: 0, y: 0 };
 
     private spriteImg: React.RefObject<HTMLImageElement>;
     private content: CanvasContent | null = null;
@@ -62,6 +67,20 @@ export default class Canvas extends React.Component<ICanvasProps> {
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 this.content.renderTerrain(ctx, canvas);
+
+                if (this.props.editable) {
+                    const terrainSize = this.content.getTerrainSize();
+                    let width = canvas.width / terrainSize;
+                    let height = canvas.height / terrainSize;
+                    let x = Math.floor((this.mouse.x * canvas.width) / width);
+                    let y = Math.floor((this.mouse.y * canvas.height) / height);
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                    ctx.fillRect(x * width, y * height, width, height);
+                    ctx.strokeStyle = "gray";
+                    ctx.lineWidth = 10;
+                    ctx.rect(x * width, y * height, width, height);
+                    ctx.stroke();
+                }
             }
         }
 
@@ -76,24 +95,34 @@ export default class Canvas extends React.Component<ICanvasProps> {
     };
 
     private mouseMove = (event: MouseEvent) => {
-        console.log("mousemove");
+        if (this.canvas.current) {
+            let rect = this.canvas.current.getBoundingClientRect();
+            this.mouse = {
+                x: (event.x - Math.round(rect.x)) / rect.width,
+                y: (event.y - Math.round(rect.y)) / rect.height
+            };
+        }
     };
 
     private mouseDown = (event: MouseEvent) => {
-        console.log("mousedown");
+        this.buttons[event.button] = true;
     };
 
     private mouseUp = (event: MouseEvent) => {
-
+        this.buttons[event.button] = false;
     };
 
     // react component
     componentDidMount() {
         if (this.canvas.current) {
             this.ctx = this.canvas.current.getContext("2d");
-            this.canvas.current.addEventListener("mousemove", this.mouseMove);
-            this.canvas.current.addEventListener("mousedown", this.mouseDown);
             this.start();
+
+            if (this.props.editable) {
+                this.canvas.current.addEventListener("mousemove", this.mouseMove);
+                this.canvas.current.addEventListener("mousedown", this.mouseDown);
+                this.canvas.current.addEventListener("mouseup", this.mouseUp);
+            }
         }
     }
 
@@ -102,13 +131,14 @@ export default class Canvas extends React.Component<ICanvasProps> {
             cancelAnimationFrame(this.animationFrameRequestId);
             this.canvas.current.removeEventListener("mousemove", this.mouseMove);
             this.canvas.current.removeEventListener("mousedown", this.mouseDown);
+            this.canvas.current.removeEventListener("mouseup", this.mouseUp);
         }
     }
 
     render() {
-        return <div >
+        return <div>
             <img ref={this.spriteImg} src={sprite} className={"d-none"} alt={"sprite"} />
-            <canvas ref={this.canvas} className="w-100 h-100 border"></canvas>
+            <canvas ref={this.canvas} className="w-100 h-100 border" onContextMenu={e => e.preventDefault()}></canvas>
         </div>
     }
 

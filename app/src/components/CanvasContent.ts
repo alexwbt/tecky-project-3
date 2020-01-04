@@ -14,23 +14,29 @@ const FOUR = [
 ];
 
 export interface ICanvasContent {
+    terrainSize?: number;
     terrain?: number[][];
 }
 
 export default class CanvasContent {
 
-    private size: number;
+    private terrainSize: number;
     private terrain: number[][];
     private spriteImg: HTMLImageElement;
 
-    constructor(size: number, terrain: number[][], spriteImg: HTMLImageElement) {
-        this.size = size;
+    constructor(terrainSize: number, terrain: number[][], spriteImg: HTMLImageElement) {
+        this.terrainSize = terrainSize;
         this.terrain = terrain;
         this.spriteImg = spriteImg;
     }
 
-    get exportContent() {
+    getTerrainSize() {
+        return this.terrainSize;
+    }
+
+    getContent() {
         return {
+            terrainSize: this.terrainSize,
             terrain: this.terrain
         };
     }
@@ -38,10 +44,10 @@ export default class CanvasContent {
     renderTerrain(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
         ctx.imageSmoothingEnabled = false;
         ctx.imageSmoothingQuality = "high";
-        let width = canvas.width / this.size;
-        let height = canvas.height / this.size;
-        for (let x = 0; x < this.size; x++) {
-            for (let y = 0; y < this.size; y++) {
+        let width = canvas.width / this.terrainSize;
+        let height = canvas.height / this.terrainSize;
+        for (let x = 0; x < this.terrainSize; x++) {
+            for (let y = 0; y < this.terrainSize; y++) {
                 switch (this.terrain[x][y]) {
                     case ROAD:
                         this.renderRoad(ctx, x, y, width, height);
@@ -87,7 +93,7 @@ export default class CanvasContent {
         for (let p of FOUR) {
             let ix = x + p[0];
             let iy = y + p[1];
-            if (ix >= 0 && ix < this.size && iy >= 0 && iy < this.size) {
+            if (ix >= 0 && ix < this.terrainSize && iy >= 0 && iy < this.terrainSize) {
                 near.push(this.terrain[ix][iy]);
                 if (this.terrain[ix][iy] === ROAD) {
                     count++;

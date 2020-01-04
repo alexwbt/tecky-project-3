@@ -117,7 +117,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                 {
                     this.state.currentTab === "Canvas" && <>
                         <div className="col-4 p-1">
-                            <Canvas size={16 * 100} terrain="empty" />
+                            <Canvas size={16 * 100} terrain="empty" editable={true} />
 
                             {/* <button onClick={this.generateCode.bind(this)}>run</button> */}
                         </div>

@@ -69,7 +69,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
             <NavBar />
             <div className="row w-100 m-0" style={{ height: this.state.height }}>
                 <div className="col-4 p-1">
-                    <Canvas size={16 * 100} terrain="empty" />
+                    <Canvas size={16 * 100} terrain="empty" editable={false} />
                     <button onClick={this.generateCode}>run</button>
                 </div>
                 <BlocklyArea ref={this.blocklyArea} height={this.state.height} className="col-8 p-0" />
