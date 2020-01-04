@@ -20,10 +20,14 @@ interface ICreatorProps {
 }
 
 type Tab = "Description" | "Canvas" | "Code";
+type CanvasTab = "Terrain" | "Charactors" | "Structures" | "Enemy"
 
 interface ICreatorStates {
     height: number;
     currentTab: Tab;
+    canvas: {
+        currentTab: CanvasTab;
+    };
 }
 
 /* eslint no-eval: 0 */
@@ -35,7 +39,10 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         super(props);
         this.state = {
             height: 0,
-            currentTab: "Description"
+            currentTab: "Description",
+            canvas: {
+                currentTab: "Terrain"
+            }
         };
         this.blocklyArea = React.createRef();
     }
@@ -74,6 +81,10 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         this.setState({ ...this.state, currentTab: tab });
     }
 
+    selectCanvasTab(tab: CanvasTab) {
+        this.setState({ ...this.state, canvas: { currentTab: tab } });
+    }
+
     uploadProblem() {
         window.alert("saved");
     }
@@ -94,7 +105,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                         name: "Save",
                         callback: this.uploadProblem.bind(this)
                     }
-                ]} />
+                ]} color="info" color2="light" />
             </NavBar>
 
             <div className="row w-100 m-0" style={{ height: this.state.height }}>
@@ -104,10 +115,25 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     </div>
                 }
                 {
-                    this.state.currentTab === "Canvas" && <div className="col-4 p-1">
-                        <Canvas size={16 * 100} terrain="empty" />
-                        {/* <button onClick={this.generateCode.bind(this)}>run</button> */}
-                    </div>
+                    this.state.currentTab === "Canvas" && <>
+                        <div className="col-4 p-1">
+                            <Canvas size={16 * 100} terrain="empty" />
+
+                            {/* <button onClick={this.generateCode.bind(this)}>run</button> */}
+                        </div>
+                        <div className="col-8 p-0">
+                            <TabSelect tabs={[
+                                "Terrain" as CanvasTab,
+                                "Charactors" as CanvasTab,
+                                "Structures" as CanvasTab,
+                                "Enemy" as CanvasTab
+                            ].map((name: CanvasTab) => ({
+                                name: name as string,
+                                active: this.state.canvas.currentTab === name,
+                                callback: this.selectCanvasTab.bind(this, name)
+                            }))} buttons={[]} color="light" color2="dark" />
+                        </div>
+                    </>
                 }
                 {
                     this.state.currentTab === "Code" && <BlocklyArea

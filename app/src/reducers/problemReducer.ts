@@ -1,11 +1,11 @@
-import { CanvasContentExport } from "../components/CanvasContent";
+import { ICanvasContent } from "../components/CanvasContent";
 import ProblemActions from "../actions/problemActions";
 
 
 export interface IProblemState {
     title: string;
     description: string;
-    canvas: CanvasContentExport;
+    canvas: ICanvasContent;
     code: string;
     saved: boolean;
 }

@@ -13,7 +13,7 @@ const FOUR = [
     [0, 1]
 ];
 
-export interface CanvasContentExport {
+export interface ICanvasContent {
     terrain?: number[][];
 }
 

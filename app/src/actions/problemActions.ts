@@ -1,8 +1,8 @@
-import { CanvasContentExport } from "../components/CanvasContent";
+import { ICanvasContent } from "../components/CanvasContent";
 
 
 
-export function setProblem(title: string, description: string, canvas: CanvasContentExport, code: string) {
+export function setProblem(title: string, description: string, canvas: ICanvasContent, code: string) {
     return {
         type: "SET_PROBLEM" as "SET_PROBLEM",
         title,

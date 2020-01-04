@@ -12,16 +12,18 @@ interface ITabSelectProps {
         name: string;
         callback: () => void;
     }[];
+    color: string;
+    color2: string;
 }
 
 const TabSelect: React.FC<ITabSelectProps> = (props) => {
-    return <Navbar bg="info" expand="md" className="py-0">
+    return <Navbar bg={props.color} expand="md" className="py-0">
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="border-0" />
         <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="w-100">
                 {props.tabs.map((tab, i) => <button
                     key={i}
-                    className={`btn rounded-0 ${tab.active ? "btn-light" : "btn-info"}`}
+                    className={`btn rounded-0 ${tab.active ? `btn-${props.color2}` : `btn-${props.color}`}`}
                     onClick={tab.callback}>
                     {tab.name}
                 </button>)}
@@ -29,7 +31,7 @@ const TabSelect: React.FC<ITabSelectProps> = (props) => {
                 <div className="ml-auto">
                     {props.buttons.map((btn, i) => <button
                         key={i}
-                        className={"btn btn-info rounded-0"}
+                        className={`btn btn-${props.color} rounded-0`}
                         onClick={btn.callback}>
                         {btn.name}
                     </button>)}
