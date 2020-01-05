@@ -30,6 +30,12 @@ export function catcher(routerFunction: (req: express.Request, res: express.Resp
                 message: "Internal Server Error"
             });
         }
+        if (!res.headersSent) {
+            res.status(500).json({
+                result: false,
+                message: "No Response"
+            });
+        }
     };
 }
 

@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import AuthActions, { loginSuccess, logoutSuccess, loginFailed } from "../actions/authActions";
+import AuthActions, { loginSuccess, loginFailed, registerSuccess, registerFailed, logoutSuccess } from "../actions/authActions";
 import { push } from "connected-react-router";
 
 
@@ -23,6 +23,30 @@ export function login(username: string, password: string) {
             dispatch(push("/"));
         } else {
             dispatch(loginFailed(result.message));
+        }
+    };
+}
+
+export function register(email: string, username: string, password: string, cpassword: string) {
+    return async (dispatch: Dispatch<AuthActions>) => {
+        const res = await fetch(`${REACT_APP_API_SERVER}/user/register`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                username,
+                password,
+                cpassword
+            })
+        });
+        const result = await res.json();
+
+        if (res.status === 200 && result.result) {
+            dispatch(registerSuccess());
+        } else {
+            dispatch(registerFailed(result.message));
         }
     };
 }

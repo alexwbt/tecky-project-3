@@ -1,11 +1,13 @@
 import React from "react";
 import { ReduxThunkDispatch, IRootState } from "../store";
 import { connect } from "react-redux";
-import { login } from "../thunks/authThunks";
+import { login, register } from "../thunks/authThunks";
 
 interface ILoginProps {
-    login: (username: string, password: string) => void;
     message: string;
+    error: boolean;
+    login: (username: string, password: string) => void;
+    register: (email: string, username: string, password: string, cpassword: string) => void;
 }
 
 interface ILoginStates {
@@ -16,6 +18,8 @@ interface ILoginStates {
     password: string;
     cpassword: string;
 }
+
+type FormInput = "email" | "username" | "password" | "cpassword";
 
 class Login extends React.Component<ILoginProps, ILoginStates> {
 
@@ -39,10 +43,25 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
         this.setState({ ...this.state, register: !this.state.register });
     };
 
-    private submitForm = (event: React.FormEvent<HTMLFormElement>) => {
+    private submitLoginForm = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (this.state.username && this.state.password) {
             this.props.login(this.state.username, this.state.password);
+        }
+    };
+
+    private submitRegisterForm = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (this.state.email
+            && this.state.username
+            && this.state.password
+            && this.state.cpassword === this.state.password) {
+            this.props.register(
+                this.state.email,
+                this.state.username,
+                this.state.password,
+                this.state.cpassword
+            );
         }
     };
 
@@ -54,7 +73,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
         window.removeEventListener('resize', this.updateHeight);
     }
 
-    private inputChange(field: "email" | "username" | "password" | "cpassword", event: React.ChangeEvent<HTMLInputElement>) {
+    private inputChange(field: FormInput, event: React.ChangeEvent<HTMLInputElement>) {
         this.setState({ ...this.state, [field]: event.target.value });
     }
 
@@ -83,9 +102,18 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                 value={this.state.password}
                 onChange={this.inputChange.bind(this, "password")}
                 required />
-            <div className="text-danger pt-1">{this.props.message && this.props.message}</div>
-            <input type="submit" className="btn btn-info py-1 mt-3" value="Login" />
-            <button className="btn btn-link text-info mt-3" onClick={this.toggleRegister}>Register</button>
+            <div className={`pt-1 ${this.props.error ? "text-danger" : "text-success"}`}>
+                {this.props.message && this.props.message}
+            </div>
+            <input
+                type="submit"
+                className="btn btn-info py-1 mt-3"
+                value="Login" />
+            <button
+                className="btn btn-link text-info mt-3"
+                onClick={this.toggleRegister}>
+                Register
+            </button>
         </>
     }
 
@@ -138,9 +166,18 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                 value={this.state.cpassword}
                 onChange={this.inputChange.bind(this, "cpassword")}
                 required />
-            <div className="text-danger pt-1">{this.props.message && this.props.message}</div>
-            <input type="submit" className="btn btn-info py-1 mt-3" value="Register" />
-            <button className="btn btn-link text-info mt-3" onClick={this.toggleRegister}>Login</button>
+            <div className={`pt-1 ${this.props.error ? "text-danger" : "text-success"}`}>
+                {this.props.message && this.props.message}
+            </div>
+            <input
+                type="submit"
+                className="btn btn-info py-1 mt-3"
+                value="Register" />
+            <button
+                className="btn btn-link text-info mt-3"
+                onClick={this.toggleRegister}>
+                Login
+            </button>
         </>
     }
 
@@ -151,7 +188,9 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
             <div className="row align-items-center" style={{ height: this.state.height }}>
                 <div className="col-12">
                     <div className="col-12 col-md-6 p-3 mx-auto" style={{ maxWidth: 500 }}>
-                        <form className="px-3 py-4 rounded shadow bg-light" onSubmit={this.submitForm}>
+                        <form
+                            className="px-3 py-4 rounded shadow bg-light"
+                            onSubmit={this.state.register ? this.submitRegisterForm : this.submitLoginForm}>
                             <h3 className="d-inline">{this.state.register ? "Register" : "Login"}</h3>
                             <span className="float-right">Block<span className="text-info">Dojo</span></span>
                             <hr className="mt-1" />
@@ -166,11 +205,15 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    message: state.auth.message
+    message: state.auth.message,
+    error: state.auth.error
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    login: (username: string, password: string) => dispatch(login(username, password))
+    login: (username: string, password: string) =>
+        dispatch(login(username, password)),
+    register: (email: string, username: string, password: string, cpassword: string) =>
+        dispatch(register(email, username, password, cpassword))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

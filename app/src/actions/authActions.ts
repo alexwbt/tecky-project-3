@@ -13,12 +13,29 @@ export function loginFailed(message: string) {
     };
 }
 
+export function registerSuccess() {
+    return {
+        type: "REGISTER_SUCCESS" as "REGISTER_SUCCESS"
+    };
+}
+
+export function registerFailed(message: string) {
+    return {
+        type: "REGISTER_FAILED" as "REGISTER_FAILED",
+        message
+    };
+}
+
 export function logoutSuccess() {
     return {
         type: "LOGOUT" as "LOGOUT"
     };
 }
 
-type ActionCreators = typeof loginSuccess | typeof loginFailed | typeof logoutSuccess;
+type ActionCreators = typeof loginSuccess
+                    | typeof loginFailed
+                    | typeof registerSuccess
+                    | typeof registerFailed
+                    | typeof logoutSuccess;
 type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;
