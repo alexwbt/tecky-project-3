@@ -90,7 +90,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
     }
 
     render() {
-        return <div className="container-fluid p-0">
+        return <>
             <NavBar>
                 <TabSelect tabs={[
                     "Description" as Tab,
@@ -107,42 +107,43 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     }
                 ]} color="info" color2="light" />
             </NavBar>
-
-            <div className="row w-100 m-0" style={{ height: this.state.height }}>
-                {
-                    this.state.currentTab === "Description" && <div className="col-6 pt-3">
-                        <DescriptionForm />
-                    </div>
-                }
-                {
-                    this.state.currentTab === "Canvas" && <>
-                        <div className="col-4 p-1">
-                            <Canvas size={16 * 100} terrain="empty" editable={true} />
-
-                            {/* <button onClick={this.generateCode.bind(this)}>run</button> */}
+            <div className="container-fluid p-0">
+                <div className="row w-100 m-0" style={{ height: this.state.height }}>
+                    {
+                        this.state.currentTab === "Description" && <div className="col-6 pt-3">
+                            <DescriptionForm />
                         </div>
-                        <div className="col-8 p-0">
-                            <TabSelect tabs={[
-                                "Terrain" as CanvasTab,
-                                "Charactors" as CanvasTab,
-                                "Structures" as CanvasTab,
-                                "Enemy" as CanvasTab
-                            ].map((name: CanvasTab) => ({
-                                name: name as string,
-                                active: this.state.canvas.currentTab === name,
-                                callback: this.selectCanvasTab.bind(this, name)
-                            }))} buttons={[]} color="light" color2="dark" />
-                        </div>
-                    </>
-                }
-                {
-                    this.state.currentTab === "Code" && <BlocklyArea
-                        ref={this.blocklyArea}
-                        height={this.state.height}
-                        className="col-12 p-0" />
-                }
+                    }
+                    {
+                        this.state.currentTab === "Canvas" && <>
+                            <div className="col-4 p-1">
+                                <Canvas size={16 * 100} terrain="empty" editable={true} />
+
+                                {/* <button onClick={this.generateCode.bind(this)}>run</button> */}
+                            </div>
+                            <div className="col-8 p-0">
+                                <TabSelect tabs={[
+                                    "Terrain" as CanvasTab,
+                                    "Charactors" as CanvasTab,
+                                    "Structures" as CanvasTab,
+                                    "Enemy" as CanvasTab
+                                ].map((name: CanvasTab) => ({
+                                    name: name as string,
+                                    active: this.state.canvas.currentTab === name,
+                                    callback: this.selectCanvasTab.bind(this, name)
+                                }))} buttons={[]} color="light" color2="dark" />
+                            </div>
+                        </>
+                    }
+                    {
+                        this.state.currentTab === "Code" && <BlocklyArea
+                            ref={this.blocklyArea}
+                            height={this.state.height}
+                            className="col-12 p-0" />
+                    }
+                </div>
             </div>
-        </div>
+        </>
     }
 
 }

@@ -21,7 +21,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
     private fps: number = 0;
 
     private buttons = [false, false, false];
-    private mouse = { x: 0, y: 0 };
+    private mouse = { x: -1, y: -1 };
 
     private spriteImg: React.RefObject<HTMLImageElement>;
     private content: CanvasContent | null = null;
@@ -38,10 +38,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
             const size = 8;
             let terrain: number[][] = [];
             for (let x = 0; x < size; x++) {
-                terrain.push([]);
-                for (let y = 0; y < size; y++) {
-                    terrain[x].push(Math.floor(Math.random() * 2));
-                }
+                terrain.push(Array(size).fill(0));
             }
             this.content = new CanvasContent(size, this.props.terrain === "empty" ? terrain : this.props.terrain, this.spriteImg.current);
         }
@@ -76,10 +73,10 @@ export default class Canvas extends React.Component<ICanvasProps> {
                     let y = Math.floor((this.mouse.y * canvas.height) / height);
                     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
                     ctx.fillRect(x * width, y * height, width, height);
-                    ctx.strokeStyle = "gray";
-                    ctx.lineWidth = 10;
-                    ctx.rect(x * width, y * height, width, height);
-                    ctx.stroke();
+
+                    if (this.buttons[0]) {
+                        this.content.setTerrain(x, y, 1);
+                    }
                 }
             }
         }
@@ -112,6 +109,10 @@ export default class Canvas extends React.Component<ICanvasProps> {
         this.buttons[event.button] = false;
     };
 
+    private mouseLeave = (event: MouseEvent) => {
+        this.mouse = { x: -1, y: -1 };
+    };
+
     // react component
     componentDidMount() {
         if (this.canvas.current) {
@@ -122,6 +123,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
                 this.canvas.current.addEventListener("mousemove", this.mouseMove);
                 this.canvas.current.addEventListener("mousedown", this.mouseDown);
                 this.canvas.current.addEventListener("mouseup", this.mouseUp);
+                this.canvas.current.addEventListener("mouseleave", this.mouseLeave);
             }
         }
     }
@@ -132,6 +134,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
             this.canvas.current.removeEventListener("mousemove", this.mouseMove);
             this.canvas.current.removeEventListener("mousedown", this.mouseDown);
             this.canvas.current.removeEventListener("mouseup", this.mouseUp);
+            this.canvas.current.removeEventListener("mouseleave", this.mouseLeave);
         }
     }
 

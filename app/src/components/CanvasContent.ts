@@ -30,6 +30,12 @@ export default class CanvasContent {
         this.spriteImg = spriteImg;
     }
 
+    setTerrain(x: number, y: number, tile: number) {
+        if (x >= 0 && x < this.terrainSize && y >= 0 && y < this.terrainSize) {
+            this.terrain[x][y] = tile;
+        }
+    }
+
     getTerrainSize() {
         return this.terrainSize;
     }

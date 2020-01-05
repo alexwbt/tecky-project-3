@@ -8,16 +8,18 @@ interface ITabSelectProps {
         active: boolean;
         callback: () => void;
     }[];
-    buttons: {
+    buttons?: {
         name: string;
         callback: () => void;
     }[];
     color: string;
     color2: string;
+    children?: React.ReactNode;
+    className?: string;
 }
 
 const TabSelect: React.FC<ITabSelectProps> = (props) => {
-    return <Navbar bg={props.color} expand="md" className="py-0">
+    return <Navbar bg={props.color} expand="md" className={"py-0 " + props.className}>
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="border-0" />
         <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="w-100">
@@ -29,7 +31,7 @@ const TabSelect: React.FC<ITabSelectProps> = (props) => {
                 </button>)}
                 {props.children}
                 <div className="ml-auto">
-                    {props.buttons.map((btn, i) => <button
+                    {props.buttons && props.buttons.map((btn, i) => <button
                         key={i}
                         className={`btn btn-${props.color} rounded-0`}
                         onClick={btn.callback}>
