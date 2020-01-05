@@ -131,6 +131,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
 
     private mouseLeave = (event: MouseEvent) => {
         this.mouse = { x: -1, y: -1 };
+        this.buttons = [false, false, false];
     };
 
     // react component

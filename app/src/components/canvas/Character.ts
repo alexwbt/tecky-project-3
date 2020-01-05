@@ -10,7 +10,7 @@ export default class Character {
     constructor(private x: number, private y: number, private type: number) {
         setInterval(() => {
             this.move(Math.floor(Math.random() * 4));
-        }, 100);
+        }, 2000);
     }
 
     move(dir: number) {
@@ -49,7 +49,10 @@ export default class Character {
         const angle = this.moveTo.length ? Math.cos(this.moving * 2 * Math.PI) : 0;
 
         ctx.save();
-        ctx.translate((this.x + 0.5) * tileWidth + mx, (this.y + 0.7 - jumpHeight * 0.1) * tileHeight + my);
+        ctx.translate((this.x + 0.5) * tileWidth + mx, (this.y + 0.6 - jumpHeight * 0.1) * tileHeight + my);
+        ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+        ctx.ellipse(0, 0, width * 0.4, height * 0.2, 0, 0, 2 * Math.PI);
+        ctx.fill();
         ctx.rotate(12 * angle * Math.PI / 180);
         if (this.flip) {
             ctx.scale(-1, 1);
