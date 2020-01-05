@@ -7,6 +7,13 @@ type User = {
     password: string;
 };
 
+type Profile = {
+    user_id: number,
+    email: string,
+    image?: string,
+    experience: number
+};
+
 export default class UserService {
 
     constructor(private knex: Knex) { }
@@ -30,6 +37,10 @@ export default class UserService {
             console.log(err.message);
             throw new Error("Failed To Register");
         }
+    }
+
+    async getProfileWithId(id: number): Promise<Profile> {
+        return (await this.knex.select().from("profile").where("user_id", id))[0];
     }
 
 }

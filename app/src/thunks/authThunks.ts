@@ -16,7 +16,7 @@ export function login(username: string, password: string) {
         });
         const result = await res.json();
 
-        if (res.status === 200 && result.result) {
+        if (res.status === 200 && result.success) {
             localStorage.setItem('token', result.token);
             localStorage.setItem('username', username);
             dispatch(loginSuccess());
@@ -43,7 +43,7 @@ export function register(email: string, username: string, password: string, cpas
         });
         const result = await res.json();
 
-        if (res.status === 200 && result.result) {
+        if (res.status === 200 && result.success) {
             dispatch(registerSuccess());
         } else {
             dispatch(registerFailed(result.message));

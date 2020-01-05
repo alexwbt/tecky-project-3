@@ -5,6 +5,8 @@ import authReducer, { IAuthState } from "./reducers/authReducer";
 import AuthActions from "./actions/authActions";
 import problemReducer, { IProblemState } from "./reducers/problemReducer";
 import ProblemActions from "./actions/problemActions";
+import profileReducer, { IProfileState } from "./reducers/profileReducer";
+import ProfileActions from "./actions/profileActions";
 
 import { routerMiddleware, connectRouter, RouterState } from 'connected-react-router';
 import { createBrowserHistory } from "history";
@@ -13,14 +15,16 @@ export const history = createBrowserHistory();
 export interface IRootState {
     auth: IAuthState;
     problem: IProblemState;
+    profile: IProfileState;
     router: RouterState;
 }
 
-type RootActions = AuthActions | ProblemActions;
+type RootActions = AuthActions | ProblemActions | ProfileActions;
 
 const rootReducer = combineReducers<IRootState>({
     auth: authReducer,
     problem: problemReducer,
+    profile: profileReducer,
     router: connectRouter(history)
 });
 

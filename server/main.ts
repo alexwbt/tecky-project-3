@@ -26,13 +26,13 @@ export function catcher(routerFunction: (req: express.Request, res: express.Resp
         } catch (err) {
             console.log(err.message);
             res.status(500).json({
-                result: false,
+                success: false,
                 message: "Internal Server Error"
             });
         }
         if (!res.headersSent) {
             res.status(500).json({
-                result: false,
+                success: false,
                 message: "No Response"
             });
         }

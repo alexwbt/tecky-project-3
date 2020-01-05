@@ -1,4 +1,5 @@
 import { ICanvasContent } from "../components/CanvasContent";
+import { CallHistoryMethodAction } from "connected-react-router";
 
 
 
@@ -14,5 +15,5 @@ export function setProblem(title: string, description: string, canvas: ICanvasCo
 
 
 type ActionCreators = typeof setProblem;
-type Actions = ReturnType<ActionCreators>;
+type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;

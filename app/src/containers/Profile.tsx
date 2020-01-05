@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { IRootState, ReduxThunkDispatch } from "../store";
 import NavBar from "../components/NavBar";
 import TabSelect from "../components/TabSelect";
+import { getProfile } from "../thunks/profileThunks";
 
 
 interface IProfileProps {
@@ -11,6 +12,10 @@ interface IProfileProps {
             username: string;
         };
     };
+    username: string;
+    email: string;
+    exp: number;
+    getProfile: (username: string) => void;
 }
 
 interface IProfileState {
@@ -26,6 +31,10 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
         this.state = {
             currentTab: "Info"
         };
+    }
+
+    componentDidMount() {
+        this.props.getProfile(this.props.match.params.username);
     }
 
     selectTab(tab: Tab) {
@@ -44,7 +53,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                             className="rounded-circle shadow"
                             style={{ border: "5px solid white" }}
                             alt="user-icon" />
-                        <h2 className="mt-3 mb-0">{this.props.match.params.username}</h2>
+                        <h2 className="mt-3 mb-0">{this.props.username}</h2>
                         <h4 className="text-monospace text-warning">Lvl. 10</h4>
                         <div className="progress w-25 m-auto rounded-pill">
                             <div
@@ -71,8 +80,8 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                 <div className="row pt-2 justify-content-center">
                     {
                         this.state.currentTab === "Info" && <div className="col-6 p-2 text-center">
-                            <h6>username: {this.props.match.params.username}</h6>
-                            <h6>email: patrick@gmail.com</h6>
+                            <h6>username: {this.props.username}</h6>
+                            <h6>email: {this.props.email}</h6>
                         </div>
                     }
                 </div>
@@ -82,8 +91,14 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 
 }
 
-const mapStateToProps = (state: IRootState) => ({});
+const mapStateToProps = (state: IRootState) => ({
+    username: state.profile.username,
+    email: state.profile.email,
+    exp: state.profile.exp
+});
 
-const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({});
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
+    getProfile: (username: string) => dispatch(getProfile(username))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
