@@ -35,7 +35,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     render() {
         return <>
             <NavBar />
-            <div className="container">
+            <div className="container bg-white border shadow">
                 <div className="row">
                     <div className="col-12 text-center mt-4">
                         <img
@@ -58,8 +58,6 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="row pt-4">
                     <TabSelect tabs={[
                         "Info" as Tab,
                         "Posts" as Tab,
@@ -68,9 +66,15 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                         name: tab,
                         active: this.state.currentTab === tab,
                         callback: this.selectTab.bind(this, tab)
-                    }))} color="light" color2="info" className="m-auto text-center rounded-pill">
-
-                    </TabSelect>
+                    }))} color="light" color2="info" className="mt-4 mx-auto text-center rounded-pill" />
+                </div>
+                <div className="row pt-2 justify-content-center">
+                    {
+                        this.state.currentTab === "Info" && <div className="col-6 p-2 text-center">
+                            <h6>username: {this.props.match.params.username}</h6>
+                            <h6>email: patrick@gmail.com</h6>
+                        </div>
+                    }
                 </div>
             </div>
         </>

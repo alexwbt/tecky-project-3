@@ -31,11 +31,18 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
 
     private updateHeight = () => {
         this.setState({ ...this.state, height: window.innerHeight });
-    }
+    };
 
     private toggleRegister = () => {
         this.setState({ ...this.state, register: !this.state.register });
-    }
+    };
+
+    private submitForm = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (this.state.username && this.state.password) {
+            this.props.login(this.state.username, this.state.password);
+        }
+    };
 
     componentDidMount() {
         window.addEventListener('resize', this.updateHeight);
@@ -47,13 +54,6 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
 
     private inputChange(field: "username" | "password" | "cpassword", event: React.ChangeEvent<HTMLInputElement>) {
         this.setState({ ...this.state, [field]: event.target.value });
-    }
-
-    private submitForm(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        if (this.state.username && this.state.password) {
-            this.props.login(this.state.username, this.state.password);
-        }
     }
 
     renderLoginForm() {

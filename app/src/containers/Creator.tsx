@@ -107,7 +107,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     }
                 ]} color="info" color2="light" />
             </NavBar>
-            <div className="container-fluid p-0">
+            <div className="container-fluid p-0 bg-light">
                 <div className="row w-100 m-0" style={{ height: this.state.height }}>
                     {
                         this.state.currentTab === "Description" && <div className="col-6 pt-3">
