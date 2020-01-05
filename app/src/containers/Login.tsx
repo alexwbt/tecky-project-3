@@ -11,6 +11,7 @@ interface ILoginProps {
 interface ILoginStates {
     register: boolean;
     height: number;
+    email: string;
     username: string;
     password: string;
     cpassword: string;
@@ -23,6 +24,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
         this.state = {
             register: false,
             height: window.innerHeight,
+            email: "",
             username: "",
             password: "",
             cpassword: ""
@@ -52,7 +54,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
         window.removeEventListener('resize', this.updateHeight);
     }
 
-    private inputChange(field: "username" | "password" | "cpassword", event: React.ChangeEvent<HTMLInputElement>) {
+    private inputChange(field: "email" | "username" | "password" | "cpassword", event: React.ChangeEvent<HTMLInputElement>) {
         this.setState({ ...this.state, [field]: event.target.value });
     }
 
@@ -89,7 +91,19 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
 
     renderRegisterForm() {
         return <>
-            <label htmlFor="usernameInput" className="input-group-prepend">
+            <label htmlFor="emailInput" className="input-group-prepend">
+                <span className="">Email:</span>
+            </label>
+            <input
+                type="email"
+                id="emailInput"
+                className="form-control"
+                name="email"
+                placeholder="example@email.com"
+                value={this.state.email}
+                onChange={this.inputChange.bind(this, "email")}
+                required />
+            <label htmlFor="emailInput" className="input-group-prepend mt-1">
                 <span className="">Username:</span>
             </label>
             <input
@@ -136,7 +150,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
         }}>
             <div className="row align-items-center" style={{ height: this.state.height }}>
                 <div className="col-12">
-                    <div className="col-12 col-md-6 p-3 mx-auto" style={{ maxWidth: 500}}>
+                    <div className="col-12 col-md-6 p-3 mx-auto" style={{ maxWidth: 500 }}>
                         <form className="px-3 py-4 rounded shadow bg-light" onSubmit={this.submitForm}>
                             <h3 className="d-inline">{this.state.register ? "Register" : "Login"}</h3>
                             <span className="float-right">Block<span className="text-info">Dojo</span></span>
