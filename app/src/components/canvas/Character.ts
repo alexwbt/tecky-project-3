@@ -1,4 +1,4 @@
-import { SIZE, SPRITE_SIZE, EIGHT, ROAD } from "./CanvasContent";
+import { SIZE, EIGHT, ROAD, getSpritePos } from "./CanvasContent";
 
 
 export default class Character {
@@ -39,8 +39,7 @@ export default class Character {
     render(ctx: CanvasRenderingContext2D, tileWidth: number, tileHeight: number, sprite: HTMLImageElement) {
         const width = tileWidth * 0.5;
         const height = tileHeight * 0.5
-        const ix = this.type % SPRITE_SIZE;
-        const iy = Math.floor(this.type / SPRITE_SIZE);
+        const ip = getSpritePos(this.type);
 
         const jumpHeight = this.moveTo.length ? Math.pow(Math.sin(this.moving * 2 * Math.PI), 2) : 0;
 
@@ -48,14 +47,14 @@ export default class Character {
         const my = this.moveTo.length > 0 ? EIGHT[this.moveTo[0]][1] * height * this.moving * 2 : 0;
 
         const angle = this.moveTo.length ? Math.cos(this.moving * 2 * Math.PI) : 0;
-        console.log(this.flip);
+
         ctx.save();
         ctx.translate((this.x + 0.5) * tileWidth + mx, (this.y + 0.7 - jumpHeight * 0.1) * tileHeight + my);
         ctx.rotate(12 * angle * Math.PI / 180);
         if (this.flip) {
             ctx.scale(-1, 1);
         }
-        ctx.drawImage(sprite, ix * SIZE, iy * SIZE, SIZE, SIZE, -0.5 * width, -1 * height, width, height);
+        ctx.drawImage(sprite, ip.x, ip.y, SIZE, SIZE, -0.5 * width, -1 * height, width, height);
         ctx.restore();
     }
 

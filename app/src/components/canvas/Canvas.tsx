@@ -1,13 +1,14 @@
 import React from "react";
 import CanvasContent from "./CanvasContent";
-import tileSprite from "./tileSprite.png";
-import charSprite from "./charSprite.png";
 import Character from "./Character";
 
 
 interface ICanvasProps {
     size: number;
     terrain: number[][] | "empty";
+
+    tileSprite: HTMLImageElement | null;
+    charSprite: HTMLImageElement | null;
 
     editable: boolean;
 }
@@ -26,8 +27,6 @@ export default class Canvas extends React.Component<ICanvasProps> {
     private buttons = [false, false, false];
     private mouse = { x: -1, y: -1 };
 
-    private tilsSpriteImg: React.RefObject<HTMLImageElement>;
-    private charSpriteImg: React.RefObject<HTMLImageElement>;
     private content: CanvasContent | null = null;
 
     public tilePen = 1;
@@ -35,13 +34,11 @@ export default class Canvas extends React.Component<ICanvasProps> {
     constructor(props: ICanvasProps) {
         super(props);
         this.canvas = React.createRef();
-        this.tilsSpriteImg = React.createRef();
-        this.charSpriteImg = React.createRef();
     }
 
     // canvas
     private start() {
-        if (this.tilsSpriteImg.current && this.charSpriteImg.current) {
+        if (this.props.tileSprite && this.props.charSprite) {
             const size = 8;
             let terrain: number[][] = [];
             for (let x = 0; x < size; x++) {
@@ -49,7 +46,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
             }
             this.content = new CanvasContent(size,
                 this.props.terrain === "empty" ? terrain : this.props.terrain,
-                this.tilsSpriteImg.current, this.charSpriteImg.current);
+                this.props.tileSprite, this.props.charSprite);
 
             let player = new Character(0, 0, 0);
             this.content.addCharacter(player);
@@ -163,8 +160,6 @@ export default class Canvas extends React.Component<ICanvasProps> {
 
     render() {
         return <div>
-            <img ref={this.tilsSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
-            <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />
             <canvas ref={this.canvas} className="w-100 h-100 border" onContextMenu={e => e.preventDefault()}></canvas>
         </div>
     }

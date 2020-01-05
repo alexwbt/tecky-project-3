@@ -8,6 +8,15 @@ export const GRASS = 0;
 export const ROAD = 1;
 export const WATER = 2;
 
+export function getSpritePos(i: number) {
+    const ix = i % SPRITE_SIZE;
+    const iy = Math.floor(i / SPRITE_SIZE);
+    return {
+        x: ix * SIZE,
+        y: iy * SIZE
+    };
+}
+
 export const EIGHT = [
     [-1, 0],
     [1, 0],
@@ -93,9 +102,8 @@ export default class CanvasContent {
     }
 
     private renderTile(ctx: CanvasRenderingContext2D, i: number, x: number, y: number, width: number, height: number) {
-        const ix = i % SPRITE_SIZE;
-        const iy = Math.floor(i / SPRITE_SIZE);
-        ctx.drawImage(this.tileSprite, ix * SIZE, iy * SIZE, SIZE, SIZE, x * width, y * height, width, height);
+        const ip = getSpritePos(i);
+        ctx.drawImage(this.tileSprite, ip.x, ip.y, SIZE, SIZE, x * width, y * height, width, height);
     }
 
     private renderTile2(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, offset: number, tile: number, offset2: boolean) {
@@ -122,9 +130,8 @@ export default class CanvasContent {
         ctx.translate((x + 0.5) * width, (y + 0.5) * height);
         ctx.rotate(off.angle * Math.PI / 180);
         const i = offset + count;
-        const ix = i % SPRITE_SIZE;
-        const iy = Math.floor(i / SPRITE_SIZE);
-        ctx.drawImage(this.tileSprite, ix * SIZE, iy * SIZE, SIZE, SIZE, -0.5 * width, -0.5 * height, width, height);
+        const ip = getSpritePos(i);
+        ctx.drawImage(this.tileSprite, ip.x, ip.y, SIZE, SIZE, -0.5 * width, -0.5 * height, width, height);
         ctx.restore();
     }
 

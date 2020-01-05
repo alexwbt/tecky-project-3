@@ -6,6 +6,9 @@ import NavBar from "../components/NavBar";
 import BlocklyArea from "../components/blockly/BlocklyArea";
 import Canvas from "../components/canvas/Canvas";
 
+import tileSprite from "../sprites/tileSprite.png";
+import charSprite from "../sprites/charSprite.png";
+
 const BlocklyJS = require("blockly/javascript");
 
 
@@ -25,6 +28,8 @@ interface ISolverStates {
 class Solver extends React.Component<ISolverProps, ISolverStates> {
 
     private blocklyArea: React.RefObject<BlocklyArea>;
+    private tilsSpriteImg: React.RefObject<HTMLImageElement>;
+    private charSpriteImg: React.RefObject<HTMLImageElement>;
 
     constructor(props: ISolverProps) {
         super(props);
@@ -32,6 +37,8 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
             height: 0
         };
         this.blocklyArea = React.createRef();
+        this.tilsSpriteImg = React.createRef();
+        this.charSpriteImg = React.createRef();
     }
 
     private updateHeight = () => {
@@ -69,8 +76,15 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
             <NavBar />
             <div className="container-fluid p-0 bg-light">
                 <div className="row w-100 m-0" style={{ height: this.state.height }}>
+                    <img ref={this.tilsSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
+                    <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />
                     <div className="col-4 p-1">
-                        <Canvas size={16 * 100} terrain="empty" editable={false} />
+                        <Canvas
+                            tileSprite={this.tilsSpriteImg.current}
+                            charSprite={this.charSpriteImg.current}
+                            size={16 * 100}
+                            terrain="empty"
+                            editable={true} />
                         <button onClick={this.generateCode}>run</button>
                     </div>
                     <BlocklyArea ref={this.blocklyArea} height={this.state.height} className="col-8 p-0" />

@@ -9,6 +9,9 @@ import TabSelect from "../components/TabSelect";
 import DescriptionForm from "../components/DescriptionForm";
 import TileSelector from "../components/canvas/TileSelector";
 
+import tileSprite from "../sprites/tileSprite.png";
+import charSprite from "../sprites/charSprite.png";
+
 const BlocklyJS = require("blockly/javascript");
 
 
@@ -36,6 +39,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     private blocklyArea: React.RefObject<BlocklyArea>;
     private canvas: React.RefObject<Canvas>;
+    private tilsSpriteImg: React.RefObject<HTMLImageElement>;
+    private charSpriteImg: React.RefObject<HTMLImageElement>;
 
     constructor(props: ICreatorProps) {
         super(props);
@@ -48,6 +53,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         };
         this.blocklyArea = React.createRef();
         this.canvas = React.createRef();
+        this.tilsSpriteImg = React.createRef();
+        this.charSpriteImg = React.createRef();
     }
 
     private updateHeight = () => {
@@ -116,6 +123,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     }
                 ]} color="info" color2="light" />
             </NavBar>
+            <img ref={this.tilsSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
+            <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />
             <div className="container-fluid p-0 bg-light">
                 <div className="row w-100 m-0" style={{ height: this.state.height }}>
                     {
@@ -126,9 +135,13 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     {
                         this.state.currentTab === "Canvas" && <>
                             <div className="col-4 p-1">
-                                <Canvas ref={this.canvas} size={16 * 100} terrain="empty" editable={true} />
-
-                                {/* <button onClick={this.generateCode.bind(this)}>run</button> */}
+                                <Canvas
+                                    tileSprite={this.tilsSpriteImg.current}
+                                    charSprite={this.charSpriteImg.current}
+                                    ref={this.canvas}
+                                    size={16 * 100}
+                                    terrain="empty"
+                                    editable={true} />
                             </div>
                             <div className="col-8 p-0">
                                 <TabSelect tabs={[
@@ -141,9 +154,13 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     active: this.state.canvas.currentTab === name,
                                     callback: this.selectCanvasTab.bind(this, name)
                                 }))} buttons={[]} color="light" color2="dark" />
-                                {
-                                    this.state.canvas.currentTab === "Terrain" && <TileSelector select={this.selectTile} />
-                                }
+                                <div className="p-3">
+                                    {
+                                        this.state.canvas.currentTab === "Terrain" && <TileSelector
+                                            tileSprite={this.tilsSpriteImg.current}
+                                            select={this.selectTile} />
+                                    }
+                                </div>
                             </div>
                         </>
                     }
