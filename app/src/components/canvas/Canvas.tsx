@@ -1,6 +1,9 @@
 import React from "react";
 import CanvasContent from "./CanvasContent";
-import sprite from "../sprite.png";
+import tileSprite from "./tileSprite.png";
+import charSprite from "./charSprite.png";
+import GameObject from "./GameObject";
+
 
 interface ICanvasProps {
     size: number;
@@ -23,24 +26,32 @@ export default class Canvas extends React.Component<ICanvasProps> {
     private buttons = [false, false, false];
     private mouse = { x: -1, y: -1 };
 
-    private spriteImg: React.RefObject<HTMLImageElement>;
+    private tilsSpriteImg: React.RefObject<HTMLImageElement>;
+    private charSpriteImg: React.RefObject<HTMLImageElement>;
     private content: CanvasContent | null = null;
+
+    public tilePen = 1;
 
     constructor(props: ICanvasProps) {
         super(props);
         this.canvas = React.createRef();
-        this.spriteImg = React.createRef();
+        this.tilsSpriteImg = React.createRef();
+        this.charSpriteImg = React.createRef();
     }
 
     // canvas
     private start() {
-        if (this.spriteImg.current) {
+        if (this.tilsSpriteImg.current && this.charSpriteImg.current) {
             const size = 8;
             let terrain: number[][] = [];
             for (let x = 0; x < size; x++) {
                 terrain.push(Array(size).fill(0));
             }
-            this.content = new CanvasContent(size, this.props.terrain === "empty" ? terrain : this.props.terrain, this.spriteImg.current);
+            this.content = new CanvasContent(size,
+                this.props.terrain === "empty" ? terrain : this.props.terrain,
+                this.tilsSpriteImg.current, this.charSpriteImg.current);
+
+            this.content.addGameObject(new GameObject(0, 0, 0));
         }
 
         this.fpsStartTime = this.renderStartTime = performance.now();
@@ -51,8 +62,17 @@ export default class Canvas extends React.Component<ICanvasProps> {
         this.renderDelta += (timestamp - this.renderStartTime) / (1000 / 30);
         this.renderStartTime = timestamp;
 
+        let updated = false;
         while (this.renderDelta >= 1) {
             this.renderDelta--;
+            
+            if (this.content) {
+                this.content.update();
+            }
+
+            updated = true;
+        }
+        if (updated) {
             this.fps++;
 
             let ctx = this.ctx;
@@ -63,7 +83,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
                 ctx.fillStyle = "white";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                this.content.renderTerrain(ctx, canvas);
+                this.content.render(ctx, canvas);
 
                 if (this.props.editable) {
                     const terrainSize = this.content.getTerrainSize();
@@ -75,7 +95,9 @@ export default class Canvas extends React.Component<ICanvasProps> {
                     ctx.fillRect(x * width, y * height, width, height);
 
                     if (this.buttons[0]) {
-                        this.content.setTerrain(x, y, 1);
+                        this.content.setTerrain(x, y, this.tilePen);
+                    } else if (this.buttons[2]) {
+                        this.content.setTerrain(x, y, 0);
                     }
                 }
             }
@@ -140,7 +162,8 @@ export default class Canvas extends React.Component<ICanvasProps> {
 
     render() {
         return <div>
-            <img ref={this.spriteImg} src={sprite} className={"d-none"} alt={"sprite"} />
+            <img ref={this.tilsSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
+            <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />
             <canvas ref={this.canvas} className="w-100 h-100 border" onContextMenu={e => e.preventDefault()}></canvas>
         </div>
     }

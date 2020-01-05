@@ -1,4 +1,4 @@
-import { ICanvasContent } from "../components/CanvasContent";
+import { ICanvasContent } from "../components/canvas/CanvasContent";
 import ProblemActions from "../actions/problemActions";
 
 

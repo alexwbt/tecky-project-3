@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { IRootState, ReduxThunkDispatch } from "../store";
 
 import NavBar from "../components/NavBar";
-import BlocklyArea from "../components/BlocklyArea";
-import Canvas from "../components/Canvas";
+import BlocklyArea from "../components/blockly/BlocklyArea";
+import Canvas from "../components/canvas/Canvas";
 
 const BlocklyJS = require("blockly/javascript");
 

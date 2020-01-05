@@ -3,10 +3,11 @@ import { connect } from "react-redux";
 import { IRootState, ReduxThunkDispatch } from "../store";
 
 import NavBar from "../components/NavBar";
-import BlocklyArea from "../components/BlocklyArea";
-import Canvas from "../components/Canvas";
+import BlocklyArea from "../components/blockly/BlocklyArea";
+import Canvas from "../components/canvas/Canvas";
 import TabSelect from "../components/TabSelect";
 import DescriptionForm from "../components/DescriptionForm";
+import TileSelector from "../components/canvas/TileSelector";
 
 const BlocklyJS = require("blockly/javascript");
 
@@ -34,6 +35,7 @@ interface ICreatorStates {
 class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     private blocklyArea: React.RefObject<BlocklyArea>;
+    private canvas: React.RefObject<Canvas>;
 
     constructor(props: ICreatorProps) {
         super(props);
@@ -45,12 +47,19 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             }
         };
         this.blocklyArea = React.createRef();
+        this.canvas = React.createRef();
     }
 
-    updateHeight = () => {
+    private updateHeight = () => {
         const nav = document.getElementById("navagation-bar");
         this.setState({ ...this.state, height: window.innerHeight - (nav ? nav.clientHeight : 0) });
-    }
+    };
+
+    private selectTile = (tile: number) => {
+        if (this.canvas.current) {
+            this.canvas.current.tilePen = tile;
+        }
+    };
 
     componentDidMount() {
         window.addEventListener('resize', this.updateHeight);
@@ -117,7 +126,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     {
                         this.state.currentTab === "Canvas" && <>
                             <div className="col-4 p-1">
-                                <Canvas size={16 * 100} terrain="empty" editable={true} />
+                                <Canvas ref={this.canvas} size={16 * 100} terrain="empty" editable={true} />
 
                                 {/* <button onClick={this.generateCode.bind(this)}>run</button> */}
                             </div>
@@ -132,6 +141,9 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     active: this.state.canvas.currentTab === name,
                                     callback: this.selectCanvasTab.bind(this, name)
                                 }))} buttons={[]} color="light" color2="dark" />
+                                {
+                                    this.state.canvas.currentTab === "Terrain" && <TileSelector select={this.selectTile} />
+                                }
                             </div>
                         </>
                     }
