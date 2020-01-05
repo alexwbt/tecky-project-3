@@ -8,6 +8,7 @@ interface ITileSelectorProps {
 const TileSelector: React.FC<ITileSelectorProps> = (props: ITileSelectorProps) => {
     return <>
         {["Grass", "Road", "Water"].map((tile, i) => <button
+            key={i}
             onClick={props.select.bind(null, i)}
             className="btn btn-light">
             {tile}

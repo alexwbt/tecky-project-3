@@ -2,7 +2,7 @@ import React from "react";
 import CanvasContent from "./CanvasContent";
 import tileSprite from "./tileSprite.png";
 import charSprite from "./charSprite.png";
-import GameObject from "./GameObject";
+import Character from "./Character";
 
 
 interface ICanvasProps {
@@ -51,7 +51,8 @@ export default class Canvas extends React.Component<ICanvasProps> {
                 this.props.terrain === "empty" ? terrain : this.props.terrain,
                 this.tilsSpriteImg.current, this.charSpriteImg.current);
 
-            this.content.addGameObject(new GameObject(0, 0, 0));
+            let player = new Character(0, 0, 0);
+            this.content.addCharacter(player);
         }
 
         this.fpsStartTime = this.renderStartTime = performance.now();
@@ -65,7 +66,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
         let updated = false;
         while (this.renderDelta >= 1) {
             this.renderDelta--;
-            
+
             if (this.content) {
                 this.content.update();
             }

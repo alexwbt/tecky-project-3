@@ -1,14 +1,14 @@
-import GameObject from "./GameObject";
+import Character from "./Character";
 
-const SIZE = 16;
-const SPRITE_SIZE = 8;
+export const SIZE = 16;
+export const SPRITE_SIZE = 8;
 
 // Tiles
-// const GRASS = 0;
-const ROAD = 1;
-const WATER = 2;
+export const GRASS = 0;
+export const ROAD = 1;
+export const WATER = 2;
 
-const EIGHT = [
+export const EIGHT = [
     [-1, 0],
     [1, 0],
     [0, -1],
@@ -33,7 +33,7 @@ export default class CanvasContent {
     private tileSprite: HTMLImageElement;
     private charSprite: HTMLImageElement;
 
-    private objs: GameObject[] = [];
+    private objs: Character[] = [];
 
     constructor(terrainSize: number, terrain: number[][], tileSprite: HTMLImageElement, charSprite: HTMLImageElement) {
         this.terrainSize = terrainSize;
@@ -42,7 +42,7 @@ export default class CanvasContent {
         this.charSprite = charSprite;
     }
 
-    addGameObject(obj: GameObject) {
+    addCharacter(obj: Character) {
         this.objs.push(obj);
     }
 
@@ -65,7 +65,7 @@ export default class CanvasContent {
 
     // updating
     update() {
-        
+        this.objs.forEach(obj => obj.update(this.terrain));
     }
 
     // rendering
@@ -158,7 +158,7 @@ export default class CanvasContent {
 
     private getOffset2(near: number[], count: number, tile: number) {
         const off = this.getOffset(near, count, tile);
-        off.offset++;
+        // off.offset++;
         return off;
     }
 
