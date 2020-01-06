@@ -10,8 +10,16 @@ interface ICanvasProps {
     tileSprite: HTMLImageElement | null;
     charSprite: HTMLImageElement | null;
 
+    pen?: Pen;
+
     editable: boolean;
 }
+
+export type PenType = "tile" | "char";
+export type Pen = {
+    type: PenType,
+    value: number
+};
 
 export default class Canvas extends React.Component<ICanvasProps> {
 
@@ -28,8 +36,6 @@ export default class Canvas extends React.Component<ICanvasProps> {
     private mouse = { x: -1, y: -1 };
 
     private content: CanvasContent | null = null;
-
-    public tilePen = 1;
 
     constructor(props: ICanvasProps) {
         super(props);
@@ -87,16 +93,51 @@ export default class Canvas extends React.Component<ICanvasProps> {
                     const terrainSize = this.content.getTerrainSize();
                     let width = canvas.width / terrainSize;
                     let height = canvas.height / terrainSize;
-                    let x = Math.floor((this.mouse.x * canvas.width) / width);
-                    let y = Math.floor((this.mouse.y * canvas.height) / height);
+                    let mouseX = this.mouse.x * canvas.width;
+                    let mouseY = this.mouse.y * canvas.height;
+                    let x = Math.floor(mouseX / width);
+                    let y = Math.floor(mouseY / height);
                     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
                     ctx.fillRect(x * width, y * height, width, height);
+                    ctx.fillStyle = "red";
+                    ctx.font = "30px Arial";
+                    ctx.fillText(`x: ${x}, y: ${y}`, mouseX, mouseY);
 
-                    if (this.buttons[0]) {
-                        this.content.setTerrain(x, y, this.tilePen);
-                    } else if (this.buttons[2]) {
-                        this.content.setTerrain(x, y, 0);
+                    if (this.buttons[0] && this.props.pen) {
+                        switch (this.props.pen.type) {
+                            case "tile":
+                                this.content.setTerrain(x, y, this.props.pen.value);
+                                break;
+                            case "char":
+                                this.content.addCharacter(new Character(x, y, this.props.pen.value));
+                                break;
+                            default:
+                        }
                     }
+
+
+                    // ctx.strokeStyle = "black";
+                    // ctx.lineWidth = 5;
+                    // for (let x = 0; x < terrainSize; x++) {
+                    //     ctx.beginPath();
+                    //     ctx.moveTo(Math.round(x * width) + 0.5, 0);
+                    //     ctx.lineTo(Math.round(x * width) + 0.5, canvas.height);
+                    //     ctx.stroke();
+                    // }
+                    // ctx.beginPath();
+                    // ctx.moveTo(canvas.width, 0);
+                    // ctx.lineTo(canvas.width, canvas.height);
+                    // ctx.stroke();
+                    // for (let y = 0; y < terrainSize; y++) {
+                    //     ctx.beginPath();
+                    //     ctx.moveTo(0, Math.round(y * height) + 0.5);
+                    //     ctx.lineTo(canvas.width, Math.round(y * height) + 0.5);
+                    //     ctx.stroke();
+                    // }
+                    // ctx.beginPath();
+                    // ctx.moveTo(0, canvas.height);
+                    // ctx.lineTo(canvas.width, canvas.height);
+                    // ctx.stroke();
                 }
             }
         }

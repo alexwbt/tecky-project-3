@@ -7,10 +7,27 @@ export default class Character {
     private moving = 0;
     private flip = false;
 
+    private standOffset = {
+        x: (Math.random() - 0.5) * 0.2,
+        y: (Math.random() - 0.5) * 0.2
+    };
+
     constructor(private x: number, private y: number, private type: number) {
         setInterval(() => {
             this.move(Math.floor(Math.random() * 4));
         }, 2000);
+    }
+
+    getX() {
+        return this.x;
+    }
+
+    getY() {
+        return this.y;
+    }
+
+    getAbsY(tileHeight: number) {
+        return (this.y + 0.6 + this.standOffset.x) * tileHeight + (this.moveTo.length > 0 ? EIGHT[this.moveTo[0]][1] * tileHeight / 2 * this.moving * 2 : 0);
     }
 
     move(dir: number) {
@@ -49,8 +66,9 @@ export default class Character {
         const angle = this.moveTo.length ? Math.cos(this.moving * 2 * Math.PI) : 0;
 
         ctx.save();
-        ctx.translate((this.x + 0.5) * tileWidth + mx, (this.y + 0.6 - jumpHeight * 0.1) * tileHeight + my);
+        ctx.translate((this.x + 0.5 + this.standOffset.x) * tileWidth + mx, (this.y + 0.6 - jumpHeight * 0.1 + this.standOffset.x) * tileHeight + my);
         ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+        ctx.beginPath();
         ctx.ellipse(0, 0, width * 0.4, height * 0.2, 0, 0, 2 * Math.PI);
         ctx.fill();
         ctx.rotate(12 * angle * Math.PI / 180);

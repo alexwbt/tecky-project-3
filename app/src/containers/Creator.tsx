@@ -4,13 +4,14 @@ import { IRootState, ReduxThunkDispatch } from "../store";
 
 import NavBar from "../components/NavBar";
 import BlocklyArea from "../components/blockly/BlocklyArea";
-import Canvas from "../components/canvas/Canvas";
+import Canvas, { Pen } from "../components/canvas/Canvas";
 import TabSelect from "../components/TabSelect";
 import DescriptionForm from "../components/DescriptionForm";
-import TileSelector from "../components/canvas/TileSelector";
+import ObjSelector from "../components/canvas/ObjSelector";
 
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
+import { GRASS, ROAD, WATER, BOB } from "../components/canvas/CanvasContent";
 
 const BlocklyJS = require("blockly/javascript");
 
@@ -24,13 +25,14 @@ interface ICreatorProps {
 }
 
 type Tab = "Description" | "Canvas" | "Code";
-type CanvasTab = "Terrain" | "Charactors" | "Structures" | "Enemy"
+type CanvasTab = "Terrain" | "Characters" | "Structures" | "Enemy"
 
 interface ICreatorStates {
     height: number;
     currentTab: Tab;
     canvas: {
         currentTab: CanvasTab;
+        pen: Pen;
     };
 }
 
@@ -48,7 +50,11 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             height: 0,
             currentTab: "Description",
             canvas: {
-                currentTab: "Terrain"
+                currentTab: "Terrain",
+                pen: {
+                    type: "tile",
+                    value: 1
+                }
             }
         };
         this.blocklyArea = React.createRef();
@@ -64,7 +70,25 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     private selectTile = (tile: number) => {
         if (this.canvas.current) {
-            this.canvas.current.tilePen = tile;
+            this.setState({
+                ...this.state,
+                canvas: {
+                    ...this.state.canvas,
+                    pen: { type: "tile", value: tile }
+                }
+            });
+        }
+    };
+
+    private selectChar = (char: number) => {
+        if (this.canvas.current) {
+            this.setState({
+                ...this.state,
+                canvas: {
+                    ...this.state.canvas,
+                    pen: { type: "char", value: char }
+                }
+            });
         }
     };
 
@@ -98,7 +122,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
     }
 
     selectCanvasTab(tab: CanvasTab) {
-        this.setState({ ...this.state, canvas: { currentTab: tab } });
+        this.setState({ ...this.state, canvas: { ...this.state.canvas, currentTab: tab } });
     }
 
     uploadProblem() {
@@ -138,6 +162,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                 <Canvas
                                     tileSprite={this.tilsSpriteImg.current}
                                     charSprite={this.charSpriteImg.current}
+                                    pen={this.state.canvas.pen}
                                     ref={this.canvas}
                                     size={16 * 100}
                                     terrain="empty"
@@ -146,7 +171,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                             <div className="col-8 p-0">
                                 <TabSelect tabs={[
                                     "Terrain" as CanvasTab,
-                                    "Charactors" as CanvasTab,
+                                    "Characters" as CanvasTab,
                                     "Structures" as CanvasTab,
                                     "Enemy" as CanvasTab
                                 ].map((name: CanvasTab) => ({
@@ -156,9 +181,46 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                 }))} buttons={[]} color="light" color2="dark" />
                                 <div className="p-3">
                                     {
-                                        this.state.canvas.currentTab === "Terrain" && <TileSelector
-                                            tileSprite={this.tilsSpriteImg.current}
+                                        this.state.canvas.currentTab === "Terrain" && <ObjSelector
+                                            objs={[
+                                                {
+                                                    name: "Grass",
+                                                    value: GRASS,
+                                                    index: 0,
+                                                    active: this.state.canvas.pen.type === "tile"
+                                                        && this.state.canvas.pen.value === GRASS
+                                                },
+                                                {
+                                                    name: "Road",
+                                                    value: ROAD,
+                                                    index: 1,
+                                                    active: this.state.canvas.pen.type === "tile"
+                                                        && this.state.canvas.pen.value === ROAD
+                                                },
+                                                {
+                                                    name: "Grass",
+                                                    value: WATER,
+                                                    index: 13,
+                                                    active: this.state.canvas.pen.type === "tile"
+                                                        && this.state.canvas.pen.value === WATER
+                                                }
+                                            ]}
+                                            sprite={this.tilsSpriteImg.current}
                                             select={this.selectTile} />
+                                    }
+                                    {
+                                        this.state.canvas.currentTab === "Characters" && <ObjSelector
+                                            objs={[
+                                                {
+                                                    name: "Bob",
+                                                    value: BOB,
+                                                    index: 0,
+                                                    active: this.state.canvas.pen.type === "char"
+                                                        && this.state.canvas.pen.value === BOB
+                                                }
+                                            ]}
+                                            sprite={this.charSpriteImg.current}
+                                            select={this.selectChar} />
                                     }
                                 </div>
                             </div>
