@@ -30,6 +30,14 @@ export default class Character {
         return (this.y + 0.6 + this.standOffset.x) * tileHeight + (this.moveTo.length > 0 ? EIGHT[this.moveTo[0]][1] * tileHeight / 2 * this.moving * 2 : 0);
     }
 
+    export() {
+        return {
+            x: this.x,
+            y: this.y,
+            type: this.type
+        }
+    }
+
     move(dir: number) {
         this.moveTo.push(dir);
     }

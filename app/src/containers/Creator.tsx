@@ -11,7 +11,7 @@ import ObjSelector from "../components/canvas/ObjSelector";
 
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
-import { GRASS, ROAD, WATER, BOB } from "../components/canvas/CanvasContent";
+import { GRASS, ROAD, WATER, BOB, ICanvasContent } from "../components/canvas/CanvasContent";
 
 const BlocklyJS = require("blockly/javascript");
 
@@ -241,6 +241,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
 const mapStateToProps = (state: IRootState) => ({});
 
-const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({});
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
+    // uploadProblem: (canvasContent: ICanvasContent) => dispatch()
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator);

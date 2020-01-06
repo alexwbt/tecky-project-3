@@ -36,6 +36,7 @@ export const EIGHT = [
 export interface ICanvasContent {
     terrainSize?: number;
     terrain?: number[][];
+    chars?: { x: number, y: number, type: number }[];
 }
 
 export default class CanvasContent {
@@ -45,19 +46,20 @@ export default class CanvasContent {
     private tileSprite: HTMLImageElement;
     private charSprite: HTMLImageElement;
 
-    private objs: Character[] = [];
+    private chars: Character[];
 
-    constructor(terrainSize: number, terrain: number[][], tileSprite: HTMLImageElement, charSprite: HTMLImageElement) {
+    constructor(terrainSize: number, terrain: number[][], tileSprite: HTMLImageElement, charSprite: HTMLImageElement, chars: Character[] = []) {
         this.terrainSize = terrainSize;
         this.terrain = terrain;
         this.tileSprite = tileSprite;
         this.charSprite = charSprite;
+        this.chars = chars;
     }
 
     addCharacter(obj: Character) {
-        const char = this.objs.find(o => o.getX() === obj.getX() && o.getY() === obj.getY());
+        const char = this.chars.find(o => o.getX() === obj.getX() && o.getY() === obj.getY());
         if (!char) {
-            this.objs.push(obj);
+            this.chars.push(obj);
         }
     }
 
@@ -74,13 +76,14 @@ export default class CanvasContent {
     getContent() {
         return {
             terrainSize: this.terrainSize,
-            terrain: this.terrain
+            terrain: this.terrain,
+            chars: this.chars.map(char => char.export())
         };
     }
 
     // updating
     update() {
-        this.objs.forEach(obj => obj.update(this.terrain));
+        this.chars.forEach(obj => obj.update(this.terrain));
     }
 
     // rendering
@@ -104,8 +107,8 @@ export default class CanvasContent {
             }
         }
 
-        this.objs.sort((a, b) => a.getAbsY(height) - b.getAbsY(height));
-        this.objs.forEach(obj => obj.render(ctx, width, height, this.charSprite));
+        this.chars.sort((a, b) => a.getAbsY(height) - b.getAbsY(height));
+        this.chars.forEach(obj => obj.render(ctx, width, height, this.charSprite));
     }
 
     private renderTile(ctx: CanvasRenderingContext2D, i: number, x: number, y: number, width: number, height: number) {
@@ -140,7 +143,7 @@ export default class CanvasContent {
         ctx.drawImage(this.tileSprite, ip.x, ip.y, SIZE, SIZE, -0.5 * width, -0.5 * height, width, height);
 
         ctx.restore();
-        
+
         if (corner) {
             this.renderTileCorner(ctx, x, y, width, height, cornerIndex, near, count);
         }
@@ -166,7 +169,7 @@ export default class CanvasContent {
             [0, -0.5, nearFour[2], nearFour[1]],
             [0, 0, nearFour[1], nearFour[3]],
         ];
-        
+
         ctx.save();
         ctx.translate((x + 0.5) * width, (y + 0.5) * height);
         const ip = getSpritePos(index);
