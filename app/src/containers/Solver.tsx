@@ -87,7 +87,11 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                             editable={true} />
                         <button onClick={this.generateCode}>run</button>
                     </div>
-                    <BlocklyArea ref={this.blocklyArea} height={this.state.height} className="col-8 p-0" />
+                    <BlocklyArea
+                        useCategory={true}
+                        ref={this.blocklyArea}
+                        height={this.state.height}
+                        className="col-8 p-0" />
                 </div>
             </div>
         </>

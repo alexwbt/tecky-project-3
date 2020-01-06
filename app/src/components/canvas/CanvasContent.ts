@@ -9,7 +9,7 @@ export const ROAD = 1;
 export const WATER = 2;
 
 // Chars
-export const BOB = 0;
+export const JASON = 0;
 
 export function getSpritePos(i: number) {
     const ix = i % SPRITE_SIZE;

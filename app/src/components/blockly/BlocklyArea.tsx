@@ -1,12 +1,15 @@
 import React from 'react';
-import BlocklyComponent, { Block, Value, Field, Shadow, Category } from "./BlocklyComponent"
+import BlocklyComponent, { Category } from "./BlocklyComponent"
 import 'blockly/blocks';
 import "./customBlocks.ts";
+import { getToolBox, getBlock } from './toolbox';
 
 
 interface IBlocklyAreaProps {
     className: string;
     height: number;
+    toolBox?: number[];
+    useCategory: boolean;
 }
 
 export default class BlocklyArea extends React.Component<IBlocklyAreaProps> {
@@ -18,11 +21,29 @@ export default class BlocklyArea extends React.Component<IBlocklyAreaProps> {
     }
 
     render() {
+        const data = getToolBox(this.props.toolBox);
+        const eachBlock = (block: string, i: number) => <React.Fragment key={i}>
+            {getBlock(block)}
+        </React.Fragment>
         return <BlocklyComponent
             ref={e => this.simpleWorkspace = e}
             initialXml={``}
             className={this.props.className}>
-            <Category name="Custom" categorystyle="loop_category">
+            {
+                this.props.useCategory ?
+                    Array.from(data.toolBox).map((cat, i) => {
+                        return <Category name={cat[0]} key={i}>
+                            {cat[1].map(eachBlock)}
+                        </Category>
+                    })
+                    :
+                    data.blockList.map(eachBlock)
+            }
+        </BlocklyComponent>
+    }
+}
+
+/* {/* <Category name="Custom" categorystyle="loop_category">
                 <Block type="console_log" />
                 <Block type="testing" />
             </Category>
@@ -253,7 +274,7 @@ export default class BlocklyArea extends React.Component<IBlocklyAreaProps> {
                         <Shadow type="text"></Shadow>
                     </Value>
                 </Block>
-                {/* <label text="Input/Output:" web-class="ioLabel"></label> */}
+                 <label text="Input/Output:" web-class="ioLabel"></label>
                 <Block type="text_print">
                     <Value name="TEXT">
                         <Shadow type="text">
@@ -271,7 +292,7 @@ export default class BlocklyArea extends React.Component<IBlocklyAreaProps> {
             </Category>
             <Category name="Lists" categorystyle="list_category">
                 <Block type="lists_create_with">
-                    {/* <mutation items="0"></mutation> */}
+                     <mutation items="0"></mutation>
                 </Block>
                 <Block type="lists_create_with"></Block>
                 <Block type="lists_repeat">
@@ -360,7 +381,4 @@ export default class BlocklyArea extends React.Component<IBlocklyAreaProps> {
                 </Block>
             </Category>
             <Category name="Variables" categorystyle="variable_category" custom="VARIABLE"></Category>
-            <Category name="Functions" categorystyle="procedure_category" custom="PROCEDURE"></Category>
-        </BlocklyComponent>
-    }
-}
+            <Category name="Functions" categorystyle="procedure_category" custom="PROCEDURE"></Category> */

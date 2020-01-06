@@ -8,10 +8,11 @@ import Canvas, { Pen } from "../components/canvas/Canvas";
 import TabSelect from "../components/TabSelect";
 import DescriptionForm from "../components/DescriptionForm";
 import ObjSelector from "../components/canvas/ObjSelector";
+import BlockSelector from "../components/blockly/BlockSelector";
 
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
-import { GRASS, ROAD, WATER, BOB, ICanvasContent } from "../components/canvas/CanvasContent";
+import { GRASS, ROAD, WATER, JASON } from "../components/canvas/CanvasContent";
 
 const BlocklyJS = require("blockly/javascript");
 
@@ -25,7 +26,7 @@ interface ICreatorProps {
 }
 
 type Tab = "Description" | "Canvas" | "Code";
-type CanvasTab = "Terrain" | "Characters" | "Structures" | "Enemy"
+type CanvasTab = "Terrain" | "Characters" | "Structures" | "Enemy";
 
 interface ICreatorStates {
     height: number;
@@ -158,7 +159,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     }
                     {
                         this.state.currentTab === "Canvas" && <>
-                            <div className="col-4 p-1">
+                            <div className="col-lg-4 p-1">
                                 <Canvas
                                     tileSprite={this.tilsSpriteImg.current}
                                     charSprite={this.charSpriteImg.current}
@@ -168,7 +169,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     terrain="empty"
                                     editable={true} />
                             </div>
-                            <div className="col-8 p-0">
+                            <div className="col-lg-4 p-0">
                                 <TabSelect tabs={[
                                     "Terrain" as CanvasTab,
                                     "Characters" as CanvasTab,
@@ -179,7 +180,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     active: this.state.canvas.currentTab === name,
                                     callback: this.selectCanvasTab.bind(this, name)
                                 }))} buttons={[]} color="light" color2="dark" />
-                                <div className="p-3">
+                                <div className="p-3 border-top">
                                     {
                                         this.state.canvas.currentTab === "Terrain" && <ObjSelector
                                             objs={[
@@ -212,11 +213,11 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                         this.state.canvas.currentTab === "Characters" && <ObjSelector
                                             objs={[
                                                 {
-                                                    name: "Bob",
-                                                    value: BOB,
+                                                    name: "Jason",
+                                                    value: JASON,
                                                     index: 0,
                                                     active: this.state.canvas.pen.type === "char"
-                                                        && this.state.canvas.pen.value === BOB
+                                                        && this.state.canvas.pen.value === JASON
                                                 }
                                             ]}
                                             sprite={this.charSpriteImg.current}
@@ -224,10 +225,15 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     }
                                 </div>
                             </div>
+                            <div className="col-lg-4 p-0">
+                                <BlockSelector />
+                            </div>
                         </>
                     }
                     {
                         this.state.currentTab === "Code" && <BlocklyArea
+                            useCategory={true}
+                            // toolBox={[2, 0, 5, 56, 4]}
                             ref={this.blocklyArea}
                             height={this.state.height}
                             className="col-12 p-0" />
