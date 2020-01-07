@@ -1,15 +1,39 @@
 import Character from "./Character";
+import GameObject from "./GameObject";
 
 export const SIZE = 16;
 export const SPRITE_SIZE = 8;
 
 // Tiles
-export const GRASS = 0;
-export const ROAD = 1;
-export const WATER = 2;
+export enum Tile {
+    GRASS,
+    ROAD,
+    WATER
+}
 
 // Chars
-export const JASON = 0;
+export enum Char {
+    JASON,
+    OWEN,
+    PATRICK,
+    HARRY,
+    SHERMAN,
+    WALLACE,
+    RONALD,
+    RAYMEND,
+    STEVEN,
+    OTIS,
+    ANDY,
+    SUNNY
+}
+
+// Objs
+export enum Obj {
+    GOLD_COIN,
+    SILV_COIN,
+    BLUE_GEM,
+    GREEN_GEM
+}
 
 export function getSpritePos(i: number) {
     const ix = i % SPRITE_SIZE;
@@ -35,23 +59,26 @@ export const EIGHT = [
 
 export interface ICanvasContent {
     terrainSize?: number;
-    terrain?: number[][];
-    chars?: { x: number, y: number, type: number }[];
+    terrain?: Tile[][];
+    objs?: Obj[][];
+    chars?: { x: number, y: number, type: Char }[];
 }
 
 export default class CanvasContent {
 
     private terrainSize: number;
-    private terrain: number[][];
+    private terrain: Tile[][];
     private tileSprite: HTMLImageElement;
     private charSprite: HTMLImageElement;
+    private objSprite: HTMLImageElement;
 
     private chars: Character[];
+    private objs: GameObject[][];
 
-    constructor(content: ICanvasContent, tileSprite: HTMLImageElement, charSprite: HTMLImageElement) {
+    constructor(content: ICanvasContent, tileSprite: HTMLImageElement, charSprite: HTMLImageElement, objSprite: HTMLImageElement) {
         if (!content.terrainSize || !content.terrain) {
             const size = 8;
-            let terrain: number[][] = [];
+            let terrain: Tile[][] = [];
             for (let x = 0; x < size; x++) {
                 terrain.push(Array(size).fill(0));
             }
@@ -61,13 +88,29 @@ export default class CanvasContent {
             this.terrainSize = content.terrainSize;
             this.terrain = content.terrain;
         }
+
         this.chars = [];
         if (content.chars) {
             content.chars.map(char => this.addCharacter(new Character(char.x, char.y, char.type)))
         }
 
+        this.objs = [];
+        if (content.objs) {
+            for (let x = 0; x < this.terrainSize; x++) {
+                this.objs[x] = [];
+                for (let y = 0; y < this.terrainSize; y++) {
+                    this.objs[x][y] = new GameObject(content.objs[x][y]);
+                }
+            }
+        } else {
+            for (let x = 0; x < this.terrainSize; x++) {
+                this.objs[x] = Array(this.terrainSize).fill(null);
+            }
+        }
+
         this.tileSprite = tileSprite;
         this.charSprite = charSprite;
+        this.objSprite = objSprite;
     }
 
     addCharacter(obj: Character) {
@@ -77,9 +120,15 @@ export default class CanvasContent {
         }
     }
 
-    setTerrain(x: number, y: number, tile: number) {
+    setTerrain(x: number, y: number, tile: Tile) {
         if (x >= 0 && x < this.terrainSize && y >= 0 && y < this.terrainSize) {
             this.terrain[x][y] = tile;
+        }
+    }
+
+    setObject(x: number, y: number, obj: Obj) {
+        if (x >= 0 && x < this.terrainSize && y >= 0 && y < this.terrainSize) {
+            this.objs[x][y] = new GameObject(obj);
         }
     }
 
@@ -97,7 +146,13 @@ export default class CanvasContent {
 
     // updating
     update() {
-        this.chars.forEach(obj => obj.update(this.terrain));
+        this.chars.forEach(char => char.update(this.terrain));
+
+        for (let x = 0; x < this.terrainSize; x++) {
+            for (let y = 0; y < this.terrainSize; y++) {
+                this.objs[x][y]?.update();
+            }
+        }
     }
 
     // rendering
@@ -109,10 +164,10 @@ export default class CanvasContent {
         for (let x = 0; x < this.terrainSize; x++) {
             for (let y = 0; y < this.terrainSize; y++) {
                 switch (this.terrain[x][y]) {
-                    case ROAD:
+                    case Tile.ROAD:
                         this.renderTile2(ctx, x, y, width, height, 1);
                         break;
-                    case WATER:
+                    case Tile.WATER:
                         this.renderTile2(ctx, x, y, width, height, 7, true, 13);
                         break;
                     default:
@@ -123,6 +178,12 @@ export default class CanvasContent {
 
         this.chars.sort((a, b) => a.getAbsY(height) - b.getAbsY(height));
         this.chars.forEach(obj => obj.render(ctx, width, height, this.charSprite));
+
+        for (let x = 0; x < this.terrainSize; x++) {
+            for (let y = 0; y < this.terrainSize; y++) {
+                this.objs[x][y]?.render(ctx, x, y, width, height, this.objSprite);
+            }
+        }
     }
 
     private renderTile(ctx: CanvasRenderingContext2D, i: number, x: number, y: number, width: number, height: number) {

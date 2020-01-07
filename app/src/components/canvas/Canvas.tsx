@@ -1,9 +1,10 @@
 import React from "react";
-import CanvasContent, { ICanvasContent } from "./CanvasContent";
+import CanvasContent, { ICanvasContent, Tile, Char, Obj } from "./CanvasContent";
 import Character from "./Character";
 import { IRootState, ReduxThunkDispatch } from "../../store";
 import { connect } from "react-redux";
 import { setCanvasContent } from "../../actions/problemActions";
+import { CanvasTab } from "../../containers/Creator";
 
 
 interface ICanvasProps {
@@ -14,17 +15,13 @@ interface ICanvasProps {
 
     tileSprite: HTMLImageElement | null;
     charSprite: HTMLImageElement | null;
+    objSprite: HTMLImageElement | null;
 
-    pen?: Pen;
+    pen?: Tile | Char | Obj;
+    currentTab?: CanvasTab;
 
     editable: boolean;
 }
-
-export type PenType = "tile" | "char";
-export type Pen = {
-    type: PenType,
-    value: number
-};
 
 class Canvas extends React.Component<ICanvasProps> {
 
@@ -49,8 +46,8 @@ class Canvas extends React.Component<ICanvasProps> {
 
     // canvas
     private start() {
-        if (this.props.tileSprite && this.props.charSprite) {
-            this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite);
+        if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
+            this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite);
         }
 
         this.fpsStartTime = this.renderStartTime = performance.now();
@@ -98,13 +95,18 @@ class Canvas extends React.Component<ICanvasProps> {
                     ctx.font = "30px Arial";
                     ctx.fillText(`x: ${x}, y: ${y}`, mouseX, mouseY);
 
-                    if (this.buttons[0] && this.props.pen) {
-                        switch (this.props.pen.type) {
-                            case "tile":
-                                this.content.setTerrain(x, y, this.props.pen.value);
+                    if (this.buttons[0] && this.props.currentTab) {
+                        switch (this.props.currentTab) {
+                            case "Terrain":
+                                this.content.setTerrain(x, y, this.props.pen as Tile);
                                 break;
-                            case "char":
-                                this.content.addCharacter(new Character(x, y, this.props.pen.value));
+                            case "Characters":
+                                this.content.addCharacter(new Character(x, y, this.props.pen as Char));
+                                this.buttons[0] = false;
+                                break;
+                            case "Objects":
+                                this.content.setObject(x, y, this.props.pen as Obj);
+                                this.buttons[0] = false;
                                 break;
                             default:
                         }
