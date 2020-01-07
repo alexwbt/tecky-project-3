@@ -6,8 +6,11 @@ export async function up(knex: Knex): Promise<any> {
         table.integer("user_id").unsigned().unique().notNullable();
         table.foreign("user_id").references("user.id");
         table.string("email").unique().notNullable();
+        table.integer("year").notNullable();
         table.string("image");
         table.integer("experience").unsigned().defaultTo(0);
+        table.integer("role_id").unsigned().notNullable();
+        table.foreign("role_id").references("role.id");
         table.timestamps(false, true);
     });
 }
