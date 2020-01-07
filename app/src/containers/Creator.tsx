@@ -45,7 +45,7 @@ interface ICreatorStates {
 class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     private blocklyArea: React.RefObject<BlocklyArea>;
-    private canvas: React.RefObject<Canvas>;
+    // private canvas: React.RefObject<Canvas>;
     private tilsSpriteImg: React.RefObject<HTMLImageElement>;
     private charSpriteImg: React.RefObject<HTMLImageElement>;
 
@@ -63,7 +63,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             }
         };
         this.blocklyArea = React.createRef();
-        this.canvas = React.createRef();
+        // this.canvas = React.createRef();
         this.tilsSpriteImg = React.createRef();
         this.charSpriteImg = React.createRef();
     }
@@ -74,27 +74,23 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
     };
 
     private selectTile = (tile: number) => {
-        if (this.canvas.current) {
-            this.setState({
-                ...this.state,
-                canvas: {
-                    ...this.state.canvas,
-                    pen: { type: "tile", value: tile }
-                }
-            });
-        }
+        this.setState({
+            ...this.state,
+            canvas: {
+                ...this.state.canvas,
+                pen: { type: "tile", value: tile }
+            }
+        });
     };
 
     private selectChar = (char: number) => {
-        if (this.canvas.current) {
-            this.setState({
-                ...this.state,
-                canvas: {
-                    ...this.state.canvas,
-                    pen: { type: "char", value: char }
-                }
-            });
-        }
+        this.setState({
+            ...this.state,
+            canvas: {
+                ...this.state.canvas,
+                pen: { type: "char", value: char }
+            }
+        });
     };
 
     componentDidMount() {
@@ -168,9 +164,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     tileSprite={this.tilsSpriteImg.current}
                                     charSprite={this.charSpriteImg.current}
                                     pen={this.state.canvas.pen}
-                                    ref={this.canvas}
+                                    // ref={this.canvas}
                                     size={16 * 100}
-                                    terrain="empty"
                                     editable={true} />
                             </div>
                             <div className="col-lg-4 p-0">

@@ -1,5 +1,6 @@
 import { CallHistoryMethodAction } from "connected-react-router";
 import { BlockList } from "../components/blockly/toolbox";
+import { ICanvasContent } from "../components/canvas/CanvasContent";
 
 
 
@@ -18,6 +19,13 @@ export function setAvalibleBlocks(blocks: BlockList, useCategory: boolean) {
         type: "SET_AVALIBLE_BLOCKS" as "SET_AVALIBLE_BLOCKS",
         blocks,
         useCategory
+    };
+}
+
+export function setCanvasContent(content: ICanvasContent) {
+    return {
+        type: "SET_CANVAS_CONTENT" as "SET_CANVAS_CONTENT",
+        content
     };
 }
 
@@ -43,6 +51,6 @@ export function toggleUseCategory() {
 }
 
 
-type ActionCreators = typeof toggleCategory | typeof toggleBlock | typeof toggleUseCategory; //typeof setProblem | typeof setAvalibleBlocks;
+type ActionCreators = typeof toggleCategory | typeof toggleBlock | typeof toggleUseCategory | typeof setCanvasContent; //typeof setProblem | typeof setAvalibleBlocks;
 type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;

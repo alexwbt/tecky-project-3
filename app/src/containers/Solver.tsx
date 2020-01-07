@@ -87,7 +87,6 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                             tileSprite={this.tilsSpriteImg.current}
                             charSprite={this.charSpriteImg.current}
                             size={16 * 100}
-                            terrain="empty"
                             editable={true} />
                         <button onClick={this.generateCode}>run</button>
                     </div>

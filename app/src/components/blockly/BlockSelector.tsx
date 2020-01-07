@@ -26,7 +26,6 @@ class BlockSelector extends React.Component<IBlockSelectorProps> {
     render() {
         return <div className="p-3 border-left" style={{ overflow: "scroll", height: this.props.height }}>
             <h3>Block Selector</h3>
-            <p>Select any block you want the player to be able to use.</p>
             <div className="checkbox">
                 <label className="m-0 w-100 p-2">
                     <input
@@ -40,6 +39,7 @@ class BlockSelector extends React.Component<IBlockSelectorProps> {
                     <h6 className="pl-3 d-inline">Use Category</h6>
                 </label>
             </div>
+            <p>Select any block you want the player to be able to use.</p>
             {Object.keys(blocklyBlocks).map((cat, i) => {
                 return <div key={i} className="checkbox">
                     <label className="m-0 w-100 p-2">

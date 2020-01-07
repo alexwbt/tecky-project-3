@@ -1,11 +1,16 @@
 import React from "react";
-import CanvasContent from "./CanvasContent";
+import CanvasContent, { ICanvasContent } from "./CanvasContent";
 import Character from "./Character";
+import { IRootState, ReduxThunkDispatch } from "../../store";
+import { connect } from "react-redux";
+import { setCanvasContent } from "../../actions/problemActions";
 
 
 interface ICanvasProps {
+    content: ICanvasContent;
+    setContent: (content: ICanvasContent) => void;
+
     size: number;
-    terrain: number[][] | "empty";
 
     tileSprite: HTMLImageElement | null;
     charSprite: HTMLImageElement | null;
@@ -21,7 +26,7 @@ export type Pen = {
     value: number
 };
 
-export default class Canvas extends React.Component<ICanvasProps> {
+class Canvas extends React.Component<ICanvasProps> {
 
     private canvas: React.RefObject<HTMLCanvasElement>;
     private ctx: CanvasRenderingContext2D | null = null;
@@ -45,14 +50,26 @@ export default class Canvas extends React.Component<ICanvasProps> {
     // canvas
     private start() {
         if (this.props.tileSprite && this.props.charSprite) {
-            const size = 8;
-            let terrain: number[][] = [];
-            for (let x = 0; x < size; x++) {
-                terrain.push(Array(size).fill(0));
+
+            if (this.props.content.terrainSize
+                && this.props.content.terrain) {
+                this.content = new CanvasContent(
+                    this.props.content.terrainSize,
+                    this.props.content.terrain,
+                    this.props.tileSprite,
+                    this.props.charSprite);
+            } else {
+                const size = 8;
+                let terrain: number[][] = [];
+                for (let x = 0; x < size; x++) {
+                    terrain.push(Array(size).fill(0));
+                }
+                this.content = new CanvasContent(
+                    size,
+                    terrain,
+                    this.props.tileSprite,
+                    this.props.charSprite);
             }
-            this.content = new CanvasContent(size,
-                this.props.terrain === "empty" ? terrain : this.props.terrain,
-                this.props.tileSprite, this.props.charSprite);
 
             let player = new Character(0, 0, 0);
             this.content.addCharacter(player);
@@ -114,30 +131,6 @@ export default class Canvas extends React.Component<ICanvasProps> {
                             default:
                         }
                     }
-
-
-                    // ctx.strokeStyle = "black";
-                    // ctx.lineWidth = 5;
-                    // for (let x = 0; x < terrainSize; x++) {
-                    //     ctx.beginPath();
-                    //     ctx.moveTo(Math.round(x * width) + 0.5, 0);
-                    //     ctx.lineTo(Math.round(x * width) + 0.5, canvas.height);
-                    //     ctx.stroke();
-                    // }
-                    // ctx.beginPath();
-                    // ctx.moveTo(canvas.width, 0);
-                    // ctx.lineTo(canvas.width, canvas.height);
-                    // ctx.stroke();
-                    // for (let y = 0; y < terrainSize; y++) {
-                    //     ctx.beginPath();
-                    //     ctx.moveTo(0, Math.round(y * height) + 0.5);
-                    //     ctx.lineTo(canvas.width, Math.round(y * height) + 0.5);
-                    //     ctx.stroke();
-                    // }
-                    // ctx.beginPath();
-                    // ctx.moveTo(0, canvas.height);
-                    // ctx.lineTo(canvas.width, canvas.height);
-                    // ctx.stroke();
                 }
             }
         }
@@ -198,12 +191,30 @@ export default class Canvas extends React.Component<ICanvasProps> {
             this.canvas.current.removeEventListener("mouseup", this.mouseUp);
             this.canvas.current.removeEventListener("mouseleave", this.mouseLeave);
         }
+
+        if (this.content) {
+            this.props.setContent(this.content.getContent());
+        }
     }
 
     render() {
         return <div>
-            <canvas ref={this.canvas} className="w-100 h-100 border" onContextMenu={e => e.preventDefault()}></canvas>
+            <canvas
+                ref={this.canvas}
+                className="w-100 h-100 border"
+                onContextMenu={e => e.preventDefault()}>
+            </canvas>
         </div>
     }
 
 }
+
+const mapStateToProps = (state: IRootState) => ({
+    content: state.problem.canvas
+});
+
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
+    setContent: (content: ICanvasContent) => dispatch(setCanvasContent(content))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Canvas);
