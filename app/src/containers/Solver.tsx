@@ -8,6 +8,7 @@ import Canvas from "../components/canvas/Canvas";
 
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
+import { BlockList } from "../components/blockly/toolbox";
 
 const BlocklyJS = require("blockly/javascript");
 
@@ -18,6 +19,9 @@ interface ISolverProps {
             problemId: number;
         };
     };
+    useCategory: boolean;
+    avalibleBlocks: BlockList;
+    avalibleCategories: string[];
 }
 
 interface ISolverStates {
@@ -88,7 +92,9 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                         <button onClick={this.generateCode}>run</button>
                     </div>
                     <BlocklyArea
-                        useCategory={true}
+                        useCategory={this.props.useCategory}
+                        avalibleBlocks={this.props.avalibleBlocks}
+                        avalibleCategories={this.props.avalibleCategories}
                         ref={this.blocklyArea}
                         height={this.state.height}
                         className="col-8 p-0" />
@@ -99,7 +105,11 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
 
 }
 
-const mapStateToProps = (state: IRootState) => ({});
+const mapStateToProps = (state: IRootState) => ({
+    useCategory: state.problem.useCategory,
+    avalibleBlocks: state.problem.avalibleBlocks,
+    avalibleCategories: state.problem.avalibleCategories
+});
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({});
 

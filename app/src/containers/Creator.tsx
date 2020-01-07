@@ -13,6 +13,7 @@ import BlockSelector from "../components/blockly/BlockSelector";
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
 import { GRASS, ROAD, WATER, JASON } from "../components/canvas/CanvasContent";
+import { BlockList } from "../components/blockly/toolbox";
 
 const BlocklyJS = require("blockly/javascript");
 
@@ -23,6 +24,9 @@ interface ICreatorProps {
             problemId: number;
         };
     };
+    useCategory: boolean;
+    avalibleBlocks: BlockList;
+    avalibleCategories: string[];
 }
 
 type Tab = "Description" | "Canvas" | "Code";
@@ -226,14 +230,15 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                 </div>
                             </div>
                             <div className="col-lg-4 p-0">
-                                <BlockSelector />
+                                <BlockSelector height={this.state.height} />
                             </div>
                         </>
                     }
                     {
                         this.state.currentTab === "Code" && <BlocklyArea
-                            useCategory={true}
-                            // toolBox={[2, 0, 5, 56, 4]}
+                            useCategory={this.props.useCategory}
+                            avalibleBlocks={this.props.avalibleBlocks}
+                            avalibleCategories={this.props.avalibleCategories}
                             ref={this.blocklyArea}
                             height={this.state.height}
                             className="col-12 p-0" />
@@ -245,7 +250,11 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
 }
 
-const mapStateToProps = (state: IRootState) => ({});
+const mapStateToProps = (state: IRootState) => ({
+    useCategory: state.problem.useCategory,
+    avalibleBlocks: state.problem.avalibleBlocks,
+    avalibleCategories: state.problem.avalibleCategories
+});
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     // uploadProblem: (canvasContent: ICanvasContent) => dispatch()

@@ -2,13 +2,14 @@ import React from 'react';
 import BlocklyComponent, { Category } from "./BlocklyComponent"
 import 'blockly/blocks';
 import "./customBlocks.ts";
-import { getToolBox, getBlock } from './toolbox';
+import { getBlock, BlockList } from './toolbox';
 
 
 interface IBlocklyAreaProps {
     className: string;
     height: number;
-    toolBox?: number[];
+    avalibleBlocks: BlockList;
+    avalibleCategories: string[];
     useCategory: boolean;
 }
 
@@ -21,23 +22,24 @@ export default class BlocklyArea extends React.Component<IBlocklyAreaProps> {
     }
 
     render() {
-        const data = getToolBox(this.props.toolBox);
-        const eachBlock = (block: string, i: number) => <React.Fragment key={i}>
-            {getBlock(block)}
-        </React.Fragment>
         return <BlocklyComponent
             ref={e => this.simpleWorkspace = e}
             initialXml={``}
             className={this.props.className}>
             {
-                this.props.useCategory ?
-                    Array.from(data.toolBox).map((cat, i) => {
-                        return <Category name={cat[0]} key={i}>
-                            {cat[1].map(eachBlock)}
+                this.props.avalibleCategories.map((cat, i) => {
+                    if (this.props.useCategory) {
+                        return <Category name={cat} key={i}>
+                            {this.props.avalibleBlocks[cat].map((block: string, i: number) => <React.Fragment key={i}>
+                                {getBlock(block)}
+                            </React.Fragment>)}
                         </Category>
-                    })
-                    :
-                    data.blockList.map(eachBlock)
+                    } else {
+                        return this.props.avalibleBlocks[cat].map((block: string, i: number) => <React.Fragment key={i}>
+                            {getBlock(block)}
+                        </React.Fragment>)
+                    }
+                })
             }
         </BlocklyComponent>
     }
