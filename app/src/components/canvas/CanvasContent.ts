@@ -48,12 +48,26 @@ export default class CanvasContent {
 
     private chars: Character[];
 
-    constructor(terrainSize: number, terrain: number[][], tileSprite: HTMLImageElement, charSprite: HTMLImageElement, chars: Character[] = []) {
-        this.terrainSize = terrainSize;
-        this.terrain = terrain;
+    constructor(content: ICanvasContent, tileSprite: HTMLImageElement, charSprite: HTMLImageElement) {
+        if (!content.terrainSize || !content.terrain) {
+            const size = 8;
+            let terrain: number[][] = [];
+            for (let x = 0; x < size; x++) {
+                terrain.push(Array(size).fill(0));
+            }
+            this.terrainSize = size;
+            this.terrain = terrain;
+        } else {
+            this.terrainSize = content.terrainSize;
+            this.terrain = content.terrain;
+        }
+        this.chars = [];
+        if (content.chars) {
+            content.chars.map(char => this.addCharacter(new Character(char.x, char.y, char.type)))
+        }
+
         this.tileSprite = tileSprite;
         this.charSprite = charSprite;
-        this.chars = chars;
     }
 
     addCharacter(obj: Character) {

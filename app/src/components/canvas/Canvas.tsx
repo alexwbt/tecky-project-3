@@ -50,29 +50,7 @@ class Canvas extends React.Component<ICanvasProps> {
     // canvas
     private start() {
         if (this.props.tileSprite && this.props.charSprite) {
-
-            if (this.props.content.terrainSize
-                && this.props.content.terrain) {
-                this.content = new CanvasContent(
-                    this.props.content.terrainSize,
-                    this.props.content.terrain,
-                    this.props.tileSprite,
-                    this.props.charSprite);
-            } else {
-                const size = 8;
-                let terrain: number[][] = [];
-                for (let x = 0; x < size; x++) {
-                    terrain.push(Array(size).fill(0));
-                }
-                this.content = new CanvasContent(
-                    size,
-                    terrain,
-                    this.props.tileSprite,
-                    this.props.charSprite);
-            }
-
-            let player = new Character(0, 0, 0);
-            this.content.addCharacter(player);
+            this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite);
         }
 
         this.fpsStartTime = this.renderStartTime = performance.now();
