@@ -40,12 +40,18 @@ export function catcher(routerFunction: (req: express.Request, res: express.Resp
 }
 
 // Routers and Services
-// import { isLoggedIn } from "./passport";
+import { isLoggedIn } from "./passport";
 import UserService from "./services/UserService";
 import UserRouter from "./routers/UserRouter";
 export const userService = new UserService(knex);
 const userRouter = new UserRouter(userService);
 app.use("/user", userRouter.router());
+
+import ProblemService from "./services/ProblemService";
+import ProblemRouter from "./routers/ProblemRouter";
+export const problemService = new ProblemService(knex);
+const problemRouter = new ProblemRouter(problemService);
+app.use("/problem", isLoggedIn, problemRouter.router());
 
 // run server
 app.listen(PORT, () => {

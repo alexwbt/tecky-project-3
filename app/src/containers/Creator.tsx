@@ -10,12 +10,11 @@ import DescriptionForm from "../components/DescriptionForm";
 import ObjSelector from "../components/canvas/ObjSelector";
 import BlockSelector from "../components/blockly/BlockSelector";
 import { Tile, Char, Obj } from "../components/canvas/CanvasContent";
-import { BlockList } from "../components/blockly/toolbox";
 
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
 import objSprite from "../sprites/objectSprite.png";
-import { uploadProblem } from "../thunks/creatorThunk";
+import { uploadProblem } from "../thunks/problemThunk";
 import { IProblemState } from "../reducers/problemReducer";
 
 
@@ -233,7 +232,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                 }
                 {
                     this.state.saving && <h1>
-                        Saving
+                        Saving...
                     </h1>
                 }
             </div>

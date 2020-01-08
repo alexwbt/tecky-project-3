@@ -11,7 +11,8 @@ export function uploadProblem(problem: IProblemState) {
         const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization':`Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify({ problem })
         });
