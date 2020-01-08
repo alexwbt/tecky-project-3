@@ -23,6 +23,7 @@ Blockly.Blocks['getPlayer'] = {
         this.appendValueInput('VALUE')
             .setCheck('Number')
             .appendField("getPlayer");
+        this.setInputsInline(true);
         this.setOutput(true, 'Player');
         this.setColour(160);
     }
@@ -42,7 +43,10 @@ Blockly.Blocks['movePlayer'] = {
         this.appendValueInput('DIR')
             .setCheck('Number')
             .appendField("toDir");
+        this.setInputsInline(true);
         this.setOutput(false);
+        this.setNextStatement(true);
+        this.setPreviousStatement(true);
         this.setColour(160);
     }
 };

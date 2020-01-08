@@ -110,7 +110,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                     ctx.font = "30px Arial";
                     ctx.fillText(`x: ${x}, y: ${y}`, mouseX, mouseY);
 
-                    if (this.buttons[0] && this.props.currentTab) {
+                    if (this.buttons[0] && this.props.currentTab && !this.state.running) {
                         switch (this.props.currentTab) {
                             case "Terrain":
                                 this.content.setTerrain(x, y, this.props.pen as Tile);
@@ -173,20 +173,20 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             }
         } else {
             this.props.setContent(this.getContent());
-        }
-        if (this.props.code) {
-            const workspace = new Blockly.Workspace();
-            Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
-            const code = BlocklyJS.workspaceToCode(workspace);
-            console.log(code);
-            try {
-                (function (code: string) {
-                    eval(code);
-                }).call({
-                    getPlayer: (id: number) => this.content ? this.content.getCharacter(id) : null
-                }, code);
-            } catch (err) {
-                console.log(err.message);
+            if (this.props.code) {
+                const workspace = new Blockly.Workspace();
+                Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
+                const code = BlocklyJS.workspaceToCode(workspace);
+                console.log(code);
+                try {
+                    (function (code: string) {
+                        eval(code);
+                    }).call({
+                        getPlayer: (id: number) => this.content ? this.content.getCharacter(id) : null
+                    }, code);
+                } catch (err) {
+                    console.log(err.message);
+                }
             }
         }
     };
