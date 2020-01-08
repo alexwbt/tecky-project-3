@@ -4,10 +4,10 @@ import { IRootState, ReduxThunkDispatch } from "../store";
 
 import NavBar from "../components/NavBar";
 import BlocklyArea from "../components/blockly/BlocklyArea";
-import Canvas from "../components/canvas/Canvas";
+// import Canvas from "../components/canvas/Canvas";
 
-import tileSprite from "../sprites/tileSprite.png";
-import charSprite from "../sprites/charSprite.png";
+// import tileSprite from "../sprites/tileSprite.png";
+// import charSprite from "../sprites/charSprite.png";
 import { BlockList } from "../components/blockly/toolbox";
 
 const BlocklyJS = require("blockly/javascript");
@@ -78,7 +78,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     render() {
         return <>
             <NavBar />
-            <div className="container-fluid p-0 bg-light">
+            {/* <div className="container-fluid p-0 bg-light">
                 <div className="row w-100 m-0" style={{ height: this.state.height }}>
                     <img ref={this.tilsSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
                     <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />
@@ -87,7 +87,6 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                             tileSprite={this.tilsSpriteImg.current}
                             charSprite={this.charSpriteImg.current}
                             size={16 * 100}
-                            terrain="empty"
                             editable={true} />
                         <button onClick={this.generateCode}>run</button>
                     </div>
@@ -99,7 +98,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                         height={this.state.height}
                         className="col-8 p-0" />
                 </div>
-            </div>
+            </div> */}
         </>
     }
 

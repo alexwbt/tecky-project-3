@@ -43,6 +43,11 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
         //         avalibleBlocks: action.blocks,
         //         useCategory: action.useCategory
         //     };
+        case "SET_CANVAS_CONTENT":
+            return {
+                ...state,
+                canvas: action.content
+            };
         case "TOGGLE_CATEGORY":
             let acat = state.avalibleCategories.slice();
             if (acat.includes(action.category)) {
@@ -56,7 +61,7 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
             };
         case "TOGGLE_BLOCK":
             let ablo = state.avalibleBlocks[action.category].slice();
-            if (ablo.includes(action.category)) {
+            if (ablo.includes(action.block)) {
                 ablo = ablo.filter(block => block !== action.block);
             } else {
                 ablo.push(action.block);

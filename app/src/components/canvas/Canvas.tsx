@@ -1,27 +1,29 @@
 import React from "react";
-import CanvasContent from "./CanvasContent";
+import CanvasContent, { ICanvasContent, Tile, Char, Obj } from "./CanvasContent";
 import Character from "./Character";
+import { IRootState, ReduxThunkDispatch } from "../../store";
+import { connect } from "react-redux";
+import { setCanvasContent } from "../../actions/problemActions";
+import { CanvasTab } from "../../containers/Creator";
 
 
 interface ICanvasProps {
+    content: ICanvasContent;
+    setContent: (content: ICanvasContent) => void;
+
     size: number;
-    terrain: number[][] | "empty";
 
     tileSprite: HTMLImageElement | null;
     charSprite: HTMLImageElement | null;
+    objSprite: HTMLImageElement | null;
 
-    pen?: Pen;
+    pen?: Tile | Char | Obj;
+    currentTab?: CanvasTab;
 
     editable: boolean;
 }
 
-export type PenType = "tile" | "char";
-export type Pen = {
-    type: PenType,
-    value: number
-};
-
-export default class Canvas extends React.Component<ICanvasProps> {
+class Canvas extends React.Component<ICanvasProps> {
 
     private canvas: React.RefObject<HTMLCanvasElement>;
     private ctx: CanvasRenderingContext2D | null = null;
@@ -44,18 +46,8 @@ export default class Canvas extends React.Component<ICanvasProps> {
 
     // canvas
     private start() {
-        if (this.props.tileSprite && this.props.charSprite) {
-            const size = 8;
-            let terrain: number[][] = [];
-            for (let x = 0; x < size; x++) {
-                terrain.push(Array(size).fill(0));
-            }
-            this.content = new CanvasContent(size,
-                this.props.terrain === "empty" ? terrain : this.props.terrain,
-                this.props.tileSprite, this.props.charSprite);
-
-            let player = new Character(0, 0, 0);
-            this.content.addCharacter(player);
+        if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
+            this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite);
         }
 
         this.fpsStartTime = this.renderStartTime = performance.now();
@@ -103,41 +95,22 @@ export default class Canvas extends React.Component<ICanvasProps> {
                     ctx.font = "30px Arial";
                     ctx.fillText(`x: ${x}, y: ${y}`, mouseX, mouseY);
 
-                    if (this.buttons[0] && this.props.pen) {
-                        switch (this.props.pen.type) {
-                            case "tile":
-                                this.content.setTerrain(x, y, this.props.pen.value);
+                    if (this.buttons[0] && this.props.currentTab) {
+                        switch (this.props.currentTab) {
+                            case "Terrain":
+                                this.content.setTerrain(x, y, this.props.pen as Tile);
                                 break;
-                            case "char":
-                                this.content.addCharacter(new Character(x, y, this.props.pen.value));
+                            case "Characters":
+                                this.content.addCharacter(new Character(x, y, this.props.pen as Char));
+                                this.buttons[0] = false;
+                                break;
+                            case "Objects":
+                                this.content.setObject(x, y, this.props.pen as Obj);
+                                this.buttons[0] = false;
                                 break;
                             default:
                         }
                     }
-
-
-                    // ctx.strokeStyle = "black";
-                    // ctx.lineWidth = 5;
-                    // for (let x = 0; x < terrainSize; x++) {
-                    //     ctx.beginPath();
-                    //     ctx.moveTo(Math.round(x * width) + 0.5, 0);
-                    //     ctx.lineTo(Math.round(x * width) + 0.5, canvas.height);
-                    //     ctx.stroke();
-                    // }
-                    // ctx.beginPath();
-                    // ctx.moveTo(canvas.width, 0);
-                    // ctx.lineTo(canvas.width, canvas.height);
-                    // ctx.stroke();
-                    // for (let y = 0; y < terrainSize; y++) {
-                    //     ctx.beginPath();
-                    //     ctx.moveTo(0, Math.round(y * height) + 0.5);
-                    //     ctx.lineTo(canvas.width, Math.round(y * height) + 0.5);
-                    //     ctx.stroke();
-                    // }
-                    // ctx.beginPath();
-                    // ctx.moveTo(0, canvas.height);
-                    // ctx.lineTo(canvas.width, canvas.height);
-                    // ctx.stroke();
                 }
             }
         }
@@ -198,12 +171,30 @@ export default class Canvas extends React.Component<ICanvasProps> {
             this.canvas.current.removeEventListener("mouseup", this.mouseUp);
             this.canvas.current.removeEventListener("mouseleave", this.mouseLeave);
         }
+
+        if (this.content) {
+            this.props.setContent(this.content.getContent());
+        }
     }
 
     render() {
         return <div>
-            <canvas ref={this.canvas} className="w-100 h-100 border" onContextMenu={e => e.preventDefault()}></canvas>
+            <canvas
+                ref={this.canvas}
+                className="w-100 h-100 border"
+                onContextMenu={e => e.preventDefault()}>
+            </canvas>
         </div>
     }
 
 }
+
+const mapStateToProps = (state: IRootState) => ({
+    content: state.problem.canvas
+});
+
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
+    setContent: (content: ICanvasContent) => dispatch(setCanvasContent(content))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Canvas);
