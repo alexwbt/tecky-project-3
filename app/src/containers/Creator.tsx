@@ -10,7 +10,7 @@ import DescriptionForm from "../components/DescriptionForm";
 import ObjSelector from "../components/canvas/ObjSelector";
 import BlockSelector from "../components/blockly/BlockSelector";
 import { Tile, Char, Obj } from "../components/canvas/CanvasContent";
-import { BlockList } from "../components/blockly/toolbox";
+import { BlockList, blocklyBlocks } from "../components/blockly/toolbox";
 
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
@@ -233,9 +233,9 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     }
                     {
                         this.state.currentTab === "Code" && <BlocklyArea
-                            useCategory={this.props.useCategory}
-                            avalibleBlocks={this.props.avalibleBlocks}
-                            avalibleCategories={this.props.avalibleCategories}
+                            useCategory={true}
+                            useVariables={true}
+                            useFunctions={true}
                             ref={this.blocklyArea}
                             height={this.state.height}
                             className="col-12 p-0" />

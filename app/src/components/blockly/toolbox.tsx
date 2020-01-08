@@ -2,8 +2,6 @@ import React from "react";
 import { Block, Value, Shadow, Field } from "./BlocklyComponent";
 
 export const blocklyBlocks: BlockList = {
-    // "console_log",
-    // "testing",
     "Logic": [
         "controls_if",
         "logic_compare",
@@ -13,7 +11,7 @@ export const blocklyBlocks: BlockList = {
         "logic_null",
         "logic_ternary"
     ],
-    "Loops": [
+    "Loop": [
         "controls_repeat_ext",
         "controls_repeat",
         "controls_whileUntil",
@@ -37,24 +35,24 @@ export const blocklyBlocks: BlockList = {
         "math_atan2"
     ],
     "Text": [
-        "Text:text",
-        "Text:text_multiline",
-        "Text:text_join",
-        "Text:text_append",
-        "Text:text_length",
-        "Text:text_isEmpty",
-        "Text:text_indexOf",
-        "Text:text_charAt",
-        "Text:text_getSubstring",
-        "Text:text_changeCase",
-        "Text:text_trim",
-        "Text:text_count",
-        "Text:text_replace",
-        "Text:text_reverse",
-        "Text:text_print",
-        "Text:text_prompt_ext"
+        "text",
+        "text_multiline",
+        "text_join",
+        "text_append",
+        "text_length",
+        "text_isEmpty",
+        "text_indexOf",
+        "text_charAt",
+        "text_getSubstring",
+        "text_changeCase",
+        "text_trim",
+        "text_count",
+        "text_replace",
+        "text_reverse",
+        "text_print",
+        "text_prompt_ext"
     ],
-    "Lists": [
+    "List": [
         "lists_create_with",
         "lists_create_with",
         "lists_repeat",
@@ -69,10 +67,10 @@ export const blocklyBlocks: BlockList = {
         "lists_reverse"
     ],
     "Colour": [
-        "Colour:colour_picker",
-        "Colour:colour_random",
-        "Colour:colour_rgb",
-        "Colour:colour_blend"
+        "colour_picker",
+        "colour_random",
+        "colour_rgb",
+        "colour_blend"
     ]
 };
 
