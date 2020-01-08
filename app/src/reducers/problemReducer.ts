@@ -1,11 +1,11 @@
 import { ICanvasContent } from "../components/canvas/CanvasContent";
 import ProblemActions from "../actions/problemActions";
 import { BlockList, blocklyBlocks } from "../components/blockly/toolbox";
+import { ProblemInfo } from "../models/Problem";
 
 
-export interface IProblemState {
-    title: string;
-    description: string;
+export interface IProblemState extends ProblemInfo {
+    // Editor
     canvas: ICanvasContent;
     code: string;
     avalibleBlocks: BlockList;
@@ -15,8 +15,16 @@ export interface IProblemState {
 }
 
 const initialState: IProblemState = {
+    // Description
     title: "",
+    category: null,
+    difficulty: null,
+    status: null,
     description: "",
+    score: 0,
+    deduction: null,
+
+    // Editor
     canvas: {},
     code: "",
     avalibleBlocks: {},
