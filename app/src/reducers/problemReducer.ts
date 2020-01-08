@@ -11,6 +11,8 @@ export interface IProblemState extends ProblemInfo {
     avalibleBlocks: BlockList;
     avalibleCategories: string[];
     useCategory: boolean;
+
+    savingMessage: string;
     saved: boolean;
 }
 
@@ -30,6 +32,8 @@ const initialState: IProblemState = {
     avalibleBlocks: {},
     avalibleCategories: [],
     useCategory: false,
+
+    savingMessage: "",
     saved: true
 };
 
@@ -37,12 +41,15 @@ Object.keys(blocklyBlocks).forEach(cat => initialState.avalibleBlocks[cat] = [])
 
 const problemReducer = (state: IProblemState = initialState, action: ProblemActions) => {
     switch (action.type) {
-        // case "SET_AVALIBLE_BLOCKS":
+        // case "SET_PROBLEM":
         //     return {
-        //         ...state,
-        //         avalibleBlocks: action.blocks,
-        //         useCategory: action.useCategory
         //     };
+        case "SET_SAVED":
+            return {
+                ...state,
+                saved: action.saved,
+                savingMessage: action.message
+            };
         case "SET_CANVAS_CONTENT":
             return {
                 ...state,

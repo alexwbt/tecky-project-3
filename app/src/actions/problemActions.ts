@@ -4,15 +4,20 @@ import { ICanvasContent } from "../components/canvas/CanvasContent";
 
 
 
-// export function setProblem(title: string, description: string, canvas: ICanvasContent, code: string) {
+// export function setProblem(problem: IProblemState) {
 //     return {
 //         type: "SET_PROBLEM" as "SET_PROBLEM",
-//         title,
-//         description,
-//         canvas,
-//         code
+//         problem
 //     };
 // }
+
+export function setSaved(saved: boolean, message: string) {
+    return {
+        type: "SET_SAVED" as "SET_SAVED",
+        saved,
+        message
+    };
+}
 
 export function setAvalibleBlocks(blocks: BlockList, useCategory: boolean) {
     return {
@@ -58,6 +63,11 @@ export function setCode(code: string) {
 }
 
 
-type ActionCreators = typeof toggleCategory | typeof toggleBlock | typeof toggleUseCategory | typeof setCanvasContent | typeof setCode; //typeof setProblem | typeof setAvalibleBlocks;
+type ActionCreators = typeof toggleCategory
+                    | typeof toggleBlock
+                    | typeof toggleUseCategory
+                    | typeof setCanvasContent
+                    | typeof setCode
+                    | typeof setSaved; //typeof setProblem;
 type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;

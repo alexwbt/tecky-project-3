@@ -1,28 +1,22 @@
 import { Dispatch } from "react";
-import ProfileActions, { loadProfile } from "../actions/profileActions";
-import { push } from "connected-react-router";
-import { ICanvasContent } from "../components/canvas/CanvasContent";
+import ProblemActions from "../actions/problemActions";
+import { IProblemState } from "../reducers/problemReducer";
+import { setSaved } from "../actions/problemActions";
 
 
 const { REACT_APP_API_SERVER } = process.env;
 
-export function uploadProblem(title: string, description: string, canvas: ICanvasContent, avalibleBlockls: string[], gameCode: string) {
-    return async (dispatch: Dispatch<ProfileActions>) => {
+export function uploadProblem(problem: IProblemState) {
+    return async (dispatch: Dispatch<ProblemActions>) => {
         const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-
-            })
+            body: JSON.stringify({ problem })
         });
         const result = await res.json();
 
-        if (res.status === 200 && result.success) {
-
-        } else {
-
-        }
+        dispatch(setSaved(res.status === 200 && result.success, result.message));
     };
 }

@@ -15,6 +15,8 @@ import { BlockList } from "../components/blockly/toolbox";
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
 import objSprite from "../sprites/objectSprite.png";
+import { uploadProblem } from "../thunks/creatorThunk";
+import { IProblemState } from "../reducers/problemReducer";
 
 
 interface ICreatorProps {
@@ -23,9 +25,8 @@ interface ICreatorProps {
             problemId: number;
         };
     };
-    useCategory: boolean;
-    avalibleBlocks: BlockList;
-    avalibleCategories: string[];
+    problem: IProblemState;
+    uploadProblem: (problem: IProblemState) => void;
 }
 
 type Tab = "Description" | "Canvas" | "Code";
@@ -38,6 +39,7 @@ interface ICreatorStates {
         currentTab: CanvasTab;
         pen: Tile | Char | Obj;
     };
+    saving: boolean;
 }
 
 /* eslint no-eval: 0 */
@@ -55,7 +57,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             canvas: {
                 currentTab: "Terrain",
                 pen: 0
-            }
+            },
+            saving: false
         };
         this.tileSpriteImg = React.createRef();
         this.charSpriteImg = React.createRef();
@@ -96,6 +99,13 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         window.removeEventListener('resize', this.updateHeight);
     }
 
+    componentDidUpdate() {
+        if (this.state.saving) {
+            this.props.uploadProblem(this.props.problem);
+            this.setState({ ...this.state, saving: false });
+        }
+    }
+
     selectTab(tab: Tab) {
         this.setState({ ...this.state, currentTab: tab });
     }
@@ -105,7 +115,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
     }
 
     uploadProblem() {
-        window.alert("saved");
+        this.setState({ ...this.state, saving: true });
     }
 
     render() {
@@ -133,92 +143,99 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />
             <img ref={this.objSpriteImg} src={objSprite} className={"d-none"} alt={"sprite"} />
             <div className="container-fluid p-0 bg-light">
-                <div className="row w-100 m-0" style={{ height: this.state.height }}>
-                    {
-                        this.state.currentTab === "Description" && <div className="col-6 pt-3">
-                            <DescriptionForm />
-                        </div>
-                    }
-                    {
-                        this.state.currentTab === "Canvas" && <>
-                            <div className="col-lg-4 p-1">
-                                <Canvas
-                                    tileSprite={this.tileSpriteImg.current}
-                                    charSprite={this.charSpriteImg.current}
-                                    objSprite={this.objSpriteImg.current}
-                                    pen={this.state.canvas.pen}
-                                    currentTab={this.state.canvas.currentTab}
-                                    size={16 * 100}
-                                    editable={true} />
+                {
+                    !this.state.saving && <div className="row w-100 m-0" style={{ height: this.state.height }}>
+                        {
+                            this.state.currentTab === "Description" && <div className="col-6 pt-3">
+                                <DescriptionForm />
                             </div>
-                            <div className="col-lg-4 p-0">
-                                <TabSelect tabs={[
-                                    "Terrain" as CanvasTab,
-                                    "Characters" as CanvasTab,
-                                    "Objects" as CanvasTab,
-                                    "Enemy" as CanvasTab
-                                ].map((name: CanvasTab) => ({
-                                    name: name as string,
-                                    active: this.state.canvas.currentTab === name,
-                                    callback: this.selectCanvasTab.bind(this, name)
-                                }))} buttons={[]} color="light" color2="dark" />
-                                <div className="p-3 border-top">
-                                    {
-                                        this.state.canvas.currentTab === "Terrain" && <ObjSelector
-                                            objs={[
-                                                getTabObj("Grass", Tile.GRASS, 0),
-                                                getTabObj("Road", Tile.ROAD, 1),
-                                                getTabObj("Water", Tile.WATER, 13)
-                                            ]}
-                                            sprite={this.tileSpriteImg.current}
-                                            select={this.selectTile} />
-                                    }
-                                    {
-                                        this.state.canvas.currentTab === "Characters" && <ObjSelector
-                                            objs={[
-                                                getTabObj("Jason", Char.JASON, Char.JASON),
-                                                getTabObj("Owen", Char.OWEN, Char.OWEN),
-                                                getTabObj("Patrick", Char.PATRICK, Char.PATRICK),
-                                                getTabObj("Harry", Char.HARRY, Char.HARRY),
-                                                getTabObj("Sherman", Char.SHERMAN, Char.SHERMAN),
-                                                getTabObj("Wallace", Char.WALLACE, Char.WALLACE),
-                                                getTabObj("Ronald", Char.RONALD, Char.RONALD),
-                                                getTabObj("Raymend", Char.RAYMEND, Char.RAYMEND),
-                                                getTabObj("Steven", Char.STEVEN, Char.STEVEN),
-                                                getTabObj("Otis", Char.OTIS, Char.OTIS),
-                                                getTabObj("Andy", Char.ANDY, Char.ANDY),
-                                                getTabObj("Sunny", Char.SUNNY, Char.SUNNY)
-                                            ]}
-                                            sprite={this.charSpriteImg.current}
-                                            select={this.selectChar} />
-                                    }
-                                    {
-                                        this.state.canvas.currentTab === "Objects" && <ObjSelector
-                                            objs={[
-                                                getTabObj("Gold Coin", Obj.GOLD_COIN, 0),
-                                                getTabObj("Silver Coin", Obj.SILV_COIN, 8),
-                                                getTabObj("Blue Gem", Obj.BLUE_GEM, 16),
-                                                getTabObj("Green Gem", Obj.GREEN_GEM, 24)
-                                            ]}
-                                            sprite={this.objSpriteImg.current}
-                                            select={this.selectChar} />
-                                    }
+                        }
+                        {
+                            this.state.currentTab === "Canvas" && <>
+                                <div className="col-lg-4 p-1">
+                                    <Canvas
+                                        tileSprite={this.tileSpriteImg.current}
+                                        charSprite={this.charSpriteImg.current}
+                                        objSprite={this.objSpriteImg.current}
+                                        pen={this.state.canvas.pen}
+                                        currentTab={this.state.canvas.currentTab}
+                                        size={16 * 100}
+                                        editable={true} />
                                 </div>
-                            </div>
-                            <div className="col-lg-4 p-0">
-                                <BlockSelector height={this.state.height} />
-                            </div>
-                        </>
-                    }
-                    {
-                        this.state.currentTab === "Code" && <BlocklyArea
-                            useCategory={true}
-                            useVariables={true}
-                            useFunctions={true}
-                            height={this.state.height}
-                            className="col-12 p-0" />
-                    }
-                </div>
+                                <div className="col-lg-4 p-0">
+                                    <TabSelect tabs={[
+                                        "Terrain" as CanvasTab,
+                                        "Characters" as CanvasTab,
+                                        "Objects" as CanvasTab,
+                                        "Enemy" as CanvasTab
+                                    ].map((name: CanvasTab) => ({
+                                        name: name as string,
+                                        active: this.state.canvas.currentTab === name,
+                                        callback: this.selectCanvasTab.bind(this, name)
+                                    }))} buttons={[]} color="light" color2="dark" />
+                                    <div className="p-3 border-top">
+                                        {
+                                            this.state.canvas.currentTab === "Terrain" && <ObjSelector
+                                                objs={[
+                                                    getTabObj("Grass", Tile.GRASS, 0),
+                                                    getTabObj("Road", Tile.ROAD, 1),
+                                                    getTabObj("Water", Tile.WATER, 13)
+                                                ]}
+                                                sprite={this.tileSpriteImg.current}
+                                                select={this.selectTile} />
+                                        }
+                                        {
+                                            this.state.canvas.currentTab === "Characters" && <ObjSelector
+                                                objs={[
+                                                    getTabObj("Jason", Char.JASON, Char.JASON),
+                                                    getTabObj("Owen", Char.OWEN, Char.OWEN),
+                                                    getTabObj("Patrick", Char.PATRICK, Char.PATRICK),
+                                                    getTabObj("Harry", Char.HARRY, Char.HARRY),
+                                                    getTabObj("Sherman", Char.SHERMAN, Char.SHERMAN),
+                                                    getTabObj("Wallace", Char.WALLACE, Char.WALLACE),
+                                                    getTabObj("Ronald", Char.RONALD, Char.RONALD),
+                                                    getTabObj("Raymend", Char.RAYMEND, Char.RAYMEND),
+                                                    getTabObj("Steven", Char.STEVEN, Char.STEVEN),
+                                                    getTabObj("Otis", Char.OTIS, Char.OTIS),
+                                                    getTabObj("Andy", Char.ANDY, Char.ANDY),
+                                                    getTabObj("Sunny", Char.SUNNY, Char.SUNNY)
+                                                ]}
+                                                sprite={this.charSpriteImg.current}
+                                                select={this.selectChar} />
+                                        }
+                                        {
+                                            this.state.canvas.currentTab === "Objects" && <ObjSelector
+                                                objs={[
+                                                    getTabObj("Gold Coin", Obj.GOLD_COIN, 0),
+                                                    getTabObj("Silver Coin", Obj.SILV_COIN, 8),
+                                                    getTabObj("Blue Gem", Obj.BLUE_GEM, 16),
+                                                    getTabObj("Green Gem", Obj.GREEN_GEM, 24)
+                                                ]}
+                                                sprite={this.objSpriteImg.current}
+                                                select={this.selectChar} />
+                                        }
+                                    </div>
+                                </div>
+                                <div className="col-lg-4 p-0">
+                                    <BlockSelector height={this.state.height} />
+                                </div>
+                            </>
+                        }
+                        {
+                            this.state.currentTab === "Code" && <BlocklyArea
+                                useCategory={true}
+                                useVariables={true}
+                                useFunctions={true}
+                                height={this.state.height}
+                                className="col-12 p-0" />
+                        }
+                    </div>
+                }
+                {
+                    this.state.saving && <h1>
+                        Saving
+                    </h1>
+                }
             </div>
         </>
     }
@@ -226,13 +243,11 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    useCategory: state.problem.useCategory,
-    avalibleBlocks: state.problem.avalibleBlocks,
-    avalibleCategories: state.problem.avalibleCategories
+    problem: state.problem
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    // uploadProblem: (canvasContent: ICanvasContent) => dispatch()
+    uploadProblem: (problem: IProblemState) => dispatch(uploadProblem(problem))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator);
