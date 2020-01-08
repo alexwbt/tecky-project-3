@@ -5,10 +5,16 @@ import { IRootState, ReduxThunkDispatch } from "../../store";
 import { connect } from "react-redux";
 import { setCanvasContent, changed } from "../../actions/problemActions";
 import { CanvasTab } from "../../containers/Creator";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+
+const Blockly = require("blockly");
+const BlocklyJS = require("blockly/javascript");
 
 
 export interface ICanvasProps {
     content: ICanvasContent;
+    code: string;
     setContent: (content: ICanvasContent) => void;
     changed: () => void;
 
@@ -24,7 +30,12 @@ export interface ICanvasProps {
     editable: boolean;
 }
 
-class Canvas extends React.Component<ICanvasProps> {
+interface ICanvasState {
+    running: boolean;
+}
+
+/* eslint no-eval: 0 */
+class Canvas extends React.Component<ICanvasProps, ICanvasState> {
 
     private canvas: React.RefObject<HTMLCanvasElement>;
     private ctx: CanvasRenderingContext2D | null = null;
@@ -42,6 +53,9 @@ class Canvas extends React.Component<ICanvasProps> {
 
     constructor(props: ICanvasProps) {
         super(props);
+        this.state = {
+            running: false
+        };
         this.canvas = React.createRef();
     }
 
@@ -63,7 +77,7 @@ class Canvas extends React.Component<ICanvasProps> {
         while (this.renderDelta >= 1) {
             this.renderDelta--;
 
-            if (this.content) {
+            if (this.content && this.state.running) {
                 this.content.update();
             }
 
@@ -145,12 +159,39 @@ class Canvas extends React.Component<ICanvasProps> {
         this.buttons[event.button] = false;
     };
 
-    private mouseLeave = (event: MouseEvent) => {
+    private mouseLeave = () => {
         this.mouse = { x: -1, y: -1 };
         this.buttons = [false, false, false];
     };
 
-    getContext() {
+    private run = () => {
+        this.setState({ ...this.state, running: !this.state.running });
+
+        if (this.state.running) {
+            if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
+                this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite);
+            }
+        } else {
+            this.props.setContent(this.getContent());
+        }
+        if (this.props.code) {
+            const workspace = new Blockly.Workspace();
+            Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
+            const code = BlocklyJS.workspaceToCode(workspace);
+            console.log(code);
+            try {
+                (function (code: string) {
+                    eval(code);
+                }).call({
+                    getPlayer: (id: number) => this.content ? this.content.getCharacter(id) : null
+                }, code);
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
+    };
+
+    getContent() {
         return this.content ? this.content.getContent() : {};
     }
 
@@ -178,7 +219,7 @@ class Canvas extends React.Component<ICanvasProps> {
             this.canvas.current.removeEventListener("mouseleave", this.mouseLeave);
         }
 
-        if (this.content) {
+        if (this.content && !this.state.running) {
             this.props.setContent(this.content.getContent());
         }
     }
@@ -190,13 +231,19 @@ class Canvas extends React.Component<ICanvasProps> {
                 className="w-100 h-100 border"
                 onContextMenu={e => e.preventDefault()}>
             </canvas>
+            <button
+                className={"m-1 btn btn-" + (this.state.running ? "danger" : "success")}
+                onClick={this.run}><FontAwesomeIcon
+                icon={this.state.running ? faStop : faPlay}
+                /></button>
         </div>
     }
 
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    content: state.problem.canvas
+    content: state.problem.canvas,
+    code: state.problem.code
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({

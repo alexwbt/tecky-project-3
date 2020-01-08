@@ -13,9 +13,9 @@ export default class Character {
     };
 
     constructor(private x: number, private y: number, private type: Char) {
-        setInterval(() => {
-            this.move(Math.floor(Math.random() * 4));
-        }, Math.random() * 1000 + 1000);
+        // setInterval(() => {
+        //     this.move(Math.floor(Math.random() * 4));
+        // }, Math.random() * 1000 + 1000);
     }
 
     getX() {
@@ -46,7 +46,7 @@ export default class Character {
         if (this.moveTo.length > 0 && this.moveTo[0] >= 0 && this.moveTo[0] < 4) {
             const x = this.x + EIGHT[this.moveTo[0]][0];
             const y = this.y + EIGHT[this.moveTo[0]][1];
-            if (x >= 0 && x < terrain.length && y >= 0 && y < terrain[x].length && terrain[x][y] === Tile.ROAD) {
+            if (x >= 0 && x < terrain.length && y >= 0 && y < terrain[x].length && terrain[x][y] !== Tile.WATER) {
                 this.moving += 0.05;
                 this.flip = this.x > x;
                 if (this.moving >= 1) {
@@ -71,7 +71,7 @@ export default class Character {
         const mx = this.moveTo.length > 0 ? EIGHT[this.moveTo[0]][0] * width * this.moving * 2 : 0;
         const my = this.moveTo.length > 0 ? EIGHT[this.moveTo[0]][1] * height * this.moving * 2 : 0;
 
-        const angle = this.moveTo.length ? Math.cos(this.moving * 2 * Math.PI) : 0;
+        const angle = this.moveTo.length > 0 ? Math.cos(this.moving * 2 * Math.PI) : 0;
 
         ctx.save();
         ctx.translate((this.x + 0.5 + this.standOffset.x) * tileWidth + mx, (this.y + 0.6 - jumpHeight * 0.1 + this.standOffset.x) * tileHeight + my);

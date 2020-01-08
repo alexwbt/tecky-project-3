@@ -7,8 +7,6 @@ import { getBlock, BlockList, blocklyBlocks } from './toolbox';
 import { IRootState, ReduxThunkDispatch } from '../../store';
 import { setCode, changed } from '../../actions/problemActions';
 
-// const BlocklyJS = require("blockly/javascript");
-
 
 interface IBlocklyAreaProps {
     className: string;
@@ -25,7 +23,6 @@ interface IBlocklyAreaProps {
 
 class BlocklyArea extends React.Component<IBlocklyAreaProps> {
 
-    // private simpleWorkspace: BlocklyComponent | null = null;
     private component: React.RefObject<BlocklyComponent>;
 
     constructor(props: IBlocklyAreaProps) {
@@ -35,19 +32,6 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
 
     getCodeXml() {
         return this.component.current ? this.component.current.getXml() : "";
-        // if (this.blocklyArea.current) {
-        //     var code = BlocklyJS.workspaceToCode(this.blocklyArea.current.workspace);
-        //     console.log(code);
-        //     try {
-        //         (function (code: string) {
-        //             eval(code);
-        //         }).call({
-        //             testing: () => console.log("test")
-        //         }, code);
-        //     } catch (err) {
-        //         console.log(err.message);
-        //     }
-        // }
     }
 
     componentDidMount() {

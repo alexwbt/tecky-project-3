@@ -120,6 +120,10 @@ export default class CanvasContent {
         }
     }
 
+    getCharacter(id: number): Character | undefined {
+        return this.chars[id];
+    }
+
     setTerrain(x: number, y: number, tile: Tile) {
         if (x >= 0 && x < this.terrainSize && y >= 0 && y < this.terrainSize) {
             this.terrain[x][y] = tile;
@@ -177,8 +181,7 @@ export default class CanvasContent {
             }
         }
 
-        this.chars.sort((a, b) => a.getAbsY(height) - b.getAbsY(height));
-        this.chars.forEach(obj => obj.render(ctx, width, height, this.charSprite));
+        this.chars.slice().sort((a, b) => a.getAbsY(height) - b.getAbsY(height)).forEach(obj => obj.render(ctx, width, height, this.charSprite));
 
         for (let x = 0; x < this.terrainSize; x++) {
             for (let y = 0; y < this.terrainSize; y++) {

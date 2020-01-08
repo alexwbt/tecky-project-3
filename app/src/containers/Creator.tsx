@@ -42,7 +42,6 @@ interface ICreatorStates {
     saving: boolean;
 }
 
-/* eslint no-eval: 0 */
 class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     private tileSpriteImg: React.RefObject<HTMLImageElement>;
@@ -105,7 +104,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateHeight);
-        window.onbeforeunload = () => {};
+        window.onbeforeunload = () => { };
     }
 
     componentDidUpdate() {
