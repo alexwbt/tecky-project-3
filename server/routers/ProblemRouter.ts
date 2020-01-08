@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { catcher } from "../main";
-import { isLoggedIn } from "./passport";
+import { isLoggedIn } from "../passport";
 import ProblemService from "../services/ProblemService";
 
 import { MongoClient } from "mongodb";
