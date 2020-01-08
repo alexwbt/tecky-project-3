@@ -3,14 +3,11 @@ import { connect } from "react-redux";
 import { IRootState, ReduxThunkDispatch } from "../store";
 
 import NavBar from "../components/NavBar";
-import BlocklyArea from "../components/blockly/BlocklyArea";
 // import Canvas from "../components/canvas/Canvas";
 
 // import tileSprite from "../sprites/tileSprite.png";
 // import charSprite from "../sprites/charSprite.png";
 import { BlockList } from "../components/blockly/toolbox";
-
-const BlocklyJS = require("blockly/javascript");
 
 
 interface ISolverProps {
@@ -31,7 +28,6 @@ interface ISolverStates {
 /* eslint no-eval: 0 */
 class Solver extends React.Component<ISolverProps, ISolverStates> {
 
-    private blocklyArea: React.RefObject<BlocklyArea>;
     private tilsSpriteImg: React.RefObject<HTMLImageElement>;
     private charSpriteImg: React.RefObject<HTMLImageElement>;
 
@@ -40,7 +36,6 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
         this.state = {
             height: 0
         };
-        this.blocklyArea = React.createRef();
         this.tilsSpriteImg = React.createRef();
         this.charSpriteImg = React.createRef();
     }
@@ -48,22 +43,6 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     private updateHeight = () => {
         const nav = document.getElementById("navagation-bar");
         this.setState({ ...this.state, height: window.innerHeight - (nav ? nav.clientHeight : 0) });
-    };
-
-    private generateCode = () => {
-        if (this.blocklyArea.current) {
-            var code = BlocklyJS.workspaceToCode(this.blocklyArea.current.workspace);
-            console.log(code);
-            try {
-                (function (code: string) {
-                    eval(code);
-                }).call({
-                    testing: () => console.log("test")
-                }, code);
-            } catch (err) {
-                console.log(err.message);
-            }
-        }
     };
 
     componentDidMount() {

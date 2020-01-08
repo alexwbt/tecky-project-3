@@ -78,6 +78,11 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
                 ...state,
                 useCategory: !state.useCategory
             };
+        case "SET_CODE":
+            return {
+                ...state,
+                code: action.code
+            };
         default:
             return state;
     }

@@ -1,8 +1,13 @@
 import React from 'react';
+import { connect } from "react-redux";
 import BlocklyComponent, { Category } from "./BlocklyComponent"
 import 'blockly/blocks';
 import "./customBlocks.ts";
 import { getBlock, BlockList, blocklyBlocks } from './toolbox';
+import { IRootState, ReduxThunkDispatch } from '../../store';
+import { setCode } from '../../actions/problemActions';
+
+// const BlocklyJS = require("blockly/javascript");
 
 
 interface IBlocklyAreaProps {
@@ -13,20 +18,45 @@ interface IBlocklyAreaProps {
     useVariables: boolean;
     useFunctions: boolean;
     useCategory: boolean;
+    code: string;
+    setCode: (code: string) => void;
 }
 
-export default class BlocklyArea extends React.Component<IBlocklyAreaProps> {
+class BlocklyArea extends React.Component<IBlocklyAreaProps> {
 
-    private simpleWorkspace: BlocklyComponent | null = null;
+    // private simpleWorkspace: BlocklyComponent | null = null;
+    private component: React.RefObject<BlocklyComponent>;
 
-    get workspace() {
-        return this.simpleWorkspace ? this.simpleWorkspace.workspace : null;
+    constructor(props: IBlocklyAreaProps) {
+        super(props);
+        this.component = React.createRef();
+    }
+
+    getCodeXml() {
+        return this.component.current ? this.component.current.getXml() : "";
+        // if (this.blocklyArea.current) {
+        //     var code = BlocklyJS.workspaceToCode(this.blocklyArea.current.workspace);
+        //     console.log(code);
+        //     try {
+        //         (function (code: string) {
+        //             eval(code);
+        //         }).call({
+        //             testing: () => console.log("test")
+        //         }, code);
+        //     } catch (err) {
+        //         console.log(err.message);
+        //     }
+        // }
+    }
+
+    componentWillUnmount() {
+        this.props.setCode(this.getCodeXml());
     }
 
     render() {
         return <BlocklyComponent
-            ref={e => this.simpleWorkspace = e}
-            initialXml={``}
+            ref={this.component}
+            initialXml={this.props.code}
             className={this.props.className}>
             {
                 (this.props.avalibleCategories ? this.props.avalibleCategories : Object.keys(blocklyBlocks)).map((cat, i) => {
@@ -57,4 +87,13 @@ export default class BlocklyArea extends React.Component<IBlocklyAreaProps> {
     }
 }
 
+const mapStateToProps = (state: IRootState) => ({
+    code: state.problem.code
+});
+
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
+    setCode: (code: string) => dispatch(setCode(code))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BlocklyArea);
 

@@ -10,13 +10,11 @@ import DescriptionForm from "../components/DescriptionForm";
 import ObjSelector from "../components/canvas/ObjSelector";
 import BlockSelector from "../components/blockly/BlockSelector";
 import { Tile, Char, Obj } from "../components/canvas/CanvasContent";
-import { BlockList, blocklyBlocks } from "../components/blockly/toolbox";
+import { BlockList } from "../components/blockly/toolbox";
 
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
 import objSprite from "../sprites/objectSprite.png";
-
-const BlocklyJS = require("blockly/javascript");
 
 
 interface ICreatorProps {
@@ -45,7 +43,6 @@ interface ICreatorStates {
 /* eslint no-eval: 0 */
 class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
-    private blocklyArea: React.RefObject<BlocklyArea>;
     private tileSpriteImg: React.RefObject<HTMLImageElement>;
     private charSpriteImg: React.RefObject<HTMLImageElement>;
     private objSpriteImg: React.RefObject<HTMLImageElement>;
@@ -60,7 +57,6 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                 pen: 0
             }
         };
-        this.blocklyArea = React.createRef();
         this.tileSpriteImg = React.createRef();
         this.charSpriteImg = React.createRef();
         this.objSpriteImg = React.createRef();
@@ -98,22 +94,6 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateHeight);
-    }
-
-    generateCode() {
-        if (this.blocklyArea.current) {
-            var code = BlocklyJS.workspaceToCode(this.blocklyArea.current.workspace);
-            console.log(code);
-            try {
-                (function (code: string) {
-                    eval(code);
-                }).call({
-                    testing: () => console.log("test")
-                }, code);
-            } catch (err) {
-                console.log(err.message);
-            }
-        }
     }
 
     selectTab(tab: Tab) {
@@ -168,7 +148,6 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     objSprite={this.objSpriteImg.current}
                                     pen={this.state.canvas.pen}
                                     currentTab={this.state.canvas.currentTab}
-                                    // ref={this.canvas}
                                     size={16 * 100}
                                     editable={true} />
                             </div>
@@ -236,7 +215,6 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                             useCategory={true}
                             useVariables={true}
                             useFunctions={true}
-                            ref={this.blocklyArea}
                             height={this.state.height}
                             className="col-12 p-0" />
                     }

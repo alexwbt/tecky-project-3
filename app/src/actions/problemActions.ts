@@ -50,7 +50,14 @@ export function toggleUseCategory() {
     };
 }
 
+export function setCode(code: string) {
+    return {
+        type: "SET_CODE" as "SET_CODE",
+        code
+    };
+}
 
-type ActionCreators = typeof toggleCategory | typeof toggleBlock | typeof toggleUseCategory | typeof setCanvasContent; //typeof setProblem | typeof setAvalibleBlocks;
+
+type ActionCreators = typeof toggleCategory | typeof toggleBlock | typeof toggleUseCategory | typeof setCanvasContent | typeof setCode; //typeof setProblem | typeof setAvalibleBlocks;
 type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;

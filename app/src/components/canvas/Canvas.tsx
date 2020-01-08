@@ -7,7 +7,7 @@ import { setCanvasContent } from "../../actions/problemActions";
 import { CanvasTab } from "../../containers/Creator";
 
 
-interface ICanvasProps {
+export interface ICanvasProps {
     content: ICanvasContent;
     setContent: (content: ICanvasContent) => void;
 
@@ -147,6 +147,10 @@ class Canvas extends React.Component<ICanvasProps> {
         this.mouse = { x: -1, y: -1 };
         this.buttons = [false, false, false];
     };
+
+    getContext() {
+        return this.content ? this.content.getContent() : {};
+    }
 
     // react component
     componentDidMount() {
