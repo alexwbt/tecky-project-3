@@ -136,7 +136,9 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                         name: "Save",
                         callback: this.uploadProblem.bind(this)
                     }
-                ]} color="info" color2="light" />
+                ]} color="info" color2="light">
+                    <span className={`mx-2 px-2 ${this.props.problem.saved ? "text-white" : "text-danger"}`}>{this.props.problem.savingMessage}</span>
+                </TabSelect>
             </NavBar>
             <img ref={this.tileSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
             <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />

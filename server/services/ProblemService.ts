@@ -1,7 +1,7 @@
 import * as Knex from "knex";
 
 
-export default class UserService {
+export default class ProblemService {
 
     constructor(private knex: Knex) { }
 
