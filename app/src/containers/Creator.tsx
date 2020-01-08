@@ -99,6 +99,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             return;
         };
         this.updateHeight();
+
+        document.title = "BlockDojo - Editor";
     }
 
     componentWillUnmount() {
