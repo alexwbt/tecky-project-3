@@ -60,7 +60,7 @@ export const EIGHT = [
 export interface ICanvasContent {
     terrainSize?: number;
     terrain?: Tile[][];
-    objs?: Obj[][];
+    objs?: (Obj | null)[][];
     chars?: { x: number, y: number, type: Char }[];
 }
 
@@ -73,7 +73,7 @@ export default class CanvasContent {
     private objSprite: HTMLImageElement;
 
     private chars: Character[];
-    private objs: GameObject[][];
+    private objs: (GameObject | null)[][];
 
     constructor(content: ICanvasContent, tileSprite: HTMLImageElement, charSprite: HTMLImageElement, objSprite: HTMLImageElement) {
         if (!content.terrainSize || !content.terrain) {
@@ -99,7 +99,7 @@ export default class CanvasContent {
             for (let x = 0; x < this.terrainSize; x++) {
                 this.objs[x] = [];
                 for (let y = 0; y < this.terrainSize; y++) {
-                    this.objs[x][y] = new GameObject(content.objs[x][y]);
+                    this.objs[x][y] = content.objs[x][y] !== null ? new GameObject(content.objs[x][y] as Obj) : null;
                 }
             }
         } else {
@@ -140,7 +140,8 @@ export default class CanvasContent {
         return {
             terrainSize: this.terrainSize,
             terrain: this.terrain,
-            chars: this.chars.map(char => char.export())
+            chars: this.chars.map(char => char.export()),
+            objs: this.objs.map(x => x.map(y => y ? y.getType() : null))
         };
     }
 
