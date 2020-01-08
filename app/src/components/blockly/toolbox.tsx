@@ -1,98 +1,85 @@
 import React from "react";
 import { Block, Value, Shadow, Field } from "./BlocklyComponent";
 
-export const blocklyBlocks = [
-    // "console_log",
-    // "testing",
-    "Logic:controls_if",
-    "Logic:logic_compare",
-    "Logic:logic_operation",
-    "Logic:logic_negate",
-    "Logic:logic_boolean",
-    "Logic:logic_null",
-    "Logic:logic_ternary",
-    "Loops:controls_repeat_ext",
-    "Loops:controls_repeat",
-    "Loops:controls_whileUntil",
-    "Loops:controls_for",
-    "Loops:controls_forEach",
-    "Loops:controls_flow_statements",
-    "Math:math_number",
-    "Math:math_arithmetic",
-    "Math:math_single",
-    "Math:math_trig",
-    "Math:math_constant",
-    "Math:math_number_property",
-    "Math:math_round",
-    "Math:math_on_list",
-    "Math:math_modulo",
-    "Math:math_constrain",
-    "Math:math_random_int",
-    "Math:math_random_float",
-    "Math:math_atan2",
-    "Text:text",
-    "Text:text_multiline",
-    "Text:text_join",
-    "Text:text_append",
-    "Text:text_length",
-    "Text:text_isEmpty",
-    "Text:text_indexOf",
-    "Text:text_charAt",
-    "Text:text_getSubstring",
-    "Text:text_changeCase",
-    "Text:text_trim",
-    "Text:text_count",
-    "Text:text_replace",
-    "Text:text_reverse",
-    "Text:text_print",
-    "Text:text_prompt_ext",
-    "Lists:lists_create_with",
-    "Lists:lists_create_with",
-    "Lists:lists_repeat",
-    "Lists:lists_length",
-    "Lists:lists_isEmpty",
-    "Lists:lists_indexOf",
-    "Lists:lists_getIndex",
-    "Lists:lists_setIndex",
-    "Lists:lists_getSublist",
-    "Lists:lists_split",
-    "Lists:lists_sort",
-    "Lists:lists_reverse",
-    "Colour:colour_picker",
-    "Colour:colour_random",
-    "Colour:colour_rgb",
-    "Colour:colour_blend"
-];
-
-export const blocklyCategories = [
-    // "Custom",
-    "Logic",
-    "Loops",
-    "Math",
-    "Text",
-    "Lists",
-    "Colour",
-    "Variables",
-    "Functions"
-];
-
-
-export const getToolBox = (blocks?: number[]) => {
-    let toolBox = new Map<string, string[]>();
-    let blockList: string[] = [];
-
-    for (let i = 0; i < (blocks ? blocks.length : blocklyBlocks.length); i++) {
-        const block = blocks ? blocklyBlocks[blocks[i]] : blocklyBlocks[i];
-        let data = block.split(":");
-        if (!toolBox.has(data[0])) {
-            toolBox.set(data[0], []);
-        }
-        toolBox.get(data[0])?.push(data[1]);
-        blockList.push(data[1]);
-    }
-
-    return { toolBox, blockList };
+export const blocklyBlocks: BlockList = {
+    "Custom": [
+        "console_log",
+        "getPlayer",
+        "movePlayer"
+    ],
+    "Logic": [
+        "controls_if",
+        "logic_compare",
+        "logic_operation",
+        "logic_negate",
+        "logic_boolean",
+        "logic_null",
+        "logic_ternary"
+    ],
+    "Loop": [
+        "controls_repeat_ext",
+        "controls_repeat",
+        "controls_whileUntil",
+        "controls_for",
+        "controls_forEach",
+        "controls_flow_statements"
+    ],
+    "Math": [
+        "math_number",
+        "math_arithmetic",
+        "math_single",
+        "math_trig",
+        "math_constant",
+        "math_number_property",
+        "math_round",
+        "math_on_list",
+        "math_modulo",
+        "math_constrain",
+        "math_random_int",
+        "math_random_float",
+        "math_atan2"
+    ],
+    "Text": [
+        "text",
+        "text_multiline",
+        "text_join",
+        "text_append",
+        "text_length",
+        "text_isEmpty",
+        "text_indexOf",
+        "text_charAt",
+        "text_getSubstring",
+        "text_changeCase",
+        "text_trim",
+        "text_count",
+        "text_replace",
+        "text_reverse",
+        "text_print",
+        "text_prompt_ext"
+    ],
+    "List": [
+        "lists_create_with",
+        "lists_create_with",
+        "lists_repeat",
+        "lists_length",
+        "lists_isEmpty",
+        "lists_indexOf",
+        "lists_getIndex",
+        "lists_setIndex",
+        "lists_getSublist",
+        "lists_split",
+        "lists_sort",
+        "lists_reverse"
+    ],
+    "Colour": [
+        "colour_picker",
+        "colour_random",
+        "colour_rgb",
+        "colour_blend"
+    ]
 };
+
+export type BlockList = { [cat: string]: string[] };
 
 
 export const getBlock = (block: string) => {

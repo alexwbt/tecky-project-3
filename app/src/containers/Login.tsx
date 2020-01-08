@@ -67,6 +67,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
 
     componentDidMount() {
         window.addEventListener('resize', this.updateHeight);
+        document.title = "BlockDojo - Login";
     }
 
     componentWillUnmount() {

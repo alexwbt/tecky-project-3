@@ -1,27 +1,41 @@
 import React from "react";
-import CanvasContent from "./CanvasContent";
+import CanvasContent, { ICanvasContent, Tile, Char, Obj } from "./CanvasContent";
 import Character from "./Character";
+import { IRootState, ReduxThunkDispatch } from "../../store";
+import { connect } from "react-redux";
+import { setCanvasContent, changed } from "../../actions/problemActions";
+import { CanvasTab } from "../../containers/Creator";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+
+const Blockly = require("blockly");
+const BlocklyJS = require("blockly/javascript");
 
 
-interface ICanvasProps {
+export interface ICanvasProps {
+    content: ICanvasContent;
+    code: string;
+    setContent: (content: ICanvasContent) => void;
+    changed: () => void;
+
     size: number;
-    terrain: number[][] | "empty";
 
     tileSprite: HTMLImageElement | null;
     charSprite: HTMLImageElement | null;
+    objSprite: HTMLImageElement | null;
 
-    pen?: Pen;
+    pen?: Tile | Char | Obj;
+    currentTab?: CanvasTab;
 
     editable: boolean;
 }
 
-export type PenType = "tile" | "char";
-export type Pen = {
-    type: PenType,
-    value: number
-};
+interface ICanvasState {
+    running: boolean;
+}
 
-export default class Canvas extends React.Component<ICanvasProps> {
+/* eslint no-eval: 0 */
+class Canvas extends React.Component<ICanvasProps, ICanvasState> {
 
     private canvas: React.RefObject<HTMLCanvasElement>;
     private ctx: CanvasRenderingContext2D | null = null;
@@ -39,23 +53,16 @@ export default class Canvas extends React.Component<ICanvasProps> {
 
     constructor(props: ICanvasProps) {
         super(props);
+        this.state = {
+            running: false
+        };
         this.canvas = React.createRef();
     }
 
     // canvas
     private start() {
-        if (this.props.tileSprite && this.props.charSprite) {
-            const size = 8;
-            let terrain: number[][] = [];
-            for (let x = 0; x < size; x++) {
-                terrain.push(Array(size).fill(0));
-            }
-            this.content = new CanvasContent(size,
-                this.props.terrain === "empty" ? terrain : this.props.terrain,
-                this.props.tileSprite, this.props.charSprite);
-
-            let player = new Character(0, 0, 0);
-            this.content.addCharacter(player);
+        if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
+            this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite);
         }
 
         this.fpsStartTime = this.renderStartTime = performance.now();
@@ -70,7 +77,7 @@ export default class Canvas extends React.Component<ICanvasProps> {
         while (this.renderDelta >= 1) {
             this.renderDelta--;
 
-            if (this.content) {
+            if (this.content && this.state.running) {
                 this.content.update();
             }
 
@@ -103,41 +110,23 @@ export default class Canvas extends React.Component<ICanvasProps> {
                     ctx.font = "30px Arial";
                     ctx.fillText(`x: ${x}, y: ${y}`, mouseX, mouseY);
 
-                    if (this.buttons[0] && this.props.pen) {
-                        switch (this.props.pen.type) {
-                            case "tile":
-                                this.content.setTerrain(x, y, this.props.pen.value);
+                    if (this.buttons[0] && this.props.currentTab && !this.state.running) {
+                        switch (this.props.currentTab) {
+                            case "Terrain":
+                                this.content.setTerrain(x, y, this.props.pen as Tile);
                                 break;
-                            case "char":
-                                this.content.addCharacter(new Character(x, y, this.props.pen.value));
+                            case "Characters":
+                                this.content.addCharacter(new Character(x, y, this.props.pen as Char));
+                                this.buttons[0] = false;
+                                break;
+                            case "Objects":
+                                this.content.setObject(x, y, this.props.pen as Obj);
+                                this.buttons[0] = false;
                                 break;
                             default:
                         }
+                        this.props.changed();
                     }
-
-
-                    // ctx.strokeStyle = "black";
-                    // ctx.lineWidth = 5;
-                    // for (let x = 0; x < terrainSize; x++) {
-                    //     ctx.beginPath();
-                    //     ctx.moveTo(Math.round(x * width) + 0.5, 0);
-                    //     ctx.lineTo(Math.round(x * width) + 0.5, canvas.height);
-                    //     ctx.stroke();
-                    // }
-                    // ctx.beginPath();
-                    // ctx.moveTo(canvas.width, 0);
-                    // ctx.lineTo(canvas.width, canvas.height);
-                    // ctx.stroke();
-                    // for (let y = 0; y < terrainSize; y++) {
-                    //     ctx.beginPath();
-                    //     ctx.moveTo(0, Math.round(y * height) + 0.5);
-                    //     ctx.lineTo(canvas.width, Math.round(y * height) + 0.5);
-                    //     ctx.stroke();
-                    // }
-                    // ctx.beginPath();
-                    // ctx.moveTo(0, canvas.height);
-                    // ctx.lineTo(canvas.width, canvas.height);
-                    // ctx.stroke();
                 }
             }
         }
@@ -170,10 +159,41 @@ export default class Canvas extends React.Component<ICanvasProps> {
         this.buttons[event.button] = false;
     };
 
-    private mouseLeave = (event: MouseEvent) => {
+    private mouseLeave = () => {
         this.mouse = { x: -1, y: -1 };
         this.buttons = [false, false, false];
     };
+
+    private run = () => {
+        this.setState({ ...this.state, running: !this.state.running });
+
+        if (this.state.running) {
+            if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
+                this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite);
+            }
+        } else {
+            this.props.setContent(this.getContent());
+            if (this.props.code) {
+                const workspace = new Blockly.Workspace();
+                Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
+                const code = BlocklyJS.workspaceToCode(workspace);
+                console.log(code);
+                try {
+                    (function (code: string) {
+                        eval(code);
+                    }).call({
+                        getPlayer: (id: number) => this.content ? this.content.getCharacter(id) : null
+                    }, code);
+                } catch (err) {
+                    console.log(err.message);
+                }
+            }
+        }
+    };
+
+    getContent() {
+        return this.content ? this.content.getContent() : {};
+    }
 
     // react component
     componentDidMount() {
@@ -198,12 +218,37 @@ export default class Canvas extends React.Component<ICanvasProps> {
             this.canvas.current.removeEventListener("mouseup", this.mouseUp);
             this.canvas.current.removeEventListener("mouseleave", this.mouseLeave);
         }
+
+        if (this.content && !this.state.running) {
+            this.props.setContent(this.content.getContent());
+        }
     }
 
     render() {
         return <div>
-            <canvas ref={this.canvas} className="w-100 h-100 border" onContextMenu={e => e.preventDefault()}></canvas>
+            <canvas
+                ref={this.canvas}
+                className="w-100 h-100 border"
+                onContextMenu={e => e.preventDefault()}>
+            </canvas>
+            <button
+                className={"m-1 btn btn-" + (this.state.running ? "danger" : "success")}
+                onClick={this.run}><FontAwesomeIcon
+                icon={this.state.running ? faStop : faPlay}
+                /></button>
         </div>
     }
 
 }
+
+const mapStateToProps = (state: IRootState) => ({
+    content: state.problem.canvas,
+    code: state.problem.code
+});
+
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
+    setContent: (content: ICanvasContent) => dispatch(setCanvasContent(content)),
+    changed: () => dispatch(changed())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Canvas);

@@ -1,4 +1,8 @@
 
+// dotenv
+import * as dotenv from "dotenv";
+dotenv.config();
+
 // Express
 import * as express from "express";
 const app = express();
@@ -13,6 +17,9 @@ app.use(bodyParser.json());
 import * as Knex from "knex";
 const knexConfig = require('./knexfile');
 const knex = Knex(knexConfig[process.env.NODE_ENV || "development"]);
+
+// MongoDB Client
+import { mongoClient } from "./mongodb";
 
 // Cors
 import * as cors from "cors";
@@ -40,12 +47,23 @@ export function catcher(routerFunction: (req: express.Request, res: express.Resp
 }
 
 // Routers and Services
-// import { isLoggedIn } from "./passport";
 import UserService from "./services/UserService";
 import UserRouter from "./routers/UserRouter";
 export const userService = new UserService(knex);
 const userRouter = new UserRouter(userService);
 app.use("/user", userRouter.router());
+
+import CategoryService , { Category } from './services/CategoryService';
+import CategoryRouter from './routers/CategoryRouter';
+const categoryService = new CategoryService(knex);
+const categoryRouter = new CategoryRouter(categoryService);
+app.use("/category", categoryRouter.router());
+
+import ProblemService from "./services/ProblemService";
+import ProblemRouter from "./routers/ProblemRouter";
+export const problemService = new ProblemService(knex);
+const problemRouter = new ProblemRouter(problemService, mongoClient);
+app.use("/problem", problemRouter.router());
 
 // run server
 app.listen(PORT, () => {

@@ -7,7 +7,7 @@ export interface IProfileState {
     exp: number;
 }
 
-const initialState = {
+const initialState: IProfileState = {
     username: "",
     email: "",
     exp: 0

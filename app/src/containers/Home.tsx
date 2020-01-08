@@ -6,6 +6,10 @@ import NavBar from "../components/NavBar";
 
 class Home extends React.Component {
 
+    componentDidMount() {
+        document.title = "BlockDojo - Home";
+    }
+
     render() {
         return <div>
             <NavBar />

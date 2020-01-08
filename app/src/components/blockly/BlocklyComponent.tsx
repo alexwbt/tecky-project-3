@@ -45,6 +45,10 @@ export default class BlocklyComponent extends React.Component<IBlocklyProps> {
         Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml), this.primaryWorkspace);
     }
 
+    getXml() {
+        return Blockly.Xml.workspaceToDom(this.primaryWorkspace).outerHTML as string;
+    }
+
     render() {
         return <>
             <div ref={this.blocklyDiv} className={this.props.className} />

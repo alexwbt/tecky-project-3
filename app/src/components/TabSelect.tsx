@@ -29,8 +29,8 @@ const TabSelect: React.FC<ITabSelectProps> = (props) => {
                     onClick={tab.callback}>
                     {tab.name}
                 </button>)}
-                {props.children}
                 <div className="ml-auto">
+                    {props.children}
                     {props.buttons && props.buttons.map((btn, i) => <button
                         key={i}
                         className={`btn btn-${props.color} rounded-0`}

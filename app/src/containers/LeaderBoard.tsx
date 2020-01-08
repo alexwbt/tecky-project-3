@@ -7,6 +7,10 @@ import { IRootState, ReduxThunkDispatch } from "../store";
 
 class LeaderBoard extends React.Component {
 
+    componentDidMount() {
+        document.title = "BlockDojo - LeaderBoard";
+    }
+
     render() {
         return <div>
             <NavBar />

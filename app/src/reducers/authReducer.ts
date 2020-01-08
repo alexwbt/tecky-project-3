@@ -7,7 +7,7 @@ export interface IAuthState {
     message: string;
 }
 
-const initialState = {
+const initialState: IAuthState = {
     authenticated: !!localStorage.getItem("token"),
     error: false,
     message: ""
