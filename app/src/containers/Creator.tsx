@@ -16,6 +16,7 @@ import charSprite from "../sprites/charSprite.png";
 import objSprite from "../sprites/objectSprite.png";
 import { uploadProblem } from "../thunks/problemThunk";
 import { IProblemState } from "../reducers/problemReducer";
+import { Prompt } from "react-router-dom";
 
 
 interface ICreatorProps {
@@ -91,11 +92,18 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     componentDidMount() {
         window.addEventListener('resize', this.updateHeight);
+        window.onbeforeunload = () => {
+            if (!this.props.problem.saved) {
+                return "Changes you made may not be saved."
+            }
+            return;
+        };
         this.updateHeight();
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateHeight);
+        window.onbeforeunload = () => {};
     }
 
     componentDidUpdate() {
@@ -122,6 +130,9 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             name, value, index, active: (this.state.canvas.pen === value)
         });
         return <>
+            <Prompt
+                when={!this.props.problem.saved}
+                message='Changes you made may not be saved.' />
             <NavBar>
                 <TabSelect tabs={[
                     "Description" as Tab,
@@ -137,7 +148,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                         callback: this.uploadProblem.bind(this)
                     }
                 ]} color="info" color2="light">
-                    <span className={`mx-2 px-2 ${this.props.problem.saved ? "text-white" : "text-danger"}`}>{this.props.problem.savingMessage}</span>
+                    <span className={` mx-2 px-2 ${this.props.problem.saved ? "text-white" : "text-danger"}`}>{this.props.problem.savingMessage}</span>
                 </TabSelect>
             </NavBar>
             <img ref={this.tileSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />

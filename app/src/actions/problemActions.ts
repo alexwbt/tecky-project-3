@@ -11,6 +11,12 @@ import { ICanvasContent } from "../components/canvas/CanvasContent";
 //     };
 // }
 
+export function changed() {
+    return {
+        type: "CHANGED" as "CHANGED"
+    };
+}
+
 export function setSaved(saved: boolean, message: string) {
     return {
         type: "SET_SAVED" as "SET_SAVED",
@@ -68,6 +74,7 @@ type ActionCreators = typeof toggleCategory
                     | typeof toggleUseCategory
                     | typeof setCanvasContent
                     | typeof setCode
-                    | typeof setSaved; //typeof setProblem;
+                    | typeof setSaved
+                    | typeof changed; //typeof setProblem;
 type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;

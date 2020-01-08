@@ -3,13 +3,14 @@ import CanvasContent, { ICanvasContent, Tile, Char, Obj } from "./CanvasContent"
 import Character from "./Character";
 import { IRootState, ReduxThunkDispatch } from "../../store";
 import { connect } from "react-redux";
-import { setCanvasContent } from "../../actions/problemActions";
+import { setCanvasContent, changed } from "../../actions/problemActions";
 import { CanvasTab } from "../../containers/Creator";
 
 
 export interface ICanvasProps {
     content: ICanvasContent;
     setContent: (content: ICanvasContent) => void;
+    changed: () => void;
 
     size: number;
 
@@ -110,6 +111,7 @@ class Canvas extends React.Component<ICanvasProps> {
                                 break;
                             default:
                         }
+                        this.props.changed();
                     }
                 }
             }
@@ -198,7 +200,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    setContent: (content: ICanvasContent) => dispatch(setCanvasContent(content))
+    setContent: (content: ICanvasContent) => dispatch(setCanvasContent(content)),
+    changed: () => dispatch(changed())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Canvas);

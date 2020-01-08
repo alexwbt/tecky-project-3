@@ -44,6 +44,12 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
         // case "SET_PROBLEM":
         //     return {
         //     };
+        case "CHANGED" :
+            return {
+                ...state,
+                saved: false,
+                savingMessage: "Changes Unsaved"
+            };
         case "SET_SAVED":
             return {
                 ...state,

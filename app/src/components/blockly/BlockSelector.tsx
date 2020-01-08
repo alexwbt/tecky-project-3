@@ -7,7 +7,7 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 import "./BlockSelector.css";
 import { IRootState, ReduxThunkDispatch } from "../../store";
-import { toggleCategory, toggleBlock, toggleUseCategory } from "../../actions/problemActions";
+import { toggleCategory, toggleBlock, toggleUseCategory, changed } from "../../actions/problemActions";
 
 
 interface IBlockSelectorProps {
@@ -84,9 +84,18 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    toggleCategory: (category: string) => dispatch(toggleCategory(category)),
-    toggleBlock: (category: string, block: string) => dispatch(toggleBlock(category, block)),
-    toggleUseCategory: () => dispatch(toggleUseCategory())
+    toggleCategory: (category: string) => {
+        dispatch(toggleCategory(category));
+        dispatch(changed());
+    },
+    toggleBlock: (category: string, block: string) => {
+        dispatch(toggleBlock(category, block));
+        dispatch(changed());
+    },
+    toggleUseCategory: () => {
+        dispatch(toggleUseCategory());
+        dispatch(changed());
+    }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BlockSelector);

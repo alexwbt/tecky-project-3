@@ -5,7 +5,7 @@ import 'blockly/blocks';
 import "./customBlocks.ts";
 import { getBlock, BlockList, blocklyBlocks } from './toolbox';
 import { IRootState, ReduxThunkDispatch } from '../../store';
-import { setCode } from '../../actions/problemActions';
+import { setCode, changed } from '../../actions/problemActions';
 
 // const BlocklyJS = require("blockly/javascript");
 
@@ -20,6 +20,7 @@ interface IBlocklyAreaProps {
     useCategory: boolean;
     code: string;
     setCode: (code: string) => void;
+    changed: () => void;
 }
 
 class BlocklyArea extends React.Component<IBlocklyAreaProps> {
@@ -47,6 +48,10 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
         //         console.log(err.message);
         //     }
         // }
+    }
+
+    componentDidMount() {
+        this.component.current?.workspace.addChangeListener(() => this.props.changed());
     }
 
     componentWillUnmount() {
@@ -92,7 +97,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    setCode: (code: string) => dispatch(setCode(code))
+    setCode: (code: string) => dispatch(setCode(code)),
+    changed: () => dispatch(changed())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BlocklyArea);
