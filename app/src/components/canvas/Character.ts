@@ -46,7 +46,7 @@ export default class Character {
         if (this.moveTo.length > 0 && this.moveTo[0] >= 0 && this.moveTo[0] < 4) {
             const x = this.x + EIGHT[this.moveTo[0]][0];
             const y = this.y + EIGHT[this.moveTo[0]][1];
-            if (x >= 0 && x < terrain.length && y >= 0 && y < terrain[x].length && terrain[x][y] !== Tile.WATER) {
+            if (x >= 0 && x < terrain.length && y >= 0 && y < terrain[x].length && terrain[x][y] === Tile.ROAD) {
                 this.moving += 0.05;
                 this.flip = this.x > x;
                 if (this.moving >= 1) {

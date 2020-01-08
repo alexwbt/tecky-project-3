@@ -7,7 +7,7 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 import "./BlockSelector.css";
 import { IRootState, ReduxThunkDispatch } from "../../store";
-import { toggleCategory, toggleBlock, toggleUseCategory, changed } from "../../actions/problemActions";
+import { toggleCategory, toggleBlock, toggleUseCategory, changed, toggleUseVariables, toggleUseFunctions } from "../../actions/problemActions";
 
 
 interface IBlockSelectorProps {
@@ -15,9 +15,13 @@ interface IBlockSelectorProps {
     avalibleBlocks: BlockList;
     avalibleCategories: string[];
     useCategory: boolean;
+    useVariables: boolean;
+    useFunctions: boolean;
     toggleCategory: (category: string) => void;
     toggleBlock: (category: string, block: string) => void;
     toggleUseCategory: () => void;
+    toggleUseVariables: () => void;
+    toggleUseFunctions: () => void;
 }
 
 
@@ -39,6 +43,39 @@ class BlockSelector extends React.Component<IBlockSelectorProps> {
                     <h6 className="pl-3 d-inline">Use Category</h6>
                 </label>
             </div>
+            <div className="checkbox">
+                <label className="m-0 w-100 p-2">
+                    <input
+                        type="checkbox"
+                        checked={this.props.useVariables}
+                        onChange={this.props.toggleUseVariables}
+                    />
+                    <span className="cr">
+                        <FontAwesomeIcon className="cr-icon text-info" icon={faCheck} />
+                    </span>
+                    <h6 className="pl-3 d-inline">Use Variables</h6>
+                </label>
+            </div>
+            <div className="checkbox">
+                <label className="m-0 w-100 p-2">
+                    <input
+                        type="checkbox"
+                        checked={this.props.useFunctions}
+                        onChange={this.props.toggleUseFunctions}
+                    />
+                    <span className="cr">
+                        <FontAwesomeIcon className="cr-icon text-info" icon={faCheck} />
+                    </span>
+                    <h6 className="pl-3 d-inline">Use Functions</h6>
+                </label>
+            </div>
+            {
+                ((this.props.useVariables || this.props.useFunctions) && !this.props.useCategory) && <div
+                    className="text-danger" >
+                    Category must be enabled to use Variables or Functions.
+                </div>
+            }
+            <hr />
             <p>Select any block you want the player to be able to use.</p>
             {Object.keys(blocklyBlocks).map((cat, i) => {
                 return <div key={i} className="checkbox">
@@ -80,7 +117,9 @@ class BlockSelector extends React.Component<IBlockSelectorProps> {
 const mapStateToProps = (state: IRootState) => ({
     avalibleBlocks: state.problem.avalibleBlocks,
     avalibleCategories: state.problem.avalibleCategories,
-    useCategory: state.problem.useCategory
+    useCategory: state.problem.useCategory,
+    useVariables: state.problem.useVariables,
+    useFunctions: state.problem.useFunctions
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
@@ -94,6 +133,14 @@ const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     },
     toggleUseCategory: () => {
         dispatch(toggleUseCategory());
+        dispatch(changed());
+    },
+    toggleUseVariables: () => {
+        dispatch(toggleUseVariables());
+        dispatch(changed());
+    },
+    toggleUseFunctions: () => {
+        dispatch(toggleUseFunctions());
         dispatch(changed());
     }
 });

@@ -32,7 +32,9 @@ export enum Obj {
     GOLD_COIN,
     SILV_COIN,
     BLUE_GEM,
-    GREEN_GEM
+    GREEN_GEM,
+    SPARKS,
+    FLAG
 }
 
 export function getSpritePos(i: number) {
@@ -74,6 +76,8 @@ export default class CanvasContent {
 
     private chars: Character[];
     private objs: (GameObject | null)[][];
+
+    private coinAudio = new Audio("/coin.wav");
 
     constructor(content: ICanvasContent, tileSprite: HTMLImageElement, charSprite: HTMLImageElement, objSprite: HTMLImageElement) {
         if (!content.terrainSize || !content.terrain) {
@@ -155,7 +159,16 @@ export default class CanvasContent {
 
         for (let x = 0; x < this.terrainSize; x++) {
             for (let y = 0; y < this.terrainSize; y++) {
-                this.objs[x][y]?.update();
+
+                if (this.objs[x][y]) {
+                    this.objs[x][y]?.update();
+                    const char = this.chars.find(char => char.getX() === x && char.getY() === y);
+                    if (char) {
+                        this.coinAudio.play();
+                        this.objs[x][y] = new GameObject(Obj.SPARKS);
+                        setTimeout(() => this.objs[x][y] = null, 200);
+                    }
+                }
             }
         }
     }
@@ -181,13 +194,13 @@ export default class CanvasContent {
             }
         }
 
-        this.chars.slice().sort((a, b) => a.getAbsY(height) - b.getAbsY(height)).forEach(obj => obj.render(ctx, width, height, this.charSprite));
-
         for (let x = 0; x < this.terrainSize; x++) {
             for (let y = 0; y < this.terrainSize; y++) {
                 this.objs[x][y]?.render(ctx, x, y, width, height, this.objSprite);
             }
         }
+
+        this.chars.slice().sort((a, b) => a.getAbsY(height) - b.getAbsY(height)).forEach(obj => obj.render(ctx, width, height, this.charSprite));
     }
 
     private renderTile(ctx: CanvasRenderingContext2D, i: number, x: number, y: number, width: number, height: number) {

@@ -11,6 +11,8 @@ export interface IProblemState extends ProblemInfo {
     avalibleBlocks: BlockList;
     avalibleCategories: string[];
     useCategory: boolean;
+    useVariables: boolean;
+    useFunctions: boolean;
 
     savingMessage: string;
     saved: boolean;
@@ -32,6 +34,8 @@ const initialState: IProblemState = {
     avalibleBlocks: {},
     avalibleCategories: [],
     useCategory: false,
+    useVariables: false,
+    useFunctions: false,
 
     savingMessage: "",
     saved: true
@@ -44,7 +48,7 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
         // case "SET_PROBLEM":
         //     return {
         //     };
-        case "CHANGED" :
+        case "CHANGED":
             return {
                 ...state,
                 saved: false,
@@ -90,6 +94,16 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
             return {
                 ...state,
                 useCategory: !state.useCategory
+            };
+        case "TOGGLE_USE_VARIABLES":
+            return {
+                ...state,
+                useVariables: !state.useVariables
+            };
+        case "TOGGLE_USE_FUNCTIONS":
+            return {
+                ...state,
+                useFunctions: !state.useFunctions
             };
         case "SET_CODE":
             return {

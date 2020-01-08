@@ -2,8 +2,7 @@ import React from "react";
 import { Block, Value, Shadow, Field } from "./BlocklyComponent";
 
 export const blocklyBlocks: BlockList = {
-    "Custom": [
-        "console_log",
+    "Player": [
         "getPlayer",
         "movePlayer"
     ],

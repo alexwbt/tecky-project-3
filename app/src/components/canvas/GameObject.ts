@@ -31,6 +31,16 @@ export default class GameObject {
                 this.frameCount = 4;
                 this.speed = 0.25;
                 break;
+            case Obj.SPARKS:
+                this.startFrame = 32;
+                this.frameCount = 1;
+                this.speed = 0;
+                break;
+            case Obj.FLAG:
+                this.startFrame = 33;
+                this.frameCount = 3;
+                this.speed = 0.3;
+                break;
         }
     }
 

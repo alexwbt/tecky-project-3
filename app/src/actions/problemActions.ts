@@ -61,6 +61,18 @@ export function toggleUseCategory() {
     };
 }
 
+export function toggleUseVariables() {
+    return {
+        type: "TOGGLE_USE_VARIABLES" as "TOGGLE_USE_VARIABLES"
+    };
+}
+
+export function toggleUseFunctions() {
+    return {
+        type: "TOGGLE_USE_FUNCTIONS" as "TOGGLE_USE_FUNCTIONS"
+    };
+}
+
 export function setCode(code: string) {
     return {
         type: "SET_CODE" as "SET_CODE",
@@ -70,6 +82,8 @@ export function setCode(code: string) {
 
 
 type ActionCreators = typeof toggleCategory
+                    | typeof toggleUseVariables
+                    | typeof toggleUseFunctions
                     | typeof toggleBlock
                     | typeof toggleUseCategory
                     | typeof setCanvasContent

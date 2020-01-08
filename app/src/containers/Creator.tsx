@@ -222,7 +222,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                                     getTabObj("Gold Coin", Obj.GOLD_COIN, 0),
                                                     getTabObj("Silver Coin", Obj.SILV_COIN, 8),
                                                     getTabObj("Blue Gem", Obj.BLUE_GEM, 16),
-                                                    getTabObj("Green Gem", Obj.GREEN_GEM, 24)
+                                                    getTabObj("Green Gem", Obj.GREEN_GEM, 24),
+                                                    getTabObj("Flag", Obj.FLAG, 33)
                                                 ]}
                                                 sprite={this.objSpriteImg.current}
                                                 select={this.selectChar} />
@@ -236,9 +237,11 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                         }
                         {
                             this.state.currentTab === "Code" && <BlocklyArea
-                                useCategory={true}
-                                useVariables={true}
-                                useFunctions={true}
+                                useCategory={this.props.problem.useCategory}
+                                avalibleBlocks={this.props.problem.avalibleBlocks}
+                                avalibleCategories={this.props.problem.avalibleCategories}
+                                useVariables={this.props.problem.useCategory && this.props.problem.useVariables}
+                                useFunctions={this.props.problem.useCategory && this.props.problem.useFunctions}
                                 height={this.state.height}
                                 className="col-12 p-0" />
                         }
