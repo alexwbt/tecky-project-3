@@ -47,6 +47,12 @@ export const userService = new UserService(knex);
 const userRouter = new UserRouter(userService);
 app.use("/user", userRouter.router());
 
+import CategoryService from './services/CategoryService';
+import CategoryRouter from './routers/CategoryRouter';
+const categoryService = new CategoryService(knex);
+const categoryRouter = new CategoryRouter(categoryService);
+app.use("/category", categoryRouter.router());
+
 import ProblemService from "./services/ProblemService";
 import ProblemRouter from "./routers/ProblemRouter";
 export const problemService = new ProblemService(knex);
