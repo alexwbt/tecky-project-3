@@ -1,8 +1,9 @@
 import React from "react";
-import { connect } from "react-redux";
-import { IRootState, ReduxThunkDispatch } from "../store";
+import Table from "react-bootstrap/Table";
 import NavBar from "../components/NavBar";
 import TabSelect from "../components/TabSelect";
+import { connect } from "react-redux";
+import { IRootState, ReduxThunkDispatch } from "../store";
 import { getProfile } from "../thunks/profileThunks";
 
 
@@ -15,6 +16,10 @@ interface IProfileProps {
     username: string;
     email: string;
     exp: number;
+    title: string;
+    difficulty: string;
+    audit: boolean;
+    date: string;
     getProfile: (username: string) => void;
 }
 
@@ -29,7 +34,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     constructor(props: IProfileProps) {
         super(props);
         this.state = {
-            currentTab: "Info"
+            currentTab: "Info" 
         };
     }
 
@@ -44,7 +49,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     render() {
         return <>
             <NavBar />
-            <div className="container bg-white border shadow">
+            <div className="container bg-white border shadow" style={{height:"100vh"}}>
                 <div className="row">
                     <div className="col-12 text-center mt-4">
                         <img
@@ -82,6 +87,58 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                         this.state.currentTab === "Info" && <div className="col-6 p-2 text-center">
                             <h6>username: {this.props.username}</h6>
                             <h6>email: {this.props.email}</h6>
+                        </div>
+                    }
+                </div>
+
+                <div className="row pt-2 justify-content-center">
+                    {
+                        this.state.currentTab === "Posts" && <div className="col-10 p-2 text-center">
+                            <h6>Posts Challenge</h6>
+                            <Table striped bordered hover responsive="lg" size="sm">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Difficulty</th>
+                                        <th>Audit</th>
+                                        <th>Public Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{this.props.title}</td>
+                                    <td>{this.props.difficulty}</td>
+                                    <td>{this.props.audit}</td>
+                                    <td>{this.props.date}</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                        </div>
+                    }
+                </div>
+
+                <div className="row pt-2 justify-content-center">
+                    {
+                        this.state.currentTab === "Solved" && <div className="col-10 p-2 text-center">
+                            <h6>Solved Challenge</h6>
+                            <Table striped bordered hover responsive="lg" size="sm">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Difficulty</th>
+                                        <th>Score</th>
+                                        <th>Submit Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                    <td>@fat</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
                         </div>
                     }
                 </div>
