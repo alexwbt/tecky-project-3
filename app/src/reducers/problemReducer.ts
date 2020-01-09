@@ -16,6 +16,8 @@ export interface IProblemState extends IProblemInfo {
 
     savingMessage: string;
     saved: boolean;
+    getProblemFailed: boolean;
+    failedMessage: string;
 }
 
 const initialState: IProblemState = {
@@ -38,16 +40,27 @@ const initialState: IProblemState = {
     useFunctions: false,
 
     savingMessage: "",
-    saved: true
+    saved: true,
+    getProblemFailed: false,
+    failedMessage: ""
 };
 
 Object.keys(blocklyBlocks).forEach(cat => initialState.avalibleBlocks[cat] = []);
 
 const problemReducer = (state: IProblemState = initialState, action: ProblemActions) => {
     switch (action.type) {
-        // case "SET_PROBLEM":
-        //     return {
-        //     };
+        case "SET_PROBLEM":
+            return {
+                ...action.problem,
+                getProblemFailed: false,
+                failedMessage: ""
+            };
+        case "GET_PROBLEM_FAILED":
+            return {
+                ...initialState,
+                getProblemFailed: true,
+                failedMessage: action.message
+            };
         case "CHANGED":
             return {
                 ...state,

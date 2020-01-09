@@ -3,11 +3,14 @@ import { connect } from "react-redux";
 import { IRootState, ReduxThunkDispatch } from "../store";
 
 import NavBar from "../components/NavBar";
-// import Canvas from "../components/canvas/Canvas";
-
-// import tileSprite from "../sprites/tileSprite.png";
-// import charSprite from "../sprites/charSprite.png";
+import tileSprite from "../sprites/tileSprite.png";
+import charSprite from "../sprites/charSprite.png";
+import objSprite from "../sprites/objectSprite.png";
 import { BlockList } from "../components/blockly/toolbox";
+import Canvas from "../components/canvas/Canvas";
+import { IProblemState } from "../reducers/problemReducer";
+import BlocklyArea from "../components/blockly/BlocklyArea";
+import { getProblem } from "../thunks/problemThunk";
 
 
 interface ISolverProps {
@@ -16,9 +19,7 @@ interface ISolverProps {
             problemId: number;
         };
     };
-    useCategory: boolean;
-    avalibleBlocks: BlockList;
-    avalibleCategories: string[];
+    problem: IProblemState;
 }
 
 interface ISolverStates {
@@ -27,16 +28,18 @@ interface ISolverStates {
 
 class Solver extends React.Component<ISolverProps, ISolverStates> {
 
-    private tilsSpriteImg: React.RefObject<HTMLImageElement>;
+    private tileSpriteImg: React.RefObject<HTMLImageElement>;
     private charSpriteImg: React.RefObject<HTMLImageElement>;
+    private objSpriteImg: React.RefObject<HTMLImageElement>;
 
     constructor(props: ISolverProps) {
         super(props);
         this.state = {
             height: 0
         };
-        this.tilsSpriteImg = React.createRef();
+        this.tileSpriteImg = React.createRef();
         this.charSpriteImg = React.createRef();
+        this.objSpriteImg = React.createRef();
     }
 
     private updateHeight = () => {
@@ -56,38 +59,40 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     render() {
         return <>
             <NavBar />
-            {/* <div className="container-fluid p-0 bg-light">
+            <img ref={this.tileSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
+            <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />
+            <img ref={this.objSpriteImg} src={objSprite} className={"d-none"} alt={"sprite"} />
+            <div className="container-fluid p-0 bg-light">
                 <div className="row w-100 m-0" style={{ height: this.state.height }}>
-                    <img ref={this.tilsSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
-                    <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />
                     <div className="col-4 p-1">
                         <Canvas
-                            tileSprite={this.tilsSpriteImg.current}
+                            tileSprite={this.tileSpriteImg.current}
                             charSprite={this.charSpriteImg.current}
+                            objSprite={this.objSpriteImg.current}
                             size={16 * 100}
-                            editable={true} />
-                        <button onClick={this.generateCode}>run</button>
+                            editable={false} />
                     </div>
                     <BlocklyArea
-                        useCategory={this.props.useCategory}
-                        avalibleBlocks={this.props.avalibleBlocks}
-                        avalibleCategories={this.props.avalibleCategories}
-                        ref={this.blocklyArea}
+                        useCategory={this.props.problem.useCategory}
+                        avalibleBlocks={this.props.problem.avalibleBlocks}
+                        avalibleCategories={this.props.problem.avalibleCategories}
+                        useVariables={this.props.problem.useCategory && this.props.problem.useVariables}
+                        useFunctions={this.props.problem.useCategory && this.props.problem.useFunctions}
                         height={this.state.height}
                         className="col-8 p-0" />
                 </div>
-            </div> */}
+            </div>
         </>
     }
 
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    useCategory: state.problem.useCategory,
-    avalibleBlocks: state.problem.avalibleBlocks,
-    avalibleCategories: state.problem.avalibleCategories
+    problem: state.problem
 });
 
-const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({});
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
+    getProblem: (id: number) => dispatch(getProblem(id))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Solver);

@@ -35,7 +35,10 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
     }
 
     componentDidMount() {
-        this.component.current?.workspace.addChangeListener(() => this.props.changed());
+        this.component.current?.workspace.addChangeListener(() => {
+            this.props.changed();
+            this.props.setCode(this.getCodeXml());
+        });
     }
 
     componentWillUnmount() {
