@@ -21,6 +21,7 @@ class LeaderBoard extends React.Component {
                         {/* search bar & filter tag */}
                     </div>
                     
+                    {/* user image */}
                     <div className="col-2 mt-4">
                         <img
                             src="https://cdn.shopify.com/s/files/1/0150/0643/3380/files/patrick.png?7948"
@@ -30,6 +31,7 @@ class LeaderBoard extends React.Component {
                             alt="user-icon" />
                     </div>
                         
+                    {/* user information (name,lv,progress bar) */}
                     <div className="col-2 mt-4 ">
                         <h2 className="mt-3 mb-0 text-monospace text-warning text-center">admin</h2>
                         <h6 className="text-monospace text-warning text-center">Lvl. 10</h6>
@@ -46,15 +48,17 @@ class LeaderBoard extends React.Component {
                         </div>
                     </div>
 
-                    <div className="col-2 mt-4 mb-0 text-monospace text-center" style={{border:"2px outset", backgroundColor: 'rgba(22, 152, 175, 0.7)'}}>
-                        <h6 className="mt-3" style={{display:'flex', justifyContent: 'center', alignItems:'center'}}>Ranking No.</h6>
-                        <h4 className="mt-3" style={{alignItems:'center'}}>(Number)</h4>
+                    {/* user ranking */}
+                    <div className="col-2 mt-4 text-monospace text-center" style={{border:"2px outset", backgroundColor: 'rgba(22, 152, 175, 0.7)'}}>
+                        <h6 style={{marginTop:'25px', marginBottom:'20px'}}>Ranking No</h6>
+                        <h4 style={{marginBottom:'25px'}}>(Number)</h4>
                     </div>
                 </div>
 
                 <br />
                 <br />
                 
+                {/* ranking list (only show big 10) */}
                 <div className="row pt-2 justify-content-center">
                     <div className="col-11 p-2 text-center">
                         <h6>Ranking list</h6>
@@ -73,6 +77,12 @@ class LeaderBoard extends React.Component {
                                     <td>Alex</td>
                                     <td>100 (10000)</td>
                                     <td>Hong Kong</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </Table>
