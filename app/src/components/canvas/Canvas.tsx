@@ -7,6 +7,7 @@ import { setCanvasContent, changed } from "../../actions/problemActions";
 import { CanvasTab } from "../../containers/Creator";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+import GameEndModal from "./GameEndModal";
 
 const Blockly = require("blockly");
 const BlocklyJS = require("blockly/javascript");
@@ -32,6 +33,7 @@ export interface ICanvasProps {
 
 interface ICanvasState {
     running: boolean;
+    endGameModal: boolean;
 }
 
 /* eslint no-eval: 0 */
@@ -54,7 +56,8 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     constructor(props: ICanvasProps) {
         super(props);
         this.state = {
-            running: false
+            running: false,
+            endGameModal: false
         };
         this.canvas = React.createRef();
     }
@@ -62,7 +65,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     // canvas
     private start() {
         if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
-            this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite);
+            this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
         }
 
         this.fpsStartTime = this.renderStartTime = performance.now();
@@ -110,22 +113,37 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                     ctx.font = "30px Arial";
                     ctx.fillText(`x: ${x}, y: ${y}`, mouseX, mouseY);
 
-                    if (this.buttons[0] && this.props.currentTab && !this.state.running) {
-                        switch (this.props.currentTab) {
-                            case "Terrain":
-                                this.content.setTerrain(x, y, this.props.pen as Tile);
-                                break;
-                            case "Characters":
-                                this.content.addCharacter(new Character(x, y, this.props.pen as Char));
-                                this.buttons[0] = false;
-                                break;
-                            case "Objects":
-                                this.content.setObject(x, y, this.props.pen as Obj);
-                                this.buttons[0] = false;
-                                break;
-                            default:
+                    if (!this.state.running) {
+                        if (this.buttons[0]) {
+                            switch (this.props.currentTab) {
+                                case "Terrain":
+                                    this.content.setTerrain(x, y, this.props.pen as Tile);
+                                    break;
+                                case "Characters":
+                                    this.content.addCharacter(new Character(x, y, this.props.pen as Char));
+                                    this.buttons[0] = false;
+                                    break;
+                                case "Objects":
+                                    this.content.setObject(x, y, this.props.pen as Obj);
+                                    this.buttons[0] = false;
+                                    break;
+                                default:
+                            }
+                            this.props.changed();
+                        } else if (this.buttons[2]) {
+                            switch (this.props.currentTab) {
+                                case "Terrain":
+                                    this.content.setTerrain(x, y, Tile.GRASS);
+                                    break;
+                                case "Characters":
+                                    this.content.removeCharacter(x, y);
+                                    break;
+                                case "Objects":
+                                    this.content.setObject(x, y, null);
+                                    break;
+                                default:
+                            }
                         }
-                        this.props.changed();
                     }
                 }
             }
@@ -169,7 +187,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
 
         if (this.state.running) {
             if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
-                this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite);
+                this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
             }
         } else {
             this.props.setContent(this.getContent());
@@ -189,6 +207,11 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                 }
             }
         }
+    };
+
+    private gameEnd = () => {
+        this.setState({ ...this.state, endGameModal: true });
+        this.run();
     };
 
     getContent() {
@@ -226,6 +249,14 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
 
     render() {
         return <div>
+            <GameEndModal
+                show={this.state.endGameModal}
+                handleClose={() => {
+                    this.setState({
+                        ...this.state,
+                        endGameModal: false
+                    });
+                }} />
             <canvas
                 ref={this.canvas}
                 className="w-100 h-100 border"
@@ -234,7 +265,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             <button
                 className={"m-1 btn btn-" + (this.state.running ? "danger" : "success")}
                 onClick={this.run}><FontAwesomeIcon
-                icon={this.state.running ? faStop : faPlay}
+                    icon={this.state.running ? faStop : faPlay}
                 /></button>
         </div>
     }

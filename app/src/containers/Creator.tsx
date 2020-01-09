@@ -17,6 +17,7 @@ import objSprite from "../sprites/objectSprite.png";
 import { uploadProblem } from "../thunks/problemThunk";
 import { IProblemState } from "../reducers/problemReducer";
 import { Prompt } from "react-router-dom";
+import GameEndModal from "../components/canvas/GameEndModal";
 
 
 interface ICreatorProps {
@@ -55,7 +56,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             currentTab: "Description",
             canvas: {
                 currentTab: "Terrain",
-                pen: 0
+                pen: 0,
             },
             saving: false
         };
