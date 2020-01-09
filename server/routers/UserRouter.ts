@@ -14,6 +14,7 @@ export default class UserRouter {
         router.post("/login", catcher(this.login));
         router.post("/register", catcher(this.register));
         router.get("/profile/:username", catcher(this.getProfile));
+        router.get("/leaderBoard", catcher(this.getProfile));
         return router;
     }
 
@@ -106,5 +107,4 @@ export default class UserRouter {
             exp: profile.experience
         });
     };
-
 }

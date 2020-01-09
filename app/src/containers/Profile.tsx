@@ -59,7 +59,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                             className="rounded-circle shadow"
                             style={{ border: "5px solid white" }}
                             alt="user-icon" />
-                        <h2 className="mt-3 mb-0">{this.props.username}</h2>
+                        <h2 className="mt-3 mb-0 text-warning">{this.props.username}</h2>
                         <h4 className="text-monospace text-warning">Lvl. 10</h4>
                         <div className="progress w-25 m-auto rounded-pill">
                             <div

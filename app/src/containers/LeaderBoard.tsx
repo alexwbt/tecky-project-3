@@ -34,10 +34,10 @@ class LeaderBoard extends React.Component {
                     {/* user information (name,lv,progress bar) */}
                     <div className="col-2 mt-4 ">
                         <h2 className="mt-3 mb-0 text-monospace text-warning text-center">admin</h2>
-                        <h6 className="text-monospace text-warning text-center">Lvl. 10</h6>
+                        <h6 className="mb-0 text-monospace text-warning text-center">Lvl. 10</h6>
                         <div className="progress rounded-pill">
                             <div
-                                className="progress-bar bg-info progress-bar-striped"
+                                className="mb-0 progress-bar bg-info progress-bar-striped"
                                 role="progressbar"
                                 aria-valuenow={70}
                                 aria-valuemin={0}
