@@ -8,12 +8,12 @@ export default class CategoryRouter {
 
     router() {
         const router = Router();
-        router.get("/types/", catcher(this.getTypes));
+        router.get("/", catcher(this.getAll));
         return router;
     }
 
-    private getTypes = async (req: Request, res: Response) => {
-        const categories = await this.categoryService.getCategory();
+    private getAll = async (req: Request, res: Response) => {
+        const categories = await this.categoryService.getCategories();
         res.json({ categories });
     }
 }
