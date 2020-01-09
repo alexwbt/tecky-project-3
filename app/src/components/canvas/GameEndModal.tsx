@@ -9,18 +9,15 @@ interface IGameEndModalProps {
 
 const GameEndModal: React.FC<IGameEndModalProps> = (props: IGameEndModalProps) => {
     return <>
-        <Modal show={props.show} onHide={props.handleClose}>
+        <Modal size="lg" show={props.show} onHide={props.handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Modal heading</Modal.Title>
+                <Modal.Title>Congratulation!</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+            <Modal.Body>You have completed the challenge.</Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={props.handleClose}>
                     Close
-          </Button>
-                <Button variant="primary" onClick={props.handleClose}>
-                    Save Changes
-          </Button>
+                </Button>
             </Modal.Footer>
         </Modal>
     </>

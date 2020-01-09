@@ -134,7 +134,7 @@ export default class CanvasContent {
     }
 
     removeCharacter(x: number, y: number) {
-        this.chars = this.chars.filter(char => char.getX() !== x && char.getY() !== y);
+        this.chars = this.chars.filter(char => char.getX() !== x || char.getY() !== y);
     }
 
     setTerrain(x: number, y: number, tile: Tile) {
