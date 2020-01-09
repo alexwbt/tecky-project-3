@@ -143,6 +143,17 @@ export default class CanvasContent {
         }
     }
 
+    isRoad(char: Character, dir: number) {
+        if (dir >= 0 && dir < 4) {
+            const x = char.getX() + EIGHT[dir][0];
+            const y = char.getY() + EIGHT[dir][0];
+            if (x >= 0 && x < this.terrainSize && y >= 0 && y < this.terrainSize)
+                return this.terrain[x][y] === Tile.ROAD;
+            else return false;
+        }
+        return false;
+    }
+
     setObject(x: number, y: number, obj: Obj | null) {
         if (x >= 0 && x < this.terrainSize && y >= 0 && y < this.terrainSize) {
             this.objs[x][y] = obj !== null ? new GameObject(obj) : null;

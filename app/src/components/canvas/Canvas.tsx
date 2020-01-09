@@ -183,8 +183,6 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     };
 
     private run = () => {
-        this.setState({ ...this.state, running: !this.state.running });
-
         if (this.state.running) {
             if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
                 this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
@@ -200,13 +198,16 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                     (function (code: string) {
                         eval(code);
                     }).call({
-                        getPlayer: (id: number) => this.content ? this.content.getCharacter(id) : null
+                        getPlayer: (id: number) => this.content ? this.content.getCharacter(id) : null,
+                        getContent: () => this.content
                     }, code);
                 } catch (err) {
                     console.log(err.message);
                 }
             }
         }
+        
+        this.setState({ ...this.state, running: !this.state.running });
     };
 
     private gameEnd = () => {

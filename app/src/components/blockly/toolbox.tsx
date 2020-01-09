@@ -3,8 +3,8 @@ import { Block, Value, Shadow, Field } from "./BlocklyComponent";
 
 export const blocklyBlocks: BlockList = {
     "Player": [
-        "getPlayer",
-        "movePlayer"
+        "movePlayer",
+        "isRoad"
     ],
     "Logic": [
         "controls_if",
@@ -83,6 +83,22 @@ export type BlockList = { [cat: string]: string[] };
 
 export const getBlock = (block: string) => {
     switch (block) {
+        case "movePlayer":
+            return <Block type="movePlayer">
+                <Value name="VALUE">
+                    <Shadow type="math_number">
+                        <Field name="NUM">0</Field>
+                    </Shadow>
+                </Value>
+            </Block>;
+        case "isRoad":
+            return <Block type="isRoad">
+                <Value name="VALUE">
+                    <Shadow type="math_number">
+                        <Field name="NUM">0</Field>
+                    </Shadow>
+                </Value>
+            </Block>;
         case "controls_repeat_ext":
             return <Block type="controls_repeat_ext">
                 <Value name="TIMES">
