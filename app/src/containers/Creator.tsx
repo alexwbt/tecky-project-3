@@ -55,7 +55,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             currentTab: "Description",
             canvas: {
                 currentTab: "Terrain",
-                pen: 0
+                pen: 0,
             },
             saving: false
         };

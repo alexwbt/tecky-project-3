@@ -79,7 +79,12 @@ export default class CanvasContent {
 
     private coinAudio = new Audio("/coin.wav");
 
-    constructor(content: ICanvasContent, tileSprite: HTMLImageElement, charSprite: HTMLImageElement, objSprite: HTMLImageElement) {
+    constructor(
+        content: ICanvasContent,
+        tileSprite: HTMLImageElement,
+        charSprite: HTMLImageElement,
+        objSprite: HTMLImageElement,
+        private gameEnd: () => void) {
         if (!content.terrainSize || !content.terrain) {
             const size = 8;
             let terrain: Tile[][] = [];
@@ -128,15 +133,19 @@ export default class CanvasContent {
         return this.chars[id];
     }
 
+    removeCharacter(x: number, y: number) {
+        this.chars = this.chars.filter(char => char.getX() !== x || char.getY() !== y);
+    }
+
     setTerrain(x: number, y: number, tile: Tile) {
         if (x >= 0 && x < this.terrainSize && y >= 0 && y < this.terrainSize) {
             this.terrain[x][y] = tile;
         }
     }
 
-    setObject(x: number, y: number, obj: Obj) {
+    setObject(x: number, y: number, obj: Obj | null) {
         if (x >= 0 && x < this.terrainSize && y >= 0 && y < this.terrainSize) {
-            this.objs[x][y] = new GameObject(obj);
+            this.objs[x][y] = obj !== null ? new GameObject(obj) : null;
         }
     }
 
@@ -164,9 +173,13 @@ export default class CanvasContent {
                     this.objs[x][y]?.update();
                     const char = this.chars.find(char => char.getX() === x && char.getY() === y);
                     if (char) {
-                        this.coinAudio.play();
-                        this.objs[x][y] = new GameObject(Obj.SPARKS);
-                        setTimeout(() => this.objs[x][y] = null, 200);
+                        if (this.objs[x][y]?.getType() === Obj.FLAG) {
+                            this.gameEnd();
+                        } else {
+                            this.coinAudio.play();
+                            this.objs[x][y] = new GameObject(Obj.SPARKS);
+                            setTimeout(() => this.objs[x][y] = null, 200);
+                        }
                     }
                 }
             }
