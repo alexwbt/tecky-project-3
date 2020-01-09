@@ -17,8 +17,6 @@ import objSprite from "../sprites/objectSprite.png";
 import { uploadProblem } from "../thunks/problemThunk";
 import { IProblemState } from "../reducers/problemReducer";
 import { Prompt } from "react-router-dom";
-import GameEndModal from "../components/canvas/GameEndModal";
-import { faCompressAlt } from "@fortawesome/free-solid-svg-icons";
 
 
 interface ICreatorProps {
