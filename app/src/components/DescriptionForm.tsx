@@ -1,15 +1,15 @@
 import React from "react";
 import { Container, Form } from "react-bootstrap";
-import { ProblemInfo } from "../models/Problem";
+import { IProblemInfo } from "../models/Problem";
 import { IRootState } from '../store';
 import { connect } from "react-redux";
 
 
-interface IDescriptionFormProps extends ProblemInfo {
+interface IDescriptionFormProps extends IProblemInfo {
 
 }
 
-interface IDescriptionFormStates extends ProblemInfo {
+interface IDescriptionFormStates extends IProblemInfo {
 
 }
 
@@ -39,6 +39,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
         return (
             <Container>
                 <Form>
+                    <h2>Information</h2>
                     <Form.Group controlId="formTitle">
                         <Form.Label>Title</Form.Label>
                         <Form.Control
@@ -78,11 +79,14 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             onChange={this.inputChange} />
                     </Form.Group>
 
+                    <h2>Requirement</h2>
+                    <h3>Full Marks</h3>
 
-                    <Form.Group controlId="form">
+
+                    {/* <Form.Group controlId="form">
                         <Form.Label></Form.Label>
                         <Form.Control />
-                    </Form.Group>
+                    </Form.Group> */}
                 </Form>
             </Container>
 

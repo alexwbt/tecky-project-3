@@ -1,25 +1,25 @@
-import { Category } from "./Category";
-import { Difficulty } from "./Difficulty";
+import { ICategory } from "./Category";
+import { IDifficulty } from "./Difficulty";
 
-export interface Problem {
+export interface IProblem {
     title: string;
-    category: Category | null;
-    difficulty: Difficulty | null;
-    status: ProblemStatus | null;
+    category: ICategory | null;
+    difficulty: IDifficulty | null;
+    status: IProblemStatus | null;
 }
 
-export interface ProblemInfo extends Problem {
+export interface IProblemInfo extends IProblem {
     description: string;
     score: number;
-    deduction: Deduction[] | null;
+    deduction: IProblemDeduction[] | null;
 }
 
-export interface ProblemStatus {
+export interface IProblemStatus {
     id: number;
     name: string;
 }
 
-export interface Deduction {
+export interface IProblemDeduction {
     id: number;
     title: string;
     deduct: number;

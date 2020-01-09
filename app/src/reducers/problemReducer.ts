@@ -1,10 +1,10 @@
 import { ICanvasContent } from "../components/canvas/CanvasContent";
 import ProblemActions from "../actions/problemActions";
 import { BlockList, blocklyBlocks } from "../components/blockly/toolbox";
-import { ProblemInfo } from "../models/Problem";
+import { IProblemInfo } from "../models/Problem";
 
 
-export interface IProblemState extends ProblemInfo {
+export interface IProblemState extends IProblemInfo {
     // Editor
     canvas: ICanvasContent;
     code: string;

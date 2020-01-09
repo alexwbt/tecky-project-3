@@ -1,4 +1,4 @@
-export interface Difficulty {
+export interface IDifficulty {
     id: number;
     name: string;
 }
