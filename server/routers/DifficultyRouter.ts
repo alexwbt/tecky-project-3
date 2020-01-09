@@ -14,7 +14,8 @@ export default class DifficultyRouter {
     }
 
     private getAll = async (req: Request, res: Response) => {
-        
+        const difficulties = await this.difficultyService.getDifficulties();
+        res.json({ difficulties })
     }
 
     private get = async (req: Request, res: Response) => {

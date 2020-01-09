@@ -10,7 +10,7 @@ export default class CategoryService {
     constructor(private knex: Knex) {}
 
     async getCategories() {
-        const categories: ICategory[] = await this.knex.select().from(Tables.CATEGORY);        
+        const categories: ICategory[] = await this.knex.select("id", "name").from(Tables.CATEGORY);
         return categories;
     }
 }

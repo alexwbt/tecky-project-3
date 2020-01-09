@@ -1,6 +1,11 @@
 import * as Knex from "knex";
+import Tables from "../tables";
 import { MongoClient } from "mongodb";
 
+export interface IProblemStates {
+    id: number;
+    name: string;
+}
 export default class ProblemService {
 
     constructor(private knex: Knex, private mongoClient: MongoClient) { }
@@ -12,6 +17,11 @@ export default class ProblemService {
         const data = await collection.find({}).toArray();
         console.log(data);
         this.mongoClient.close();
+    }
+
+    async getStatusList() {
+        const statuses = await this.knex.select("id", "name").from(Tables.PROBLEM_STATUS);
+        return statuses;
     }
 
 }
