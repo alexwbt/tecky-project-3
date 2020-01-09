@@ -3,8 +3,8 @@ import Table from "react-bootstrap/Table";
 import NavBar from "../components/NavBar";
 import TabSelect from "../components/TabSelect";
 import { connect } from "react-redux";
-import { IRootState, ReduxThunkDispatch } from "../store";
 import { getProfile } from "../thunks/profileThunks";
+import { IRootState, ReduxThunkDispatch } from "../store";
 
 
 interface IProfileProps {
@@ -39,6 +39,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     }
 
     componentDidMount() {
+        document.title = "BlockDojo - Profile";
         this.props.getProfile(this.props.match.params.username);
     }
 
