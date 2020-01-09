@@ -14,7 +14,7 @@ import { Tile, Char, Obj } from "../components/canvas/CanvasContent";
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
 import objSprite from "../sprites/objectSprite.png";
-import { uploadProblem } from "../thunks/problemThunk";
+import { uploadProblem, getProblem } from "../thunks/problemThunk";
 import { IProblemState } from "../reducers/problemReducer";
 import { Prompt } from "react-router-dom";
 
@@ -27,6 +27,7 @@ interface ICreatorProps {
     };
     problem: IProblemState;
     uploadProblem: (problem: IProblemState) => void;
+    getProblem: (id: number) => void;
 }
 
 enum Tab {
@@ -104,6 +105,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         this.updateHeight();
 
         document.title = "BlockDojo - Editor";
+        
+        this.props.getProblem(this.props.match.params.problemId);
     }
 
     componentWillUnmount() {
@@ -269,7 +272,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    uploadProblem: (problem: IProblemState) => dispatch(uploadProblem(problem))
+    uploadProblem: (problem: IProblemState) => dispatch(uploadProblem(problem)),
+    getProblem: (id: number) => dispatch(getProblem(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator);

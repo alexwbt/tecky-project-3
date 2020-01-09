@@ -6,7 +6,6 @@ import NavBar from "../components/NavBar";
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
 import objSprite from "../sprites/objectSprite.png";
-import { BlockList } from "../components/blockly/toolbox";
 import Canvas from "../components/canvas/Canvas";
 import { IProblemState } from "../reducers/problemReducer";
 import BlocklyArea from "../components/blockly/BlocklyArea";
@@ -20,6 +19,7 @@ interface ISolverProps {
         };
     };
     problem: IProblemState;
+    getProblem: (id: number) => void;
 }
 
 interface ISolverStates {
@@ -50,6 +50,10 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     componentDidMount() {
         window.addEventListener('resize', this.updateHeight);
         this.updateHeight();
+
+        document.title = "BlockDojo - Solver";
+        
+        this.props.getProblem(this.props.match.params.problemId);
     }
 
     componentWillUnmount() {
