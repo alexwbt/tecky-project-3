@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { catcher } from "../main";
+import { catcher } from "../middleware";
 import { isLoggedIn } from "../passport";
 import ProblemService from "../services/ProblemService";
 

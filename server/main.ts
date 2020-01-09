@@ -25,27 +25,6 @@ import { mongoClient } from "./mongodb";
 import * as cors from "cors";
 app.use(cors());
 
-// catcher
-export function catcher(routerFunction: (req: express.Request, res: express.Response) => Promise<void>) {
-    return async (req: express.Request, res: express.Response) => {
-        try {
-            await routerFunction(req, res);
-        } catch (err) {
-            console.log(err.message);
-            res.status(500).json({
-                success: false,
-                message: "Internal Server Error"
-            });
-        }
-        if (!res.headersSent) {
-            res.status(500).json({
-                success: false,
-                message: "No Response"
-            });
-        }
-    };
-}
-
 // Routers and Services
 import UserService from "./services/UserService";
 import UserRouter from "./routers/UserRouter";
