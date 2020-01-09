@@ -1,15 +1,24 @@
 import { CallHistoryMethodAction } from "connected-react-router";
 import { BlockList } from "../components/blockly/toolbox";
 import { ICanvasContent } from "../components/canvas/CanvasContent";
+import { IProblemState } from "../reducers/problemReducer";
+import { IProblemInfo } from "../models/Problem";
 
 
 
-// export function setProblem(problem: IProblemState) {
-//     return {
-//         type: "SET_PROBLEM" as "SET_PROBLEM",
-//         problem
-//     };
-// }
+export function setProblem(problem: IProblemState) {
+    return {
+        type: "SET_PROBLEM" as "SET_PROBLEM",
+        problem
+    };
+}
+
+export function getProblemFailed(message: string) {
+    return {
+        type: "GET_PROBLEM_FAILED" as "GET_PROBLEM_FAILED",
+        message
+    };
+}
 
 export function changed() {
     return {
@@ -22,6 +31,19 @@ export function setSaved(saved: boolean, message: string) {
         type: "SET_SAVED" as "SET_SAVED",
         saved,
         message
+    };
+}
+
+export function setDescription(description: IProblemInfo) {
+    return {
+        type: "SET_DESCRIPTION" as "SET_DESCRIPTION",
+        title: description.title,
+        category: description.category,
+        difficulty: description.difficulty,
+        status: description.status,
+        description: description.description,
+        score: description.score,
+        deduction: description.deduction
     };
 }
 
@@ -88,7 +110,10 @@ type ActionCreators = typeof toggleCategory
                     | typeof toggleUseCategory
                     | typeof setCanvasContent
                     | typeof setCode
+                    | typeof setDescription
                     | typeof setSaved
-                    | typeof changed; //typeof setProblem;
+                    | typeof changed
+                    | typeof setProblem
+                    | typeof getProblemFailed;
 type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;

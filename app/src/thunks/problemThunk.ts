@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import ProblemActions from "../actions/problemActions";
+import ProblemActions, { setProblem, getProblemFailed } from "../actions/problemActions";
 import { IProblemState } from "../reducers/problemReducer";
 import { setSaved } from "../actions/problemActions";
 
@@ -19,5 +19,22 @@ export function uploadProblem(problem: IProblemState) {
         const result = await res.json();
 
         dispatch(setSaved(res.status === 200 && result.success, result.message));
+    };
+}
+
+export function getProblem(problemId: number) {
+    return async (dispatch: Dispatch<ProblemActions>) => {
+        const res = await fetch(`${REACT_APP_API_SERVER}/problem/${problemId}`, {
+            headers: {
+                'Authorization':`Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        const result = await res.json();
+
+        if (res.status === 200 && result.success) {
+            dispatch(setProblem(result.problem));
+        } else {
+            dispatch(getProblemFailed(result.message));
+        }
     };
 }

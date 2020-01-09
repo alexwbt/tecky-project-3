@@ -60,6 +60,17 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
                 saved: action.saved,
                 savingMessage: action.message
             };
+        case "SET_DESCRIPTION":
+            return {
+                ...state,
+                title: action.title,
+                category: action.category,
+                difficulty: action.difficulty,
+                status: action.status,
+                description: action.description,
+                score: action.score,
+                deduction: action.deduction
+            };
         case "SET_CANVAS_CONTENT":
             return {
                 ...state,

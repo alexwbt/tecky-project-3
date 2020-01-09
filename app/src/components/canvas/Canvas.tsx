@@ -224,12 +224,10 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             this.ctx = this.canvas.current.getContext("2d");
             this.start();
 
-            if (this.props.editable) {
-                this.canvas.current.addEventListener("mousemove", this.mouseMove);
-                this.canvas.current.addEventListener("mousedown", this.mouseDown);
-                this.canvas.current.addEventListener("mouseup", this.mouseUp);
-                this.canvas.current.addEventListener("mouseleave", this.mouseLeave);
-            }
+            this.canvas.current.addEventListener("mousemove", this.mouseMove);
+            this.canvas.current.addEventListener("mousedown", this.mouseDown);
+            this.canvas.current.addEventListener("mouseup", this.mouseUp);
+            this.canvas.current.addEventListener("mouseleave", this.mouseLeave);
         }
     }
 
