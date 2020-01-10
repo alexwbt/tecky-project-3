@@ -2,14 +2,12 @@ import * as Knex from "knex";
 import Tables from "../tables";
 import { MongoClient } from "mongodb";
 
-import { ICategory } from './CategoryService'
-import { IDifficulty } from './DifficultyService'
 
 export interface IProblem {
     title: string;
-    category: ICategory | null;
-    difficulty: IDifficulty | null;
-    status: IProblemStatus | null;
+    categoryID: number;
+    difficultyID: number;
+    statusID: number;
 }
 
 export interface IProblemInfo extends IProblem {
@@ -41,39 +39,42 @@ export default class ProblemService {
         this.mongoClient.close();
     }
 
-    async getStatusList() {
-        const statuses: IProblemStatus[] = await this.knex.select("id", "name").from(Tables.PROBLEM_STATUS);
-        return statuses;
-    }
-
-    async create(
-        problemInfo: {
-            title: string,
-            categoryID: number,
-            difficultyID: number,
-            description: string,
-            score: number,
-            deduction: {
-                id: number,
-                score: number,
-            }[],
-        }
-        , game: any
+    async createProblem(
+        title: string,
+        description: string,
+        score: number,
+        category_id: number,
+        difficulty_id: number,
+        status_id: number,
+        game: any
     ) {
-        console.log(problemInfo);
-        console.log(game);
+        // insert problem info
+        const problem = (await this.knex("problem").insert({
+            title,
+            description,
+            score,
+            category_id,
+            difficulty_id,
+            status_id
+        }, ["id"]))[0];
 
-        // insert the problem info part
-        
-        
-
-        // insert the game part
+        // insert game content
         await this.mongoClient.connect();
         const db = this.mongoClient.db(process.env.MONGO_DB_NAME);
         const gameCollection = db.collection("game");
-        await gameCollection.insertOne({...game, pid: 1});
+        await gameCollection.insertOne({ ...game, pid: problem.id });
 
-        return { id: 1 }
+        return problem.id;
+    }
+
+    async getProblem(id: number) {
+        return (await this.knex.select().from("problem").where("id", id))[0];
+    }
+
+    // Get Static Table
+    async getStatusList() {
+        const statuses: IProblemStatus[] = await this.knex.select("id", "name").from(Tables.PROBLEM_STATUS);
+        return statuses;
     }
 
 }
