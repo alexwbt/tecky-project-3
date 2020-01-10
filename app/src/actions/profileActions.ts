@@ -1,12 +1,13 @@
 import { CallHistoryMethodAction } from "connected-react-router";
 
 
-export function loadProfile(username: string, email: string, exp: number) {
+export function loadProfile(username: string, email: string, exp: number, location: string) {
     return {
         type: "LOAD_PROFILE" as "LOAD_PROFILE",
         username,
         email,
-        exp
+        exp,
+        location,
     };
 }
 

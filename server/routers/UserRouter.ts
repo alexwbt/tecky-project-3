@@ -100,11 +100,16 @@ export default class UserRouter {
         if (!profile) {
             throw new Error("User Profile Not Found");
         }
+        const location = await this.service.getLocationWithId(user.id);
+        if (!location) {
+            throw new Error("User Location Not Found");
+        }
         res.status(200).json({
             success: true,
             username: user.username,
             email: profile.email,
-            exp: profile.experience
+            exp: profile.experience,
+            location: location.name,
         });
     };
 }

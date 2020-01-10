@@ -20,6 +20,7 @@ interface IProfileProps {
     difficulty: string;
     audit: boolean;
     date: string;
+    location: string;
     getProfile: (username: string) => void;
 }
 
@@ -48,6 +49,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     }
 
     render() {
+        console.log(this.props.location);
         return <>
             <NavBar />
             <div className="container bg-white border shadow" style={{height:"100vh"}}>
@@ -88,6 +90,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                         this.state.currentTab === "Info" && <div className="col-6 p-2 text-center">
                             <h6>username: {this.props.username}</h6>
                             <h6>email: {this.props.email}</h6>
+                            <h6>location: {this.props.location}</h6>
                         </div>
                     }
                 </div>
@@ -152,7 +155,8 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 const mapStateToProps = (state: IRootState) => ({
     username: state.profile.username,
     email: state.profile.email,
-    exp: state.profile.exp
+    exp: state.profile.exp,
+    location: state.profile.location
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
