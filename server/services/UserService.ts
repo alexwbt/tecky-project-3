@@ -11,7 +11,8 @@ type Profile = {
     user_id: number,
     email: string,
     image?: string,
-    experience: number
+    experience: number,
+    location: string,
 };
 
 export default class UserService {
@@ -40,9 +41,10 @@ export default class UserService {
     }
 
     async getProfileWithId(id: number): Promise<Profile> {
-        return (await this.knex.select().from("profile").where("user_id", id))[0];
+        return (await this.knex.select().from("profile").where("user_id", id))[0];        
+    }  
+    
+    async getLocationWithId(id: number) {
+        return (await this.knex.select("user_id", "location_id", "location.name").from("profile").leftJoin("location", function(){this.on("location_id", "=", "location.id")}).where("user_id", id))[0];
     }
-
 }
-
-

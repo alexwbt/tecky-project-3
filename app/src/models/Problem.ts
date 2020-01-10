@@ -1,16 +1,17 @@
-import { ICategory } from "./Category";
-import { IDifficulty } from "./Difficulty";
 
 export interface IProblem {
     title: string;
-    category: ICategory | null;
-    difficulty: IDifficulty | null;
-    status: IProblemStatus | null;
+    categoryID: number;
+    difficultyID: number;
+    statusID: number;
 }
 
 export interface IProblemInfo extends IProblem {
     description: string;
     score: number;
+
+    maxUsedBlocks: number;
+    maxMoveTimes: number;
     deduction: IProblemDeduction[] | null;
 }
 

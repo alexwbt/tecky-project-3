@@ -2,13 +2,28 @@ import React from "react";
 import NavBar from "../components/NavBar";
 import Table from "react-bootstrap/Table";
 import { connect } from "react-redux";
+import { getProfile } from "../thunks/profileThunks";
 import { IRootState, ReduxThunkDispatch } from "../store";
 
+interface IProfileProps {
+    username: string;
+    exp: number;
+    getProfile: (username: string) => void;
+}
 
-class LeaderBoard extends React.Component {
+class LeaderBoard extends React.Component <IProfileProps> {
+
+    constructor (props: IProfileProps) {
+        super(props);
+        this.state = this.setState;
+    }
 
     componentDidMount() {
         document.title = "BlockDojo - LeaderBoard";
+        const username = localStorage.getItem("username");
+        if (username) {
+            this.props.getProfile(username);
+        }
     }
 
     render() {
@@ -33,7 +48,7 @@ class LeaderBoard extends React.Component {
                         
                     {/* user information (name,lv,progress bar) */}
                     <div className="col-2 mt-4 ">
-                        <h2 className="mt-3 mb-0 text-monospace text-warning text-center">admin</h2>
+                        <h2 className="mt-3 mb-0 text-monospace text-warning text-center">{this.props.username}</h2>
                         <h6 className="mb-0 text-monospace text-warning text-center">Lvl. 10</h6>
                         <div className="progress rounded-pill">
                             <div
@@ -80,7 +95,7 @@ class LeaderBoard extends React.Component {
                                 </tr>
                                 <tr>
                                     <td>2</td>
-                                    <td></td>
+                                    <td>{this.props.username}</td>
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -94,8 +109,12 @@ class LeaderBoard extends React.Component {
 
 }
 
-const mapStateToProps = (state: IRootState) => ({});
+const mapStateToProps = (state: IRootState) => ({
+    username: state.profile.username,
+});
 
-const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({});
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
+    getProfile: (username: string) => dispatch(getProfile(username))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeaderBoard);

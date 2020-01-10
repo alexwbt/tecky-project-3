@@ -5,12 +5,14 @@ export interface IProfileState {
     username: string;
     email: string;
     exp: number;
+    location: string;
 }
 
 const initialState: IProfileState = {
     username: "",
     email: "",
-    exp: 0
+    exp: 0,
+    location: "",
 };
 
 const profileReducer = (state: IProfileState = initialState, action: ProfileActions) => {
@@ -19,10 +21,11 @@ const profileReducer = (state: IProfileState = initialState, action: ProfileActi
             return {
                 username: action.username,
                 email: action.email,
-                exp: action.exp
-            };
+                exp: action.exp,
+                location: action.location,
+            }
         default:
             return state;
-    }
-};
+        }
+    };
 export default profileReducer;
