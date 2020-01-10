@@ -13,10 +13,12 @@ import LeaderBoard from './containers/LeaderBoard';
 import Solver from './containers/Solver';
 import Creator from './containers/Creator';
 import PageNotFound from "./containers/PageNotFound";
+import MessageBox from "./containers/MessageBox";
 
 const App: React.FC = () => {
   return (
     <Provider store={store}>
+      <MessageBox />
       <ConnectedRouter history={history}>
         <Switch>
           <Route path="/login" exact={true} component={Login} />

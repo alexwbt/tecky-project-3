@@ -14,6 +14,9 @@ export default class CategoryRouter {
 
     private getAll = async (req: Request, res: Response) => {
         const categories = await this.categoryService.getCategories();
-        res.json({ categories });
+        res.json({
+            success: true,
+            categories
+         });
     }
 }

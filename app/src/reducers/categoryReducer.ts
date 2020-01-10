@@ -2,11 +2,11 @@ import ICategoryActions, { GET_CATEGORIES } from "../actions/categoryActions";
 import { ICategory } from '../models/Category';
 
 export interface ICategoryState {
-    list: ICategory[] | null
+    list: ICategory[]
 }
 
 const initialState: ICategoryState = {
-    list: null,
+    list: [],
 }
 
 export const categoryReducer = (state: ICategoryState = initialState, action: ICategoryActions) => {

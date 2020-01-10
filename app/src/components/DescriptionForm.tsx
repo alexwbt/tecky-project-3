@@ -4,10 +4,12 @@ import { IProblemInfo } from "../models/Problem";
 import { IRootState, ReduxThunkDispatch } from '../store';
 import { connect } from "react-redux";
 import { changed, setDescription } from "../actions/problemActions";
+import { ICategory } from "../models/Category";
 
 
 interface IDescriptionFormProps extends IProblemInfo {
     height: number;
+    categories: ICategory[];
     changed: () => void;
     setDescription: (description: IProblemInfo) => void;
 }
@@ -49,7 +51,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
 
     render() {
         return (
-            <Container style={{overflowY: "scroll", height: this.props.height}}>
+            <Container style={{ overflowY: "scroll", height: this.props.height }}>
                 <Form>
                     <h2 className="pt-3">Information</h2>
                     <Form.Group controlId="formTitle">
@@ -74,6 +76,11 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                     <Form.Group controlId="formCategory">
                         <Form.Label>Category:</Form.Label>
                         <Form.Control name="category" as="select">
+                            {
+                                this.props.categories.map(category =>
+                                    <option key={category.id} value={category.id}>{category.name}</option>
+                                )
+                            }
                         </Form.Control>
                     </Form.Group>
                     <Form.Group controlId="formDifficulty">
@@ -116,7 +123,8 @@ const mapStateToProps = (state: IRootState) => ({
     status: state.problem.status,
     description: state.problem.description,
     score: state.problem.score,
-    deduction: state.problem.deduction
+    deduction: state.problem.deduction,
+    categories: state.category.list,
 })
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
