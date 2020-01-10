@@ -15,10 +15,18 @@ import Creator from './containers/Creator';
 import PageNotFound from "./containers/PageNotFound";
 import MessageBox from "./containers/MessageBox";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const App: React.FC = () => {
   return (
     <Provider store={store}>
       <MessageBox />
+      <ToastContainer
+      position="top-center"
+      autoClose={3000}
+      hideProgressBar
+      draggable={false}/>
       <ConnectedRouter history={history}>
         <Switch>
           <Route path="/login" exact={true} component={Login} />

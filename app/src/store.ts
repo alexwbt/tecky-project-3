@@ -11,6 +11,8 @@ import ICategoryActions from './actions/categoryActions';
 import { ICategoryState, categoryReducer } from "./reducers/categoryReducer";
 import IMessageBoxActions from './actions/messageBoxActions';
 import { IMessageBoxState, messageBoxReducer } from "./reducers/messageBoxReducer";
+import { IDifficultyState, difficultyReducer } from "./reducers/difficultyReducer";
+import IDifficultyActions from "./actions/difficultyActions";
 
 import { routerMiddleware, connectRouter, RouterState } from 'connected-react-router';
 import { createBrowserHistory } from "history";
@@ -22,10 +24,16 @@ export interface IRootState {
     profile: IProfileState;
     router: RouterState;
     category: ICategoryState;
+    difficulty: IDifficultyState;
     message: IMessageBoxState;
 }
 
-type RootActions = AuthActions | ProblemActions | ProfileActions | ICategoryActions | IMessageBoxActions;
+type RootActions = AuthActions
+    | IMessageBoxActions
+    | ProblemActions
+    | ProfileActions
+    | ICategoryActions
+    | IDifficultyActions;
 
 const rootReducer = combineReducers<IRootState>({
     auth: authReducer,
@@ -33,6 +41,7 @@ const rootReducer = combineReducers<IRootState>({
     profile: profileReducer,
     router: connectRouter(history),
     category: categoryReducer,
+    difficulty: difficultyReducer,
     message: messageBoxReducer,
 });
 

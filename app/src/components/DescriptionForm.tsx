@@ -5,11 +5,13 @@ import { IRootState, ReduxThunkDispatch } from '../store';
 import { connect } from "react-redux";
 import { changed, setDescription } from "../actions/problemActions";
 import { ICategory } from "../models/Category";
+import { IDifficulty } from "../models/Difficulty";
 
 
 interface IDescriptionFormProps extends IProblemInfo {
     height: number;
     categories: ICategory[];
+    difficulties: IDifficulty[];
     changed: () => void;
     setDescription: (description: IProblemInfo) => void;
 }
@@ -86,6 +88,11 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                     <Form.Group controlId="formDifficulty">
                         <Form.Label>Difficulty:</Form.Label>
                         <Form.Control name="difficulty" as="select">
+                            {
+                                this.props.difficulties.map(difficulty =>
+                                    <option key={difficulty.id} value={difficulty.id}>{difficulty.name} (Exp: {difficulty.experience})</option>
+                                )
+                            }
                         </Form.Control>
                     </Form.Group>
                     <Form.Group controlId="formScore">
@@ -124,7 +131,9 @@ const mapStateToProps = (state: IRootState) => ({
     description: state.problem.description,
     score: state.problem.score,
     deduction: state.problem.deduction,
+    
     categories: state.category.list,
+    difficulties: state.difficulty.list,
 })
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
