@@ -56,12 +56,24 @@ export default class ProblemService {
             deduction: {
                 id: number,
                 score: number,
-            },
+            }[],
         }
         , game: any
     ) {
         console.log(problemInfo);
         console.log(game);
+
+        // insert the problem info part
+        
+        
+
+        // insert the game part
+        await this.mongoClient.connect();
+        const db = this.mongoClient.db(process.env.MONGO_DB_NAME);
+        const gameCollection = db.collection("game");
+        await gameCollection.insertOne({...game, pid: 1});
+
+        return { id: 1 }
     }
 
 }

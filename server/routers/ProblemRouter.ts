@@ -18,6 +18,9 @@ export default class ProblemRouter {
     private uploadProblem = async (req: Request, res: Response) => {
 
         const problem = req.body.problem;
+
+        console.log(problem);
+        
         
         const problemInfo = {
             title: problem.title,
@@ -30,7 +33,7 @@ export default class ProblemRouter {
 
         const game = {
             canvas: problem.canvas,
-            code: problem.canvas,
+            code: problem.code,
             avalibleBlocks: problem.avalibleBlocks,
             avalibleCategories: problem.avalibleCategories,
             useCategory: problem.useCategory,
@@ -40,8 +43,11 @@ export default class ProblemRouter {
 
         console.log(problemInfo);
         console.log(game);
+
+        const data = await this.problemService.create(problemInfo, game);
         
         res.status(200).json({
+            data,
             success: true,
             message: "Successfully Saved"
         });
