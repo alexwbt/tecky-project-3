@@ -1,5 +1,5 @@
 import React from "react";
-import CanvasContent, { ICanvasContent, Tile, Char, Obj } from "./CanvasContent";
+import CanvasContent, { ICanvasContent, Tile, Char, Obj, WinningCondition } from "./CanvasContent";
 import Character from "./Character";
 import { IRootState, ReduxThunkDispatch } from "../../store";
 import { connect } from "react-redux";
@@ -20,6 +20,7 @@ export interface ICanvasProps {
     changed: () => void;
 
     terrainSize?: number;
+    winningCondition?: WinningCondition;
 
     tileSprite: HTMLImageElement | null;
     charSprite: HTMLImageElement | null;
@@ -220,8 +221,13 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     }
 
     componentDidUpdate() {
-        if (this.props.terrainSize && this.content) {
-            this.content.setTerrainSize(this.props.terrainSize);
+        if (this.content) {
+            if (this.props.terrainSize) {
+                this.content.setTerrainSize(this.props.terrainSize);
+            }
+            if (this.props.winningCondition) {
+                this.content.setWinningCondition(this.props.winningCondition);
+            }
         }
     }
 

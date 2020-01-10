@@ -49,6 +49,7 @@ interface ICreatorStates {
         currentTab: CanvasTab;
         pen: Tile | Char | Obj;
         terrainSize: number;
+        winningCondition: WinningCondition;
     };
     saving: boolean;
 }
@@ -67,7 +68,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             canvas: {
                 currentTab: "Terrain",
                 pen: 0,
-                terrainSize: 8
+                terrainSize: 8,
+                winningCondition: WinningCondition.ANY_PLAYER_GOT_FLAG
             },
             saving: false
         };
@@ -184,6 +186,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     pen={this.state.canvas.pen}
                                     currentTab={this.state.canvas.currentTab}
                                     terrainSize={this.state.canvas.terrainSize}
+                                    winningCondition={this.state.canvas.winningCondition}
                                     editable={this.state.currentTab === Tab.EDITOR} />
                             </div>
                             {
@@ -258,11 +261,27 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                                 value={this.state.canvas.terrainSize}
                                                 onChange={(event) => {
                                                 const size = Math.min(Math.max(parseInt(event.target.value), 8), 16);
-                                                this.setState({...this.state, canvas: {...this.state.canvas, terrainSize: size}});
+                                                this.setState({
+                                                    ...this.state,
+                                                    canvas: {
+                                                        ...this.state.canvas,
+                                                        terrainSize: size
+                                                    }
+                                                });
                                             }} />
                                             <br />
                                             <h6 className="d-inline p-2">End Game Condition:</h6>
                                             <select
+                                                value={this.state.canvas.winningCondition}
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        ...this.state,
+                                                        canvas: {
+                                                            ...this.state.canvas,
+                                                            winningCondition: event.target.value as WinningCondition
+                                                        }
+                                                    });
+                                                }}
                                                 className="border-0 rounded-pill pl-2">
                                                 <option>{WinningCondition.ALL_OBJECT_COLLECTED}</option>
                                                 <option>{WinningCondition.ALL_PLAYER_GOT_FLAG}</option>

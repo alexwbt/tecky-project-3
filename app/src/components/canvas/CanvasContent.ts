@@ -83,6 +83,8 @@ export default class CanvasContent {
     private chars: Character[];
     private objs: (GameObject | null)[][];
 
+    private winningCondition: WinningCondition = WinningCondition.ANY_PLAYER_GOT_FLAG;
+
     private coinAudio = new Audio("/coin.wav");
 
     constructor(
@@ -122,6 +124,10 @@ export default class CanvasContent {
         this.tileSprite = tileSprite;
         this.charSprite = charSprite;
         this.objSprite = objSprite;
+    }
+
+    setWinningCondition(condition: WinningCondition) {
+        this.winningCondition = condition;
     }
 
     addCharacter(obj: Character) {
@@ -198,16 +204,17 @@ export default class CanvasContent {
                     this.objs[x][y]?.update();
                     const char = this.chars.find(char => char.getX() === x && char.getY() === y);
                     if (char) {
-                        if (this.objs[x][y]?.getType() === Obj.FLAG) {
-                            this.gameEnd();
-                        } else {
-                            this.coinAudio.play();
-                            this.objs[x][y] = new GameObject(Obj.SPARKS);
-                            setTimeout(() => this.objs[x][y] = null, 200);
-                        }
+                        this.coinAudio.play();
+                        this.objs[x][y] = new GameObject(Obj.SPARKS);
+                        char.collected.push((this.objs[x][y] as GameObject).getType());
+                        setTimeout(() => this.objs[x][y] = null, 200);
                     }
                 }
             }
+        }
+
+        switch (this.winningCondition) {
+            // case WinningCondition.
         }
     }
 

@@ -1,4 +1,4 @@
-import { SIZE, EIGHT, getSpritePos, Char, Tile } from "./CanvasContent";
+import { SIZE, EIGHT, getSpritePos, Char, Tile, Obj } from "./CanvasContent";
 
 
 export default class Character {
@@ -6,6 +6,8 @@ export default class Character {
     private moveTo: number[] = [];
     private moving = 0;
     private flip = false;
+
+    public collected: Obj[] = [];
 
     private standOffset = {
         x: (Math.random() - 0.5) * 0.2,
