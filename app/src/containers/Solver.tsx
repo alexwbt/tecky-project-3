@@ -24,6 +24,7 @@ interface ISolverProps {
 
 interface ISolverStates {
     height: number;
+    desHeight: number;
 }
 
 class Solver extends React.Component<ISolverProps, ISolverStates> {
@@ -35,7 +36,8 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     constructor(props: ISolverProps) {
         super(props);
         this.state = {
-            height: 0
+            height: 0,
+            desHeight: 0
         };
         this.tileSpriteImg = React.createRef();
         this.charSpriteImg = React.createRef();
@@ -44,15 +46,18 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
 
     private updateHeight = () => {
         const nav = document.getElementById("navagation-bar");
+        const canvas = document.getElementById("canvas-container");
         this.setState({
             ...this.state,
-            height: window.innerHeight - (nav ? nav.clientHeight : 0)
+            height: nav ? window.innerHeight - nav.clientHeight : 0,
+            desHeight: nav && canvas ? window.innerHeight - nav.clientHeight - canvas.clientHeight : 0
         });
     };
 
     componentDidMount() {
         window.addEventListener('resize', this.updateHeight);
-        this.updateHeight();
+        setTimeout(this.updateHeight, 100);
+        setTimeout(this.updateHeight, 500);
 
         document.title = "BlockDojo - Solver";
 
@@ -64,8 +69,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     }
 
     render() {
-        console.log(this.state);
-        return <>
+        return <div>
             <NavBar />
             <img ref={this.tileSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
             <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />
@@ -77,29 +81,17 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                             this.tileSpriteImg.current &&
                             this.charSpriteImg.current &&
                             this.objSpriteImg.current && <Canvas
-                                tileSprite={this.tileSpriteImg.current}
-                                charSprite={this.charSpriteImg.current}
-                                objSprite={this.objSpriteImg.current}
-                                size={16 * 100}
-                                editable={false} />
+                                    tileSprite={this.tileSpriteImg.current}
+                                    charSprite={this.charSpriteImg.current}
+                                    objSprite={this.objSpriteImg.current}
+                                    size={16 * 100}
+                                    editable={false} />
                         }
-                        <div style={{ overflowY: "scroll" }}>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                            <h1>title{this.props.problem.title}</h1>
-                        </div>
+                        {
+                            !!this.state.desHeight && <div style={{ overflowY: "auto", maxHeight: this.state.desHeight - 10 }}>
+                                <h1>{this.props.problem.title}</h1>
+                            </div>
+                        }
                     </div>
                     <BlocklyArea
                         useCategory={this.props.problem.useCategory}
@@ -111,7 +103,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                         className="col-8 p-0" />
                 </div>
             </div>
-        </>
+        </div>
     }
 
 }

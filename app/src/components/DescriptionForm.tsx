@@ -51,7 +51,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
 
     render() {
         return (
-            <Container style={{ overflowY: "scroll", height: this.props.height }}>
+            <Container style={{ overflowY: "auto", height: this.props.height }}>
                 <Form>
                     <h2 className="pt-3">Information</h2>
                     <Form.Group controlId="formTitle">
