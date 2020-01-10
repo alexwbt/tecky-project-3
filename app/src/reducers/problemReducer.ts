@@ -2,8 +2,6 @@ import { ICanvasContent } from "../components/canvas/CanvasContent";
 import ProblemActions from "../actions/problemActions";
 import { BlockList, blocklyBlocks } from "../components/blockly/toolbox";
 import { IProblemInfo } from "../models/Problem";
-import { ICategory } from "../models/Category";
-
 
 export interface IProblemState extends IProblemInfo {
     // Editor
@@ -24,11 +22,13 @@ export interface IProblemState extends IProblemInfo {
 const initialState: IProblemState = {
     // Description
     title: "",
-    category: ({} as ICategory),
-    difficulty: null,
-    status: null,
+    categoryID: 0,
+    difficultyID: 0,
+    statusID: 1,
     description: "",
     score: 0,
+    maxUsedBlocks: 0,
+    maxMoveTimes: 0,
     deduction: null,
 
     // Editor
@@ -72,11 +72,13 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
             return {
                 ...state,
                 title: action.title,
-                category: action.category,
-                difficulty: action.difficulty,
-                status: action.status,
+                categoryID: action.categoryID,
+                difficultyID: action.difficultyID,
+                statusID: action.statusID,
                 description: action.description,
                 score: action.score,
+                maxUsedBlocks: action.maxUsedBlocks,
+                maxMoveTimes: action.maxMoveTimes,
                 deduction: action.deduction
             };
         case "SET_CANVAS_CONTENT":

@@ -31,11 +31,13 @@ export function setDescription(description: IProblemInfo) {
     return {
         type: "SET_DESCRIPTION" as "SET_DESCRIPTION",
         title: description.title,
-        category: description.category,
-        difficulty: description.difficulty,
-        status: description.status,
+        categoryID: description.categoryID,
+        difficultyID: description.difficultyID,
+        statusID: description.statusID,
         description: description.description,
         score: description.score,
+        maxUsedBlocks: description.maxUsedBlocks,
+        maxMoveTimes: description.maxMoveTimes,
         deduction: description.deduction
     };
 }
