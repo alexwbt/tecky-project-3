@@ -2,10 +2,32 @@ import * as Knex from "knex";
 import Tables from "../tables";
 import { MongoClient } from "mongodb";
 
-export interface IProblemStates {
+import { ICategory } from './CategoryService'
+import { IDifficulty } from './DifficultyService'
+
+export interface IProblem {
+    title: string;
+    category: ICategory | null;
+    difficulty: IDifficulty | null;
+    status: IProblemStatus | null;
+}
+
+export interface IProblemInfo extends IProblem {
+    description: string;
+    score: number;
+    deduction: IProblemDeduction[] | null;
+}
+export interface IProblemStatus {
     id: number;
     name: string;
 }
+
+export interface IProblemDeduction {
+    id: number;
+    title: string;
+    deduct: number;
+}
+
 export default class ProblemService {
 
     constructor(private knex: Knex, private mongoClient: MongoClient) { }
@@ -20,8 +42,26 @@ export default class ProblemService {
     }
 
     async getStatusList() {
-        const statuses = await this.knex.select("id", "name").from(Tables.PROBLEM_STATUS);
+        const statuses: IProblemStatus[] = await this.knex.select("id", "name").from(Tables.PROBLEM_STATUS);
         return statuses;
+    }
+
+    async create(
+        problemInfo: {
+            title: string,
+            categoryID: number,
+            difficultyID: number,
+            description: string,
+            score: number,
+            deduction: {
+                id: number,
+                score: number,
+            },
+        }
+        , game: any
+    ) {
+        console.log(problemInfo);
+        console.log(game);
     }
 
 }
