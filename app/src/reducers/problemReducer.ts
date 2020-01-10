@@ -56,12 +56,6 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
                 getProblemFailed: false,
                 failedMessage: ""
             };
-        case "GET_PROBLEM_FAILED":
-            return {
-                ...initialState,
-                getProblemFailed: true,
-                failedMessage: action.message
-            };
         case "CHANGED":
             return {
                 ...state,

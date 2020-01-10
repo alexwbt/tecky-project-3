@@ -25,7 +25,7 @@ const App: React.FC = () => {
           <PrivateRoute path="/" exact={true} component={Home} />
           <PrivateRoute path="/profile/:username" component={Profile} />
           <PrivateRoute path="/leaderBoard" exact={true} component={LeaderBoard} />
-          <PrivateRoute path="/challenge/:problemId" exact={true} component={Solver} />
+          <PrivateRoute path="/challenge/solve/:problemId" exact={true} component={Solver} />
           <PrivateRoute path="/challenge/edit/:problemId" exact={true} component={Creator} />
           <Route component={PageNotFound} />
         </Switch>

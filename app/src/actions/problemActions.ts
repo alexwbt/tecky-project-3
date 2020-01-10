@@ -13,13 +13,6 @@ export function setProblem(problem: IProblemState) {
     };
 }
 
-export function getProblemFailed(message: string) {
-    return {
-        type: "GET_PROBLEM_FAILED" as "GET_PROBLEM_FAILED",
-        message
-    };
-}
-
 export function changed() {
     return {
         type: "CHANGED" as "CHANGED"
@@ -113,7 +106,6 @@ type ActionCreators = typeof toggleCategory
                     | typeof setDescription
                     | typeof setSaved
                     | typeof changed
-                    | typeof setProblem
-                    | typeof getProblemFailed;
+                    | typeof setProblem;
 type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;

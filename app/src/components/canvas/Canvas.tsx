@@ -206,7 +206,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                 }
             }
         }
-        
+
         this.setState({ ...this.state, running: !this.state.running });
     };
 
@@ -217,6 +217,10 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
 
     getContent() {
         return this.content ? this.content.getContent() : {};
+    }
+
+    componentDidUpdate() {
+
     }
 
     // react component
@@ -247,7 +251,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     }
 
     render() {
-        return <div>
+        return <div id="canvas-container">
             <GameEndModal
                 show={this.state.endGameModal}
                 handleClose={() => {
@@ -263,8 +267,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             </canvas>
             <button
                 className={"m-1 btn btn-" + (this.state.running ? "danger" : "success")}
-                onClick={this.run}><FontAwesomeIcon
-                    icon={this.state.running ? faStop : faPlay}
+                onClick={this.run}><FontAwesomeIcon icon={this.state.running ? faStop : faPlay}
                 /></button>
         </div>
     }

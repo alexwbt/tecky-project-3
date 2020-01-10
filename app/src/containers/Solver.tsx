@@ -44,7 +44,10 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
 
     private updateHeight = () => {
         const nav = document.getElementById("navagation-bar");
-        this.setState({ ...this.state, height: window.innerHeight - (nav ? nav.clientHeight : 0) });
+        this.setState({
+            ...this.state,
+            height: window.innerHeight - (nav ? nav.clientHeight : 0)
+        });
     };
 
     componentDidMount() {
@@ -52,7 +55,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
         this.updateHeight();
 
         document.title = "BlockDojo - Solver";
-        
+
         this.props.getProblem(this.props.match.params.problemId);
     }
 
@@ -61,6 +64,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     }
 
     render() {
+        console.log(this.state);
         return <>
             <NavBar />
             <img ref={this.tileSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
@@ -69,12 +73,33 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
             <div className="container-fluid p-0 bg-light">
                 <div className="row w-100 m-0" style={{ height: this.state.height }}>
                     <div className="col-4 p-1">
-                        <Canvas
-                            tileSprite={this.tileSpriteImg.current}
-                            charSprite={this.charSpriteImg.current}
-                            objSprite={this.objSpriteImg.current}
-                            size={16 * 100}
-                            editable={false} />
+                        {
+                            this.tileSpriteImg.current &&
+                            this.charSpriteImg.current &&
+                            this.objSpriteImg.current && <Canvas
+                                tileSprite={this.tileSpriteImg.current}
+                                charSprite={this.charSpriteImg.current}
+                                objSprite={this.objSpriteImg.current}
+                                size={16 * 100}
+                                editable={false} />
+                        }
+                        <div style={{ overflowY: "scroll" }}>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                            <h1>title{this.props.problem.title}</h1>
+                        </div>
                     </div>
                     <BlocklyArea
                         useCategory={this.props.problem.useCategory}
