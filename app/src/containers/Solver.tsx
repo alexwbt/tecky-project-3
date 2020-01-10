@@ -84,12 +84,12 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                                     tileSprite={this.tileSpriteImg.current}
                                     charSprite={this.charSpriteImg.current}
                                     objSprite={this.objSpriteImg.current}
-                                    size={16 * 100}
                                     editable={false} />
                         }
                         {
                             !!this.state.desHeight && <div style={{ overflowY: "auto", maxHeight: this.state.desHeight - 10 }}>
                                 <h1>{this.props.problem.title}</h1>
+                                <p>{this.props.problem.description}</p>
                             </div>
                         }
                     </div>

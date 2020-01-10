@@ -9,7 +9,7 @@ import TabSelect from "../components/TabSelect";
 import DescriptionForm from "../components/DescriptionForm";
 import ObjSelector from "../components/canvas/ObjSelector";
 import BlockSelector from "../components/blockly/BlockSelector";
-import { Tile, Char, Obj } from "../components/canvas/CanvasContent";
+import { Tile, Char, Obj, WinningCondition } from "../components/canvas/CanvasContent";
 
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
@@ -48,6 +48,7 @@ interface ICreatorStates {
     canvas: {
         currentTab: CanvasTab;
         pen: Tile | Char | Obj;
+        terrainSize: number;
     };
     saving: boolean;
 }
@@ -66,6 +67,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             canvas: {
                 currentTab: "Terrain",
                 pen: 0,
+                terrainSize: 8
             },
             saving: false
         };
@@ -110,11 +112,11 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         this.updateHeight();
 
         document.title = "BlockDojo - Editor";
-        
+
         this.props.getCategories();
         this.props.getDifficulties();
         this.props.getProblem(this.props.match.params.problemId);
-        
+
     }
 
     componentWillUnmount() {
@@ -181,7 +183,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     objSprite={this.objSpriteImg.current}
                                     pen={this.state.canvas.pen}
                                     currentTab={this.state.canvas.currentTab}
-                                    size={16 * 100}
+                                    terrainSize={this.state.canvas.terrainSize}
                                     editable={this.state.currentTab === Tab.EDITOR} />
                             </div>
                             {
@@ -202,7 +204,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                             active: this.state.canvas.currentTab === name,
                                             callback: this.selectCanvasTab.bind(this, name)
                                         }))} buttons={[]} color="light" color2="dark" />
-                                        <div className="p-3 border-top">
+                                        <div className="p-3 border-top h-25" style={{overflow: "auto"}}>
                                             {
                                                 this.state.canvas.currentTab === "Terrain" && <ObjSelector
                                                     objs={[
@@ -244,6 +246,28 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                                     sprite={this.objSpriteImg.current}
                                                     select={this.selectChar} />
                                             }
+                                        </div>
+                                        <div className="p-2">
+                                            <hr />
+                                            <h5>Settings</h5>
+                                            <h6 className="d-inline p-2">Terrain Size:</h6>
+                                            <input
+                                                type="number"
+                                                className="border-0 rounded-pill pl-2"
+                                                style={{width: "3em"}}
+                                                value={this.state.canvas.terrainSize}
+                                                onChange={(event) => {
+                                                const size = Math.min(Math.max(parseInt(event.target.value), 8), 16);
+                                                this.setState({...this.state, canvas: {...this.state.canvas, terrainSize: size}});
+                                            }} />
+                                            <br />
+                                            <h6 className="d-inline p-2">End Game Condition:</h6>
+                                            <select
+                                                className="border-0 rounded-pill pl-2">
+                                                <option>{WinningCondition.ALL_OBJECT_COLLECTED}</option>
+                                                <option>{WinningCondition.ALL_PLAYER_GOT_FLAG}</option>
+                                                <option>{WinningCondition.ANY_PLAYER_GOT_FLAG}</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div className="col-4 p-0">

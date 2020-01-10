@@ -37,6 +37,12 @@ export enum Obj {
     FLAG
 }
 
+export enum WinningCondition {
+    ALL_PLAYER_GOT_FLAG = "All Players Got A Flag",
+    ANY_PLAYER_GOT_FLAG = "Any Player Got A Flag",
+    ALL_OBJECT_COLLECTED = "All Objects Collected"
+}
+
 export function getSpritePos(i: number) {
     const ix = i % SPRITE_SIZE;
     const iy = Math.floor(i / SPRITE_SIZE);
@@ -86,13 +92,9 @@ export default class CanvasContent {
         objSprite: HTMLImageElement,
         private gameEnd: () => void) {
         if (!content.terrainSize || !content.terrain) {
-            const size = 8;
-            let terrain: Tile[][] = [];
-            for (let x = 0; x < size; x++) {
-                terrain.push(Array(size).fill(0));
-            }
-            this.terrainSize = size;
-            this.terrain = terrain;
+            this.terrainSize = 0;
+            this.terrain = [];
+            this.setTerrainSize(8);
         } else {
             this.terrainSize = content.terrainSize;
             this.terrain = content.terrain;
@@ -135,6 +137,18 @@ export default class CanvasContent {
 
     removeCharacter(x: number, y: number) {
         this.chars = this.chars.filter(char => char.getX() !== x || char.getY() !== y);
+    }
+
+    setTerrainSize(size: number) {
+        const rs = Math.min(Math.max(size, 8), 16);
+        if (rs !== this.terrainSize) {
+            let terrain: Tile[][] = [];
+            for (let x = 0; x < rs; x++) {
+                terrain.push(Array(rs).fill(0));
+            }
+            this.terrainSize = rs;
+            this.terrain = terrain;
+        }
     }
 
     setTerrain(x: number, y: number, tile: Tile) {
@@ -219,8 +233,10 @@ export default class CanvasContent {
         }
 
         for (let x = 0; x < this.terrainSize; x++) {
-            for (let y = 0; y < this.terrainSize; y++) {
-                this.objs[x][y]?.render(ctx, x, y, width, height, this.objSprite);
+            if (this.objs[x]) {
+                for (let y = 0; y < this.terrainSize; y++) {
+                    this.objs[x][y]?.render(ctx, x, y, width, height, this.objSprite);
+                }
             }
         }
 

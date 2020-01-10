@@ -19,7 +19,7 @@ export interface ICanvasProps {
     setContent: (content: ICanvasContent) => void;
     changed: () => void;
 
-    size: number;
+    terrainSize?: number;
 
     tileSprite: HTMLImageElement | null;
     charSprite: HTMLImageElement | null;
@@ -92,8 +92,8 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             let ctx = this.ctx;
             let canvas = this.canvas.current;
             if (ctx && canvas && this.content) {
-                canvas.width = this.props.size;
-                canvas.height = this.props.size;
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerWidth;
                 ctx.fillStyle = "white";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -220,7 +220,9 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     }
 
     componentDidUpdate() {
-
+        if (this.props.terrainSize && this.content) {
+            this.content.setTerrainSize(this.props.terrainSize);
+        }
     }
 
     // react component
