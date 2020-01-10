@@ -11,7 +11,7 @@ export function getProfile(username: string) {
         const result = await res.json();
 
         if (res.status === 200 && result.success) {
-            dispatch(loadProfile(result.username, result.email, result.exp));
+            dispatch(loadProfile(result.username, result.email, result.exp, result.location));
         } else {
             dispatch(push("/pageNotFound"));
             console.error(result.message);
