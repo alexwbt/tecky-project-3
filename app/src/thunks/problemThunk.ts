@@ -1,7 +1,8 @@
 import { Dispatch } from "react";
-import ProblemActions, { setProblem, getProblemFailed } from "../actions/problemActions";
+import ProblemActions, { setProblem } from "../actions/problemActions";
 import { IProblemState } from "../reducers/problemReducer";
 import { setSaved } from "../actions/problemActions";
+import MessageBoxActions, { showMessageBox } from "../actions/messageBoxActions";
 
 
 const { REACT_APP_API_SERVER } = process.env;
@@ -23,7 +24,7 @@ export function uploadProblem(problem: IProblemState) {
 }
 
 export function getProblem(problemId: number) {
-    return async (dispatch: Dispatch<ProblemActions>) => {
+    return async (dispatch: Dispatch<ProblemActions | MessageBoxActions>) => {
         const res = await fetch(`${REACT_APP_API_SERVER}/problem/${problemId}`, {
             headers: {
                 'Authorization':`Bearer ${localStorage.getItem('token')}`
@@ -34,7 +35,7 @@ export function getProblem(problemId: number) {
         if (res.status === 200 && result.success) {
             dispatch(setProblem(result.problem));
         } else {
-            dispatch(getProblemFailed(result.message));
+            dispatch(showMessageBox("Oops!", result.message));
         }
     };
 }

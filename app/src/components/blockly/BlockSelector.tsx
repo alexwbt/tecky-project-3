@@ -28,7 +28,7 @@ interface IBlockSelectorProps {
 class BlockSelector extends React.Component<IBlockSelectorProps> {
 
     render() {
-        return <div className="p-3 border-left" style={{ overflow: "scroll", height: this.props.height }}>
+        return <div className="p-3 border-left" style={{ overflow: "auto", height: this.props.height }}>
             <h3>Block Selector</h3>
             <div className="checkbox">
                 <label className="m-0 w-100 p-2">

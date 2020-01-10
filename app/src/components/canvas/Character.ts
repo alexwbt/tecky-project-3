@@ -12,11 +12,7 @@ export default class Character {
         y: (Math.random() - 0.5) * 0.2
     };
 
-    constructor(private x: number, private y: number, private type: Char) {
-        // setInterval(() => {
-        //     this.move(Math.floor(Math.random() * 4));
-        // }, Math.random() * 1000 + 1000);
-    }
+    constructor(private x: number, private y: number, private type: Char) { }
 
     getX() {
         return this.x;
