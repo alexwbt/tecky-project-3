@@ -30,45 +30,19 @@ class BlockSelector extends React.Component<IBlockSelectorProps> {
     render() {
         return <div className="p-3 border-left" style={{ overflow: "auto", height: this.props.height }}>
             <h3>Block Selector</h3>
-            <div className="checkbox">
-                <label className="m-0 w-100 p-2">
-                    <input
-                        type="checkbox"
-                        checked={this.props.useCategory}
-                        onChange={this.props.toggleUseCategory}
-                    />
-                    <span className="cr">
-                        <FontAwesomeIcon className="cr-icon text-info" icon={faCheck} />
-                    </span>
-                    <h6 className="pl-3 d-inline">Use Category</h6>
-                </label>
-            </div>
-            <div className="checkbox">
-                <label className="m-0 w-100 p-2">
-                    <input
-                        type="checkbox"
-                        checked={this.props.useVariables}
-                        onChange={this.props.toggleUseVariables}
-                    />
-                    <span className="cr">
-                        <FontAwesomeIcon className="cr-icon text-info" icon={faCheck} />
-                    </span>
-                    <h6 className="pl-3 d-inline">Use Variables</h6>
-                </label>
-            </div>
-            <div className="checkbox">
-                <label className="m-0 w-100 p-2">
-                    <input
-                        type="checkbox"
-                        checked={this.props.useFunctions}
-                        onChange={this.props.toggleUseFunctions}
-                    />
-                    <span className="cr">
-                        <FontAwesomeIcon className="cr-icon text-info" icon={faCheck} />
-                    </span>
-                    <h6 className="pl-3 d-inline">Use Functions</h6>
-                </label>
-            </div>
+            {
+                [
+                    { name: "Category", checked: this.props.useCategory, change: this.props.toggleUseCategory },
+                    { name: "Varaiables", checked: this.props.useVariables, change: this.props.toggleUseVariables },
+                    { name: "Functions", checked: this.props.useFunctions, change: this.props.toggleUseFunctions }
+                ].map((e, i) => <div key={i} className="checkbox">
+                    <label className="m-0 w-100 p-2">
+                        <input type="checkbox" checked={e.checked} onChange={e.change} />
+                        <span className="cr"><FontAwesomeIcon className="cr-icon text-info" icon={faCheck} /></span>
+                        <h6 className="pl-3 d-inline">Use {e.name}</h6>
+                    </label>
+                </div>)
+            }
             {
                 ((this.props.useVariables || this.props.useFunctions) && !this.props.useCategory) && <div
                     className="text-danger" >
@@ -78,33 +52,37 @@ class BlockSelector extends React.Component<IBlockSelectorProps> {
             <hr />
             <p>Select any block you want the player to be able to use.</p>
             {Object.keys(blocklyBlocks).map((cat, i) => {
+                const useThisCat = !!this.props.avalibleCategories && this.props.avalibleCategories.includes(cat);
+                const hasCat = !!this.props.avalibleBlocks && !!this.props.avalibleBlocks[cat];
                 return <div key={i} className="checkbox">
                     <label className="m-0 w-100 p-2">
                         <input
                             type="checkbox"
-                            checked={this.props.avalibleCategories.includes(cat)}
+                            checked={useThisCat}
                             onChange={this.props.toggleCategory.bind(this, cat)}
-                            aria-controls={"collapse-content" + i}
-                        />
+                            aria-controls={"collapse-content" + i} />
                         <span className="cr">
                             <FontAwesomeIcon className="cr-icon text-info" icon={faCheck} />
                         </span>
                         <h6 className="pl-3 d-inline">{cat}</h6>
                     </label>
-                    <Collapse in={this.props.avalibleCategories.includes(cat)}>
+                    <Collapse in={useThisCat}>
                         <div id={"collapse-content" + i}>
-                            {this.props.avalibleBlocks[cat] && blocklyBlocks[cat].map((block, ii) => <div key={ii} className="checkbox">
-                                <label className="m-0 ml-3 w-100 p-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={this.props.avalibleBlocks[cat].includes(block)}
-                                        onChange={this.props.toggleBlock.bind(this, cat, block)} />
-                                    <span className="cr">
-                                        <FontAwesomeIcon className="cr-icon text-info" icon={faCheck} />
-                                    </span>
-                                    <h6 className="pl-3 d-inline">{block}</h6>
-                                </label>
-                            </div>)}
+                            {hasCat && blocklyBlocks[cat].map((block, ii) => {
+                                const useThisBlock = hasCat && this.props.avalibleBlocks[cat].includes(block);
+                                return <div key={ii} className="checkbox">
+                                    <label className="m-0 ml-3 w-100 p-2">
+                                        <input
+                                            type="checkbox"
+                                            checked={useThisBlock}
+                                            onChange={this.props.toggleBlock.bind(this, cat, block)} />
+                                        <span className="cr">
+                                            <FontAwesomeIcon className="cr-icon text-info" icon={faCheck} />
+                                        </span>
+                                        <h6 className="pl-3 d-inline">{block}</h6>
+                                    </label>
+                                </div>
+                            })}
                         </div>
                     </Collapse>
                 </div>
