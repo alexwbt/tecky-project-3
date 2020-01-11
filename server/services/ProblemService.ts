@@ -1,6 +1,6 @@
 import * as Knex from "knex";
 import Tables from "../tables";
-import { MongoClient } from "mongodb";
+import { MongoClient, Db } from "mongodb";
 
 
 export interface IProblem {
@@ -28,15 +28,17 @@ export interface IProblemDeduction {
 
 export default class ProblemService {
 
-    constructor(private knex: Knex, private mongoClient: MongoClient) { }
+    private mongodb: Db;
+
+    constructor(private knex: Knex, mongodb: Promise<Db>) {
+        mongodb.then((db: Db) => {
+            this.mongodb = db;
+        });
+    }
 
     async test() {
-        await this.mongoClient.connect();
-        const db = this.mongoClient.db(process.env.MONGO_DB_NAME);
-        const collection = db.collection("test");
-        const data = await collection.find({}).toArray();
+        const data = await this.mongodb.collection("test").find({}).toArray();
         console.log(data);
-        this.mongoClient.close();
     }
 
     async createProblem(
@@ -59,16 +61,19 @@ export default class ProblemService {
         }, ["id"]))[0];
 
         // insert game content
-        await this.mongoClient.connect();
-        const db = this.mongoClient.db(process.env.MONGO_DB_NAME);
-        const gameCollection = db.collection("game");
+        const gameCollection = this.mongodb.collection("game");
         await gameCollection.insertOne({ ...game, pid: problem.id });
 
         return problem.id;
     }
 
     async getProblem(id: number) {
-        return (await this.knex.select().from("problem").where("id", id))[0];
+        const problemInfo = (await this.knex.select().from("problem").where("id", id))[0];
+        const game = await this.mongodb.collection("game").findOne({ pid: id });
+        console.log(problemInfo, game);
+        return {
+
+        };
     }
 
     // Get Static Table

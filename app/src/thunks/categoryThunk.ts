@@ -17,7 +17,7 @@ export function getCategoriesThunk() {
                 toast.error(result.message);
             }
         } catch (error) {
-            toast.error("Cannot connect to server!")
+            toast.error("Cannot connect to server!");
         }
         
     }

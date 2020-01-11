@@ -2,7 +2,6 @@ import { Router, Request, Response, json } from "express";
 import { catcher } from "../middleware";
 import { isLoggedIn } from "../passport";
 import ProblemService from "../services/ProblemService";
-import { stat } from "fs";
 
 export default class ProblemRouter {
 
@@ -10,15 +9,15 @@ export default class ProblemRouter {
 
     router() {
         const router = Router();
-        router.post("/", isLoggedIn, catcher(this.uploadProblem));
-        router.get("/:probleID", catcher(this.getProblem));
+        router.post("/", isLoggedIn, catcher(this.createProblem));
+        router.get("/:problemID", catcher(this.getProblem));
 
         router.get("/statuses/", catcher(this.getProblemStatuses));
         router.get("/test/", catcher(this.test));
         return router;
     }
 
-    private uploadProblem = async (req: Request, res: Response) => {
+    private createProblem = async (req: Request, res: Response) => {
         const { title, description, categoryID, difficultyID, statusID, score, } = req.body.problem;
         if (!title || !description || !categoryID || !difficultyID || !statusID || !score) {
             res.status(400).json({

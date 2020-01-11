@@ -18,8 +18,16 @@ import * as Knex from "knex";
 const knexConfig = require('./knexfile');
 const knex = Knex(knexConfig[process.env.NODE_ENV || "development"]);
 
-// MongoDB Client
-import { mongoClient } from "./mongodb";
+// MongoDB
+import { MongoClient } from "mongodb";
+const mongoClient = new MongoClient(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+const mongodb = (async () => {
+    await mongoClient.connect();
+    return mongoClient.db(process.env.MONGO_DB_NAME);
+})();
 
 // Cors
 import * as cors from "cors";
@@ -47,7 +55,7 @@ app.use("/difficulty", difficultyRouter.router());
 
 import ProblemService from "./services/ProblemService";
 import ProblemRouter from "./routers/ProblemRouter";
-export const problemService = new ProblemService(knex, mongoClient);
+export const problemService = new ProblemService(knex, mongodb);
 const problemRouter = new ProblemRouter(problemService);
 app.use("/problem", problemRouter.router());
 
