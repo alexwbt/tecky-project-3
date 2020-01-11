@@ -20,10 +20,10 @@ export interface IProblemState extends IProblemInfo {
 const initialState: IProblemState = {
     // Description
     title: "",
+    description: "",
     categoryID: 0,
     difficultyID: 0,
     statusID: 1,
-    description: "",
     score: 0,
     maxUsedBlocks: 0,
     maxMoveTimes: 0,

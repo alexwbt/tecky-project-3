@@ -10,6 +10,7 @@ export default class ProblemRouter {
     router() {
         const router = Router();
         router.post("/", isLoggedIn, catcher(this.createProblem));
+        router.put("/", isLoggedIn, catcher(this.editProblem));
         router.get("/:problemID", catcher(this.getProblem));
 
         router.get("/statuses/", catcher(this.getProblemStatuses));
@@ -18,33 +19,85 @@ export default class ProblemRouter {
     }
 
     private createProblem = async (req: Request, res: Response) => {
-        const { title, description, categoryID, difficultyID, statusID, score, } = req.body.problem;
-        if (!title || !description || !categoryID || !difficultyID || !statusID || !score) {
+        const problemID = this.service.createProblem(req.user["id"]);
+        res.status(200).json({
+            success: true,
+            problemID
+        });
+    };
+
+    private editProblem = async (req: Request, res: Response) => {
+        const {
+            // Description
+            title,
+            description,
+            categoryID,
+            difficultyID,
+            statusID,
+            score,
+            maxUsedBlocks,
+            maxMoveTimes,
+            deduction,
+
+            // Editor
+            canvas,
+            code,
+            avalibleBlocks,
+            avalibleCategories,
+            useCategory,
+            useVariables,
+            useFunctions,
+        } = req.body.problem;
+        if (
+            !req.body.problemID
+            // Description
+            || !title
+            || !description
+            || !categoryID
+            || !difficultyID
+            || !statusID
+            || !score
+            || !maxUsedBlocks
+            || !maxMoveTimes
+            || !deduction
+            // Editor
+            || !canvas
+            || !code
+            || !avalibleBlocks
+            || !avalibleCategories
+            || !useCategory
+            || !useVariables
+            || !useFunctions
+        ) {
             res.status(400).json({
                 success: false,
-                message: "Bad Request"
+                message: "Missing Requirements"
             });
             return;
         }
 
-        const game = {
-            canvas: req.body.problem.canvas,
-            code: req.body.problem.code,
-            avalibleBlocks: req.body.problem.avalibleBlocks,
-            avalibleCategories: req.body.problem.avalibleCategories,
-            useCategory: req.body.problem.useCategory,
-            useVariables: req.body.problem.useVariables,
-            useFunctions: req.body.problem.useFunctions,
-        };
+        const problemID = await this.service.editProblem(
+            req.body.problemID,
 
-        const problemID = await this.service.createProblem(
             title,
             description,
-            score,
             categoryID,
             difficultyID,
             statusID,
-            game
+            score,
+            // maxUsedBlocks,
+            // maxMoveTimes,
+            // deduction,
+
+            {
+                canvas: req.body.problem.canvas,
+                code: req.body.problem.code,
+                avalibleBlocks: req.body.problem.avalibleBlocks,
+                avalibleCategories: req.body.problem.avalibleCategories,
+                useCategory: req.body.problem.useCategory,
+                useVariables: req.body.problem.useVariables,
+                useFunctions: req.body.problem.useFunctions,
+            }
         );
 
         res.status(200).json({
@@ -64,12 +117,18 @@ export default class ProblemRouter {
             return;
         }
 
-        const problem = this.service.getProblem(parseInt(problemID));
+        const id = parseInt(problemID);
+        const info = await this.service.getProblemInfo(id);
+        const content = await this.service.getProblemInfo(id);
 
-        if (problem) {
+        if (info && content) {
             res.status(200).json({
                 success: true,
-                problem
+                problem: {
+                    title: info.title,
+                    description: info.description,
+
+                }
             });
         } else {
             res.status(400).json({
