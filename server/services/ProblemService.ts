@@ -42,40 +42,32 @@ export default class ProblemService {
     }
 
     async createProblem(user_id: number) {
-        return 0;
+        const pid = (await this.knex("problem").insert({ user_id }, ["id"]))[0].id;
+        await this.mongodb.collection("game").insertOne({ pid });
+        return pid;
     }
 
     async editProblem(
-        problemID: number,
+        user_id: number,
+        id: number,
         title: string,
         description: string,
-        score: number,
         category_id: number,
         difficulty_id: number,
         status_id: number,
+        score: number,
         // maxUsedBlocks,
         // maxMoveTimes,
         // deduction,
         game: any
     ) {
-        // TODO Alter tables instead of inserting
-
-        // insert problem info
-        // const problem = (await this.knex("problem").insert({
-        //     title,
-        //     description,
-        //     score,
-        //     category_id,
-        //     difficulty_id,
-        //     status_id
-        // }, ["id"]))[0];
-
-        // insert game content
-        // const gameCollection = this.mongodb.collection("game");
-        // await gameCollection.insertOne({ ...game, pid: problem.id });
+        await this.knex("problem").where({ user_id, id }).update({
+            title, description, category_id, difficulty_id, status_id, score
+        });
+        await this.mongodb.collection("game").updateOne({ pid: id }, { $set: { ...game, pid: id } });
     }
 
-    async getProblemInfo(id: number): Promise<IProblemInfo> {
+    async getProblemInfo(id: number) {
         return (await this.knex.select().from("problem").where("id", id))[0];
     }
 

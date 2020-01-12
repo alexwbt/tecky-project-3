@@ -19,15 +19,17 @@ export default class ProblemRouter {
     }
 
     private createProblem = async (req: Request, res: Response) => {
-        const problemID = this.service.createProblem(req.user["id"]);
+        const problemID = await this.service.createProblem(req.user["id"]);
         res.status(200).json({
             success: true,
+            message: "Successfully created challenge",
             problemID
         });
     };
 
     private editProblem = async (req: Request, res: Response) => {
         const {
+            pid,
             // Description
             title,
             description,
@@ -49,25 +51,25 @@ export default class ProblemRouter {
             useFunctions,
         } = req.body.problem;
         if (
-            !req.body.problemID
+            pid === undefined
             // Description
-            || !title
-            || !description
-            || !categoryID
-            || !difficultyID
-            || !statusID
-            || !score
-            || !maxUsedBlocks
-            || !maxMoveTimes
-            || !deduction
+            || title === undefined
+            || description === undefined
+            || categoryID === undefined
+            || difficultyID === undefined
+            || statusID === undefined
+            || score === undefined
+            || maxUsedBlocks === undefined
+            || maxMoveTimes === undefined
+            || deduction === undefined
             // Editor
-            || !canvas
-            || !code
-            || !avalibleBlocks
-            || !avalibleCategories
-            || !useCategory
-            || !useVariables
-            || !useFunctions
+            || canvas === undefined
+            || code === undefined
+            || avalibleBlocks === undefined
+            || avalibleCategories === undefined
+            || useCategory === undefined
+            || useVariables === undefined
+            || useFunctions === undefined
         ) {
             res.status(400).json({
                 success: false,
@@ -75,29 +77,28 @@ export default class ProblemRouter {
             });
             return;
         }
-
+        const game = {
+            canvas: req.body.problem.canvas,
+            code: req.body.problem.code,
+            avalibleBlocks: req.body.problem.avalibleBlocks,
+            avalibleCategories: req.body.problem.avalibleCategories,
+            useCategory: req.body.problem.useCategory,
+            useVariables: req.body.problem.useVariables,
+            useFunctions: req.body.problem.useFunctions,
+        };
         const problemID = await this.service.editProblem(
-            req.body.problemID,
-
+            req.user["id"],
+            pid,
             title,
             description,
-            categoryID,
-            difficultyID,
-            statusID,
+            categoryID < 1 ? null : categoryID,
+            difficultyID < 1 ? null : difficultyID,
+            statusID < 1 ? null : statusID,
             score,
             // maxUsedBlocks,
             // maxMoveTimes,
             // deduction,
-
-            {
-                canvas: req.body.problem.canvas,
-                code: req.body.problem.code,
-                avalibleBlocks: req.body.problem.avalibleBlocks,
-                avalibleCategories: req.body.problem.avalibleCategories,
-                useCategory: req.body.problem.useCategory,
-                useVariables: req.body.problem.useVariables,
-                useFunctions: req.body.problem.useFunctions,
-            }
+            game
         );
 
         res.status(200).json({
@@ -119,7 +120,7 @@ export default class ProblemRouter {
 
         const id = parseInt(problemID);
         const info = await this.service.getProblemInfo(id);
-        const content = await this.service.getProblemInfo(id);
+        const content = await this.service.getProblemContent(id);
 
         if (info && content) {
             res.status(200).json({
@@ -127,7 +128,14 @@ export default class ProblemRouter {
                 problem: {
                     title: info.title,
                     description: info.description,
-
+                    categoryID: info.category_id,
+                    difficultyID: info.difficulty_id,
+                    statusID: info.status_id,
+                    score: info.score,
+                    // maxUsedBlocks: 0,
+                    // maxMoveTimes: 0,
+                    // deduction: null,
+                    ...content
                 }
             });
         } else {

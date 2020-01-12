@@ -14,6 +14,7 @@ export function catcher(routerFunction: (req: Request, res: Response, next?: Nex
             });
         }
         if (!res.headersSent) {
+            console.log(req.originalUrl + " doesn't have a response.");
             res.status(500).json({
                 success: false,
                 message: "No Response"

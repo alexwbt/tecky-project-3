@@ -48,8 +48,8 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
     switch (action.type) {
         case "SET_PROBLEM":
             return {
-                ...action.problem,
-                ...initialState
+                ...initialState,
+                ...action.problem
             };
         case "CHANGED":
             return {

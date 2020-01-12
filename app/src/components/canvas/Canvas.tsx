@@ -130,6 +130,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                                     break;
                                 default:
                             }
+                            this.props.setContent(this.getContent());
                             this.props.changed();
                         } else if (this.buttons[2]) {
                             switch (this.props.currentTab) {
@@ -144,6 +145,8 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                                     break;
                                 default:
                             }
+                            this.props.setContent(this.getContent());
+                            this.props.changed();
                         }
                     }
                 }
@@ -189,7 +192,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                 this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
             }
         } else {
-            this.props.setContent(this.getContent());
+            // this.props.setContent(this.getContent());
             if (this.props.code) {
                 const workspace = new Blockly.Workspace();
                 Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
@@ -222,6 +225,9 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
 
     componentDidUpdate() {
         if (this.content) {
+            if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
+                this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
+            }
             if (this.props.terrainSize) {
                 this.content.setTerrainSize(this.props.terrainSize);
             }

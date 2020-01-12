@@ -14,7 +14,7 @@ import { Tile, Char, Obj, WinningCondition } from "../components/canvas/CanvasCo
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
 import objSprite from "../sprites/objectSprite.png";
-import { uploadProblem, getProblem } from "../thunks/problemThunk";
+import { editProblem, getProblem } from "../thunks/problemThunk";
 import { IProblemState } from "../reducers/problemReducer";
 import { getCategoriesThunk } from "../thunks/categoryThunk";
 import { getDifficultiesThunk } from "../thunks/difficultyThunks";
@@ -29,7 +29,7 @@ interface ICreatorProps {
         };
     };
     problem: IProblemState;
-    uploadProblem: (problem: IProblemState) => void;
+    editProblem: (problem: IProblemState) => void;
     getProblem: (id: number) => void;
     getCategories: () => void;
     getDifficulties: () => void;
@@ -128,7 +128,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     componentDidUpdate() {
         if (this.state.saving) {
-            this.props.uploadProblem(this.props.problem);
+            this.props.editProblem(this.props.problem);
             this.setState({ ...this.state, saving: false });
         }
     }
@@ -141,14 +141,11 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         this.setState({ ...this.state, canvas: { ...this.state.canvas, currentTab: tab } });
     }
 
-    uploadProblem() {
+    editProblem() {
         this.setState({ ...this.state, saving: true });
     }
 
     render() {
-        const getTabObj = (name: string, value: Tile | Char | Obj, index: number) => ({
-            name, value, index, active: (this.state.canvas.pen === value)
-        });
         return <>
             <Prompt
                 when={!this.props.problem.saved}
@@ -163,7 +160,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                 }))} buttons={[
                     {
                         name: "Save",
-                        callback: this.uploadProblem.bind(this)
+                        callback: this.editProblem.bind(this)
                     }
                 ]} color="info" color2="light">
                     <span className={` mx-2 px-2 ${this.props.problem.saved ? "text-white" : "text-danger"}`}>{this.props.problem.savingMessage}</span>
@@ -195,105 +192,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                 </div>
                             }
                             {
-                                this.state.currentTab === Tab.EDITOR && <>
-                                    <div className="col-4 p-0">
-                                        <TabSelect tabs={[
-                                            "Terrain" as CanvasTab,
-                                            "Characters" as CanvasTab,
-                                            "Objects" as CanvasTab,
-                                            "Enemy" as CanvasTab
-                                        ].map((name: CanvasTab) => ({
-                                            name: name as string,
-                                            active: this.state.canvas.currentTab === name,
-                                            callback: this.selectCanvasTab.bind(this, name)
-                                        }))} buttons={[]} color="light" color2="dark" />
-                                        <div className="p-3 border-top h-25" style={{overflow: "auto"}}>
-                                            {
-                                                this.state.canvas.currentTab === "Terrain" && <ObjSelector
-                                                    objs={[
-                                                        getTabObj("Grass", Tile.GRASS, 0),
-                                                        getTabObj("Road", Tile.ROAD, 1),
-                                                        getTabObj("Water", Tile.WATER, 13)
-                                                    ]}
-                                                    sprite={this.tileSpriteImg.current}
-                                                    select={this.selectTile} />
-                                            }
-                                            {
-                                                this.state.canvas.currentTab === "Characters" && <ObjSelector
-                                                    objs={[
-                                                        getTabObj("Jason", Char.JASON, Char.JASON),
-                                                        getTabObj("Owen", Char.OWEN, Char.OWEN),
-                                                        getTabObj("Patrick", Char.PATRICK, Char.PATRICK),
-                                                        getTabObj("Harry", Char.HARRY, Char.HARRY),
-                                                        getTabObj("Sherman", Char.SHERMAN, Char.SHERMAN),
-                                                        getTabObj("Wallace", Char.WALLACE, Char.WALLACE),
-                                                        getTabObj("Ronald", Char.RONALD, Char.RONALD),
-                                                        getTabObj("Raymend", Char.RAYMEND, Char.RAYMEND),
-                                                        getTabObj("Steven", Char.STEVEN, Char.STEVEN),
-                                                        getTabObj("Otis", Char.OTIS, Char.OTIS),
-                                                        getTabObj("Andy", Char.ANDY, Char.ANDY),
-                                                        getTabObj("Sunny", Char.SUNNY, Char.SUNNY)
-                                                    ]}
-                                                    sprite={this.charSpriteImg.current}
-                                                    select={this.selectChar} />
-                                            }
-                                            {
-                                                this.state.canvas.currentTab === "Objects" && <ObjSelector
-                                                    objs={[
-                                                        getTabObj("Gold Coin", Obj.GOLD_COIN, 0),
-                                                        getTabObj("Silver Coin", Obj.SILV_COIN, 8),
-                                                        getTabObj("Blue Gem", Obj.BLUE_GEM, 16),
-                                                        getTabObj("Green Gem", Obj.GREEN_GEM, 24),
-                                                        getTabObj("Flag", Obj.FLAG, 33)
-                                                    ]}
-                                                    sprite={this.objSpriteImg.current}
-                                                    select={this.selectChar} />
-                                            }
-                                        </div>
-                                        <div className="p-2">
-                                            <hr />
-                                            <h5>Settings</h5>
-                                            <h6 className="d-inline p-2">Terrain Size:</h6>
-                                            <input
-                                                type="number"
-                                                className="border-0 rounded-pill pl-2"
-                                                style={{width: "3em"}}
-                                                value={this.state.canvas.terrainSize}
-                                                onChange={(event) => {
-                                                const size = Math.min(Math.max(parseInt(event.target.value), 8), 16);
-                                                this.setState({
-                                                    ...this.state,
-                                                    canvas: {
-                                                        ...this.state.canvas,
-                                                        terrainSize: size
-                                                    }
-                                                });
-                                            }} />
-                                            <br />
-                                            <h6 className="d-inline p-2">End Game Condition:</h6>
-                                            <select
-                                                value={this.state.canvas.winningCondition}
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        ...this.state,
-                                                        canvas: {
-                                                            ...this.state.canvas,
-                                                            winningCondition: event.target.value as WinningCondition
-                                                        }
-                                                    });
-                                                }}
-                                                className="border-0 rounded-pill pl-2">
-                                                <option>{WinningCondition.ALL_OBJECT_COLLECTED}</option>
-                                                <option>{WinningCondition.ALL_PLAYER_GOT_FLAG}</option>
-                                                <option>{WinningCondition.ANY_PLAYER_GOT_FLAG}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className="col-4 p-0">
-                                        <BlockSelector height={this.state.height} />
-                                    </div>
-                                </>
-                            }
+                                this.state.currentTab === Tab.EDITOR && this.renderEditor()
+                }
                             {
                                 this.state.currentTab === Tab.CODE && <BlocklyArea
                                     useCategory={this.props.problem.useCategory}
@@ -316,6 +216,110 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         </>
     }
 
+    renderEditor() {
+        const getTabObj = (name: string, value: Tile | Char | Obj, index: number) => ({
+            name, value, index, active: (this.state.canvas.pen === value)
+        });
+        return <>
+            <div className="col-4 p-0">
+                <TabSelect tabs={[
+                    "Terrain" as CanvasTab,
+                    "Characters" as CanvasTab,
+                    "Objects" as CanvasTab,
+                    "Enemy" as CanvasTab
+                ].map((name: CanvasTab) => ({
+                    name: name as string,
+                    active: this.state.canvas.currentTab === name,
+                    callback: this.selectCanvasTab.bind(this, name)
+                }))} buttons={[]} color="light" color2="dark" />
+                <div className="p-3 border-top h-25" style={{ overflow: "auto" }}>
+                    {
+                        this.state.canvas.currentTab === "Terrain" && <ObjSelector
+                            objs={[
+                                getTabObj("Grass", Tile.GRASS, 0),
+                                getTabObj("Road", Tile.ROAD, 1),
+                                getTabObj("Water", Tile.WATER, 13)
+                            ]}
+                            sprite={this.tileSpriteImg.current}
+                            select={this.selectTile} />
+                    }
+                    {
+                        this.state.canvas.currentTab === "Characters" && <ObjSelector
+                            objs={[
+                                getTabObj("Jason", Char.JASON, Char.JASON),
+                                getTabObj("Owen", Char.OWEN, Char.OWEN),
+                                getTabObj("Patrick", Char.PATRICK, Char.PATRICK),
+                                getTabObj("Harry", Char.HARRY, Char.HARRY),
+                                getTabObj("Sherman", Char.SHERMAN, Char.SHERMAN),
+                                getTabObj("Wallace", Char.WALLACE, Char.WALLACE),
+                                getTabObj("Ronald", Char.RONALD, Char.RONALD),
+                                getTabObj("Raymend", Char.RAYMEND, Char.RAYMEND),
+                                getTabObj("Steven", Char.STEVEN, Char.STEVEN),
+                                getTabObj("Otis", Char.OTIS, Char.OTIS),
+                                getTabObj("Andy", Char.ANDY, Char.ANDY),
+                                getTabObj("Sunny", Char.SUNNY, Char.SUNNY)
+                            ]}
+                            sprite={this.charSpriteImg.current}
+                            select={this.selectChar} />
+                    }
+                    {
+                        this.state.canvas.currentTab === "Objects" && <ObjSelector
+                            objs={[
+                                getTabObj("Gold Coin", Obj.GOLD_COIN, 0),
+                                getTabObj("Silver Coin", Obj.SILV_COIN, 8),
+                                getTabObj("Blue Gem", Obj.BLUE_GEM, 16),
+                                getTabObj("Green Gem", Obj.GREEN_GEM, 24),
+                                getTabObj("Flag", Obj.FLAG, 33)
+                            ]}
+                            sprite={this.objSpriteImg.current}
+                            select={this.selectChar} />
+                    }
+                </div>
+                <div className="p-2">
+                    <hr />
+                    <h5>Settings</h5>
+                    <h6 className="d-inline p-2">Terrain Size:</h6>
+                    <input
+                        type="number"
+                        className="border-0 rounded-pill pl-2"
+                        style={{ width: "3em" }}
+                        value={this.state.canvas.terrainSize}
+                        onChange={(event) => {
+                            const size = Math.min(Math.max(parseInt(event.target.value), 8), 16);
+                            this.setState({
+                                ...this.state,
+                                canvas: {
+                                    ...this.state.canvas,
+                                    terrainSize: size
+                                }
+                            });
+                        }} />
+                    <br />
+                    <h6 className="d-inline p-2">End Game Condition:</h6>
+                    <select
+                        value={this.state.canvas.winningCondition}
+                        onChange={(event) => {
+                            this.setState({
+                                ...this.state,
+                                canvas: {
+                                    ...this.state.canvas,
+                                    winningCondition: event.target.value as WinningCondition
+                                }
+                            });
+                        }}
+                        className="border-0 rounded-pill pl-2">
+                        <option>{WinningCondition.ALL_OBJECT_COLLECTED}</option>
+                        <option>{WinningCondition.ALL_PLAYER_GOT_FLAG}</option>
+                        <option>{WinningCondition.ANY_PLAYER_GOT_FLAG}</option>
+                    </select>
+                </div>
+            </div>
+            <div className="col-4 p-0">
+                <BlockSelector height={this.state.height} />
+            </div>
+        </>
+    }
+
 }
 
 const mapStateToProps = (state: IRootState) => ({
@@ -323,7 +327,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    uploadProblem: (problem: IProblemState) => dispatch(uploadProblem(problem)),
+    editProblem: (problem: IProblemState) => dispatch(editProblem(problem)),
     getProblem: (id: number) => dispatch(getProblem(id)),
     getCategories: () => dispatch(getCategoriesThunk()),
     getDifficulties: () => dispatch(getDifficultiesThunk()),

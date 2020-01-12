@@ -17,30 +17,15 @@ interface IDescriptionFormProps extends IProblemInfo {
     setDescription: (description: IProblemInfo) => void;
 }
 
-interface IDescriptionFormStates extends IProblemInfo { }
 
-
-class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptionFormStates> {
-
-    constructor(props: IDescriptionFormProps) {
-        super(props);
-        this.state = {
-            title: props.title,
-            categoryID: props.categoryID,
-            difficultyID: props.difficultyID,
-            statusID: props.statusID,
-            description: props.description,
-            score: props.score,
-            maxUsedBlocks: props.maxUsedBlocks,
-            maxMoveTimes: props.maxMoveTimes,
-            deduction: props.deduction,
-        };
-    }
+class DescriptionForm extends React.Component<IDescriptionFormProps> {
 
     private inputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        console.log(event.target.name, event.target.value);
-        
-        this.setState({ ...this.state, [event.target.name]: event.target.value });
+        this.props.setDescription({
+            ...this.props,
+            [event.target.name]: event.target.value
+        });
+        // this.setState({ ...this.state, [event.target.name]: event.target.value });
         this.props.changed();
     };
 
@@ -48,20 +33,6 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
         // const category = this.props.categories.find(category => category.id === parseInt(event.target.value));
         // this.setState({ ...this.state, category: category });
         // this.props.changed();
-    }
-
-    componentWillUnmount() {
-        this.props.setDescription({
-            title: this.state.title,
-            categoryID: this.state.categoryID,
-            difficultyID: this.state.difficultyID,
-            statusID: this.state.statusID,
-            description: this.state.description,
-            score: this.state.score,
-            maxUsedBlocks: this.state.maxUsedBlocks,
-            maxMoveTimes: this.state.maxMoveTimes,
-            deduction: this.state.deduction,
-        });
     }
 
     renderRequirement(categoryID: number) {
@@ -77,7 +48,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             name="maxUsedBlocks"
                             type="number"
                             min="0"
-                            value={Number(this.state.maxUsedBlocks).toString()}
+                            value={Number(this.props.maxUsedBlocks).toString()}
                             onChange={this.inputChange} />
                     </Form.Group>
 
@@ -87,7 +58,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             name="maxMoveTimes"
                             type="number"
                             min="0"
-                            value={Number(this.state.maxMoveTimes).toString()}
+                            value={Number(this.props.maxMoveTimes).toString()}
                             onChange={this.inputChange} />
                     </Form.Group>
 
@@ -109,7 +80,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                         name="title"
                         type="text"
                         placeholder="Title"
-                        value={this.state.title}
+                        value={this.props.title}
                         onChange={this.inputChange} />
                 </Form.Group>
                 <Form.Group controlId="formDescription">
@@ -119,7 +90,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                         as="textarea"
                         rows="3"
                         placeholder="Description"
-                        value={this.state.description}
+                        value={this.props.description}
                         onChange={this.inputChange} />
                 </Form.Group>
                 <Form.Group controlId="formCategory">
@@ -148,12 +119,12 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                         name="score"
                         type="number"
                         min="0"
-                        value={Number(this.state.score).toString()}
+                        value={Number(this.props.score).toString()}
                         onChange={this.inputChange} />
                 </Form.Group>
 
                 <hr className="mt-5" />
-                {this.renderRequirement(this.state.categoryID)}
+                {this.renderRequirement(this.props.categoryID)}
 
                 {/* <Form.Group controlId="formEachBlocksLose">
                         <Form.Label>Each blocks more the Max. Used Blocks will lose</Form.Label>
@@ -182,20 +153,23 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
 
 }
 
-const mapStateToProps = (state: IRootState) => ({
-    title: state.problem.title,
-    categoryID: state.problem.categoryID,
-    difficultyID: state.problem.difficultyID,
-    statusID: state.problem.statusID,
-    description: state.problem.description,
-    score: state.problem.score,
-    maxUsedBlocks: state.problem.maxUsedBlocks,
-    maxMoveTimes: state.problem.maxMoveTimes,
-    deduction: state.problem.deduction,
-
-    categories: state.category.list,
-    difficulties: state.difficulty.list,
-})
+const mapStateToProps = (state: IRootState) => {
+    console.log(state.problem);
+    return ({
+        title: state.problem.title,
+        categoryID: state.problem.categoryID,
+        difficultyID: state.problem.difficultyID,
+        statusID: state.problem.statusID,
+        description: state.problem.description,
+        score: state.problem.score,
+        maxUsedBlocks: state.problem.maxUsedBlocks,
+        maxMoveTimes: state.problem.maxMoveTimes,
+        deduction: state.problem.deduction,
+    
+        categories: state.category.list,
+        difficulties: state.difficulty.list,
+    });
+};
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     changed: () => dispatch(changed()),
