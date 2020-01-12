@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import ProblemActions, { setProblem } from "../actions/problemActions";
+import ProblemActions, { setProblem, resetProblem } from "../actions/problemActions";
 import { IProblemState } from "../reducers/problemReducer";
 import { setSaved } from "../actions/problemActions";
 import { toast } from "react-toastify";
@@ -20,6 +20,7 @@ export function createProblem() {
             const result = await res.json();
 
             dispatch(setSaved(res.status === 200 && result.success, result.message));
+            dispatch(resetProblem());
             dispatch(push("/challenge/edit/" + result.problemID));
         } catch (err) {
             toast.error("Cannot connect to server!");
@@ -30,7 +31,6 @@ export function createProblem() {
 export function editProblem(problem: IProblemState) {
     return async (dispatch: Dispatch<ProblemActions>) => {
         try {
-            console.log(problem);
             const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
                 method: "PUT",
                 headers: {

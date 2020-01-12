@@ -193,7 +193,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                             }
                             {
                                 this.state.currentTab === Tab.EDITOR && this.renderEditor()
-                }
+                            }
                             {
                                 this.state.currentTab === Tab.CODE && <BlocklyArea
                                     useCategory={this.props.problem.useCategory}

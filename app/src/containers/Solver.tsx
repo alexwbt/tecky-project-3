@@ -81,10 +81,10 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                             this.tileSpriteImg.current &&
                             this.charSpriteImg.current &&
                             this.objSpriteImg.current && <Canvas
-                                    tileSprite={this.tileSpriteImg.current}
-                                    charSprite={this.charSpriteImg.current}
-                                    objSprite={this.objSpriteImg.current}
-                                    editable={false} />
+                                tileSprite={this.tileSpriteImg.current}
+                                charSprite={this.charSpriteImg.current}
+                                objSprite={this.objSpriteImg.current}
+                                editable={false} />
                         }
                         {
                             !!this.state.desHeight && <div style={{ overflowY: "auto", maxHeight: this.state.desHeight - 10 }}>
@@ -93,14 +93,16 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                             </div>
                         }
                     </div>
-                    <BlocklyArea
-                        useCategory={this.props.problem.useCategory}
-                        avalibleBlocks={this.props.problem.avalibleBlocks}
-                        avalibleCategories={this.props.problem.avalibleCategories}
-                        useVariables={this.props.problem.useCategory && this.props.problem.useVariables}
-                        useFunctions={this.props.problem.useCategory && this.props.problem.useFunctions}
-                        height={this.state.height}
-                        className="col-8 p-0" />
+                    {
+                        !!this.state.desHeight && <BlocklyArea
+                            useCategory={this.props.problem.useCategory}
+                            avalibleBlocks={this.props.problem.avalibleBlocks}
+                            avalibleCategories={this.props.problem.avalibleCategories}
+                            useVariables={this.props.problem.useCategory && this.props.problem.useVariables}
+                            useFunctions={this.props.problem.useCategory && this.props.problem.useFunctions}
+                            height={this.state.height}
+                            className="col-8 p-0" />
+                    }
                 </div>
             </div>
         </div>

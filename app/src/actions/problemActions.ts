@@ -12,6 +12,11 @@ export function setProblem(problem: IProblemState) {
         problem
     };
 }
+export function resetProblem() {
+    return {
+        type: "RESET_PROBLEM" as "RESET_PROBLEM"
+    };
+}
 
 export function changed() {
     return {
@@ -108,6 +113,7 @@ type ActionCreators = typeof toggleCategory
                     | typeof setDescription
                     | typeof setSaved
                     | typeof changed
-                    | typeof setProblem;
+                    | typeof setProblem
+                    | typeof resetProblem;
 type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;

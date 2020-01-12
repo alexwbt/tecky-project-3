@@ -51,6 +51,8 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
                 ...initialState,
                 ...action.problem
             };
+        case "RESET_PROBLEM":
+            return initialState;
         case "CHANGED":
             return {
                 ...state,

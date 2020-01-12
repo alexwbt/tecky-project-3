@@ -41,8 +41,7 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
         });
     }
 
-    componentWillUnmount() {
-        this.props.setCode(this.getCodeXml());
+    componentDidUpdate() {
     }
 
     render() {
@@ -52,6 +51,7 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
             className={this.props.className}>
             {
                 (this.props.avalibleCategories ? this.props.avalibleCategories : Object.keys(blocklyBlocks)).map((cat, i) => {
+                    console.log(this.props.avalibleCategories?.length);
                     if (this.props.useCategory) {
                         return <Category name={cat} categorystyle={`${cat.toLowerCase()}_category`} key={i}>
                             {(this.props.avalibleBlocks ? this.props.avalibleBlocks : blocklyBlocks)[cat]

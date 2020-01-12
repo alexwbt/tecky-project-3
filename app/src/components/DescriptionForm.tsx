@@ -153,23 +153,20 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
 
 }
 
-const mapStateToProps = (state: IRootState) => {
-    console.log(state.problem);
-    return ({
-        title: state.problem.title,
-        categoryID: state.problem.categoryID,
-        difficultyID: state.problem.difficultyID,
-        statusID: state.problem.statusID,
-        description: state.problem.description,
-        score: state.problem.score,
-        maxUsedBlocks: state.problem.maxUsedBlocks,
-        maxMoveTimes: state.problem.maxMoveTimes,
-        deduction: state.problem.deduction,
-    
-        categories: state.category.list,
-        difficulties: state.difficulty.list,
-    });
-};
+const mapStateToProps = (state: IRootState) => ({
+    title: state.problem.title,
+    categoryID: state.problem.categoryID,
+    difficultyID: state.problem.difficultyID,
+    statusID: state.problem.statusID,
+    description: state.problem.description,
+    score: state.problem.score,
+    maxUsedBlocks: state.problem.maxUsedBlocks,
+    maxMoveTimes: state.problem.maxMoveTimes,
+    deduction: state.problem.deduction,
+
+    categories: state.category.list,
+    difficulties: state.difficulty.list,
+});
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     changed: () => dispatch(changed()),
