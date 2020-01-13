@@ -67,8 +67,7 @@ const problemImageStorage = multer.diskStorage({
         cb(null, `${req.user["id"]}.${file.mimetype.split('/')[1]}`);
     }
 })
-const uploadChallengeImage = multer({problemImageStorage})
-
+const uploadChallengeImage = multer({ storage: problemImageStorage })
 
 export const problemService = new ProblemService(knex, mongodb);
 const problemRouter = new ProblemRouter(problemService, uploadChallengeImage);
