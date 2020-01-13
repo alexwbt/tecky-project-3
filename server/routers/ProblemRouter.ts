@@ -1,4 +1,4 @@
-import { Router, Request, Response, json } from "express";\
+import { Router, Request, Response, json } from "express";
 import * as multer from 'multer';
 import { catcher } from "../middleware";
 import { isLoggedIn } from "../passport";
