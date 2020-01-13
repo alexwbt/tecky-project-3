@@ -8,6 +8,7 @@ import { CanvasTab } from "../../containers/Creator";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import GameEndModal from "./GameEndModal";
+import { IProblemDeduction } from "../../models/Problem";
 
 const Blockly = require("blockly");
 const BlocklyJS = require("blockly/javascript");
@@ -16,6 +17,9 @@ const BlocklyJS = require("blockly/javascript");
 export interface ICanvasProps {
     content: ICanvasContent;
     code: string;
+    maxUsedBlocks: number;
+    maxMoveTimes: number;
+    deduction: IProblemDeduction[];
     setContent: (content: ICanvasContent) => void;
     changed: () => void;
 
@@ -54,6 +58,8 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     private mouse = { x: -1, y: -1 };
 
     private content: CanvasContent | null = null;
+
+    private blockCount = 0;
 
     constructor(props: ICanvasProps) {
         super(props);
@@ -195,6 +201,9 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             if (this.props.code) {
                 const workspace = new Blockly.Workspace();
                 Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
+
+                this.blockCount = workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length;
+
                 const code = BlocklyJS.workspaceToCode(workspace);
                 console.log(code);
                 try {
@@ -271,6 +280,12 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                         endGameModal: false
                     });
                 }}
+                blockCount={this.blockCount}
+                movedTime={this.content ? this.content.getMovedTime() : 0}
+                missedObjects={this.content ? this.content.getMissedObjects() : 0}
+                maxUsedBlocks={this.props.maxUsedBlocks}
+                maxMoveTimes={this.props.maxMoveTimes}
+                deduction={this.props.deduction}
                 failed={this.state.gameFailed} />
             <canvas
                 ref={this.canvas}
@@ -288,7 +303,10 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
 
 const mapStateToProps = (state: IRootState) => ({
     content: state.problem.canvas,
-    code: state.problem.code
+    code: state.problem.code,
+    maxUsedBlocks: state.problem.maxUsedBlocks,
+    maxMoveTimes: state.problem.maxMoveTimes,
+    deduction: state.problem.deduction
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
