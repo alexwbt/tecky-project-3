@@ -1,15 +1,16 @@
-import { Router, Request, Response, json } from "express";
+import { Router, Request, Response, json } from "express";\
+import * as multer from 'multer';
 import { catcher } from "../middleware";
 import { isLoggedIn } from "../passport";
 import ProblemService from "../services/ProblemService";
 
 export default class ProblemRouter {
 
-    constructor(private service: ProblemService) { }
+    constructor(private service: ProblemService, private upload:multer.Instance) { }
 
     router() {
         const router = Router();
-        router.post("/", isLoggedIn, catcher(this.createProblem));
+        router.post("/", isLoggedIn, this.upload.single("image"), catcher(this.createProblem));
         router.put("/", isLoggedIn, catcher(this.editProblem));
         router.get("/statuses/", catcher(this.getProblemStatuses));
         router.get("/:problemID", catcher(this.getProblem));
