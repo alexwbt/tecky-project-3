@@ -119,7 +119,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                     </Form.Group>
 
                     <Form.Group controlId="formObjectNotGetLose">
-                        <Form.Label>Move Times more than Max. Move will lose</Form.Label>
+                        <Form.Label>Each object haven't got will lose</Form.Label>
                         <Form.Control
                             name="objectNotGetLose"
                             type="number"
