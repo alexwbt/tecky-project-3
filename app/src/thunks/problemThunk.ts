@@ -31,13 +31,19 @@ export function createProblem() {
 export function editProblem(problem: IProblemState) {
     return async (dispatch: Dispatch<ProblemActions>) => {
         try {
+            let formData = new FormData();
+            if (problem.image !== undefined) {
+                formData.append("image", problem.image);
+            }
+            formData.append("problem", JSON.stringify({ ...problem }))
+            
+
             const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
                 method: "PUT",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify({ problem })
+                body: formData
             });
             const result = await res.json();
 

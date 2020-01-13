@@ -29,6 +29,18 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
         this.props.changed();
     };
 
+    private fileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            this.props.setDescription({
+                ...this.props,
+                image: event.target.files[0]
+            });
+            // this.setState({ ...this.state, [event.target.name]: event.target.value });
+            this.props.changed();
+        }
+
+    }
+
     private deductionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const deductionSets = [{
             categoryID: 1,
@@ -185,7 +197,9 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                     <Form.Label>Image:</Form.Label>
                     <Form.Control
                         name="image"
-                        type="file" />
+                        type="file"
+                        accept="image/png, image/jpeg"
+                        onChange={this.fileChange} />
                 </Form.Group>
 
                 <Form.Group controlId="formCategory">

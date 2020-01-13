@@ -13,6 +13,7 @@ export interface IProblemState extends IProblemInfo {
     useVariables: boolean;
     useFunctions: boolean;
     winningCondition: WinningCondition,
+    image: File | undefined,
 
     savingMessage: string;
     saved: boolean;
@@ -29,6 +30,7 @@ const initialState: IProblemState = {
     maxUsedBlocks: 0,
     maxMoveTimes: 0,
     deduction: ([] as IProblemDeduction[]),
+    image: new File([""], "filename"),
 
     // Editor
     canvas: {},
@@ -78,7 +80,8 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
                 score: action.score,
                 maxUsedBlocks: action.maxUsedBlocks,
                 maxMoveTimes: action.maxMoveTimes,
-                deduction: action.deduction
+                deduction: action.deduction,
+                image: action.image,
             };
         case "SET_CANVAS_CONTENT":
             return {

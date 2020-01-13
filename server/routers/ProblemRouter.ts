@@ -10,8 +10,8 @@ export default class ProblemRouter {
 
     router() {
         const router = Router();
-        router.post("/", isLoggedIn, this.upload.single("image"), catcher(this.createProblem));
-        router.put("/", isLoggedIn, catcher(this.editProblem));
+        router.post("/", isLoggedIn, catcher(this.createProblem));
+        router.put("/", isLoggedIn, this.upload.single("image"), catcher(this.editProblem));
         router.get("/statuses/", catcher(this.getProblemStatuses));
         router.get("/:problemID", catcher(this.getProblem));
         router.get("/", catcher(this.getProblemList));
@@ -38,6 +38,10 @@ export default class ProblemRouter {
     };
 
     private editProblem = async (req: Request, res: Response) => {
+        const problem = JSON.parse(req.body.problem);
+        console.log(problem);
+        
+        
         const {
             pid,
             // Description
@@ -56,7 +60,7 @@ export default class ProblemRouter {
             useCategory,
             useVariables,
             useFunctions,
-        } = req.body.problem;
+        } = problem;
         if (
             pid === undefined
             // Description
@@ -82,17 +86,17 @@ export default class ProblemRouter {
             return;
         }
         const game = {
-            canvas: req.body.problem.canvas,
-            code: req.body.problem.code,
-            avalibleBlocks: req.body.problem.avalibleBlocks,
-            avalibleCategories: req.body.problem.avalibleCategories,
-            useCategory: req.body.problem.useCategory,
-            useVariables: req.body.problem.useVariables,
-            useFunctions: req.body.problem.useFunctions,
-            winningCondition: req.body.problem.winningCondition,
-            maxUsedBlocks: req.body.problem.maxUsedBlocks,
-            maxMoveTimes: req.body.problem.maxMoveTimes,
-            deduction: req.body.problem.deduction
+            canvas: problem.canvas,
+            code: problem.code,
+            avalibleBlocks: problem.avalibleBlocks,
+            avalibleCategories: problem.avalibleCategories,
+            useCategory: problem.useCategory,
+            useVariables: problem.useVariables,
+            useFunctions: problem.useFunctions,
+            winningCondition: problem.winningCondition,
+            maxUsedBlocks: problem.maxUsedBlocks,
+            maxMoveTimes: problem.maxMoveTimes,
+            deduction: problem.deduction
         };
         const problemID = await this.service.editProblem(
             req.user["id"],

@@ -9,6 +9,7 @@ export interface IProblem {
 export interface IProblemInfo extends IProblem {
     description: string;
     score: number;
+    image?: File;
 
     maxUsedBlocks: number;
     maxMoveTimes: number;

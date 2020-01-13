@@ -43,7 +43,8 @@ export function setDescription(description: IProblemInfo) {
         score: description.score,
         maxUsedBlocks: description.maxUsedBlocks,
         maxMoveTimes: description.maxMoveTimes,
-        deduction: description.deduction
+        deduction: description.deduction,
+        image: description.image,
     };
 }
 
