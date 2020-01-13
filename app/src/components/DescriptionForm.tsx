@@ -219,12 +219,13 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                 <Form.Group controlId="formStatus">
                     <Form.Label>Status:</Form.Label>
                     <Form.Control name="statusID" as="select" value={this.props.statusID.toString()} onChange={this.inputChange}>
-                        
+
                         {
                             this.props.problemStatuses.filter(status =>
                                 selectableStatuses.indexOf(status.id) >= 0
-                            )
-                            .map(status =>
+                            ).sort((s1, s2) =>
+                                selectableStatuses.indexOf(s1.id) - selectableStatuses.indexOf(s2.id)
+                            ).map(status =>
                                 <option key={status.id} value={status.id}>{status.name}</option>
                             )
                         }
