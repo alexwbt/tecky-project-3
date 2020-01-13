@@ -79,7 +79,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                             name="maxUsedBlocks"
                             type="number"
                             min="0"
-                            value={Number(this.props.maxUsedBlocks).toString()}
+                            required
+                            value={this.props.maxUsedBlocks ? Number(this.props.maxUsedBlocks).toString() : ""}
                             onChange={this.inputChange} />
                     </Form.Group>
 
@@ -89,7 +90,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                             name="maxMoveTimes"
                             type="number"
                             min="0"
-                            value={Number(this.props.maxMoveTimes).toString()}
+                            required
+                            value={this.props.maxMoveTimes ? Number(this.props.maxMoveTimes).toString() : ""}
                             onChange={this.inputChange} />
                     </Form.Group>
 
@@ -100,7 +102,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                             name="eachBlocksLose"
                             type="number"
                             min="0"
-                            value={this.props.deduction[0] ? Number(this.props.deduction[0].deduct).toString() : "0"}
+                            required
+                            value={this.props.deduction[0] ? (this.props.deduction[0].deduct !== 0 ? Number(this.props.deduction[0].deduct).toString() : "")  : ""}
                             onChange={this.deductionChange} />
                     </Form.Group>
 
@@ -110,7 +113,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                             name="moveMoreThanMaxLose"
                             type="number"
                             min="0"
-                            value={this.props.deduction[1] ? Number(this.props.deduction[1].deduct).toString() : "0"}
+                            required
+                            value={this.props.deduction[1] ? (this.props.deduction[1].deduct !== 0 ? Number(this.props.deduction[1].deduct).toString() : "") : ""}
                             onChange={this.deductionChange} />
                     </Form.Group>
 
@@ -120,7 +124,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                             name="objectNotGetLose"
                             type="number"
                             min="0"
-                            value={this.props.deduction[2] ? Number(this.props.deduction[2].deduct).toString() : "0"}
+                            required
+                            value={this.props.deduction[2] ? (this.props.deduction[2].deduct !== 0 ? Number(this.props.deduction[2].deduct).toString() : "") : ""}
                             onChange={this.deductionChange} />
                     </Form.Group>
                 </>
@@ -162,6 +167,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                         name="title"
                         type="text"
                         placeholder="Title"
+                        required
                         value={this.props.title}
                         onChange={this.inputChange} />
                 </Form.Group>
@@ -172,12 +178,13 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                         as="textarea"
                         rows="3"
                         placeholder="Description"
+                        required
                         value={this.props.description}
                         onChange={this.inputChange} />
                 </Form.Group>
                 <Form.Group controlId="formCategory">
                     <Form.Label>Category:</Form.Label>
-                    <Form.Control name="category" as="select">
+                    <Form.Control name="categoryID" as="select" value={this.props.categoryID.toString()} onChange={this.inputChange}>
                         {
                             this.props.categories.map(category =>
                                 <option key={category.id} value={category.id}>{category.name}</option>
@@ -187,7 +194,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                 </Form.Group>
                 <Form.Group controlId="formDifficulty">
                     <Form.Label>Difficulty:</Form.Label>
-                    <Form.Control name="difficulty" as="select">
+                    <Form.Control name="difficultyID" as="select" value={this.props.difficultyID.toString()} onChange={this.inputChange}>
                         {
                             this.props.difficulties.map(difficulty =>
                                 <option key={difficulty.id} value={difficulty.id}>{difficulty.name} (Exp: {difficulty.experience})</option>
@@ -201,7 +208,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                         name="score"
                         type="number"
                         min="0"
-                        value={Number(this.props.score).toString()}
+                        required
+                        value={this.props.score ? Number(this.props.score).toString() : ""}
                         onChange={this.inputChange} />
                 </Form.Group>
 
@@ -220,28 +228,6 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                         }
                     </Form.Control>
                 </Form.Group>
-
-                {/* <Form.Group controlId="formEachBlocksLose">
-                        <Form.Label>Each blocks more the Max. Used Blocks will lose</Form.Label>
-                        <Form.Control
-                            name="eachBlocksLose"
-                            type="number"
-                            min="0"
-                            value={Number(this.state.eachBlocksLose).toString()}
-                            onChange={this.inputChange} />
-                    </Form.Group>
-
-                    <Form.Group controlId="formMoveMoreThanMax">
-                        <Form.Label>Move Times more than Max. Move will lose</Form.Label>
-                        <Form.Control
-                            name="moveMoreThanMax"
-                            type="number"
-                            min="0"
-                            value={Number(this.state.moveMoreThanMax).toString()}
-                            onChange={this.inputChange} />
-                    </Form.Group> */}
-
-
             </Form>
         </Container>
     }
