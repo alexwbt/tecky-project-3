@@ -1,4 +1,4 @@
-import { ICanvasContent } from "../components/canvas/CanvasContent";
+import { ICanvasContent, WinningCondition } from "../components/canvas/CanvasContent";
 import ProblemActions from "../actions/problemActions";
 import { BlockList, blocklyBlocks } from "../components/blockly/toolbox";
 import { IProblemInfo, IProblemDeduction } from "../models/Problem";
@@ -12,6 +12,7 @@ export interface IProblemState extends IProblemInfo {
     useCategory: boolean;
     useVariables: boolean;
     useFunctions: boolean;
+    winningCondition: WinningCondition,
 
     savingMessage: string;
     saved: boolean;
@@ -37,6 +38,7 @@ const initialState: IProblemState = {
     useCategory: false,
     useVariables: false,
     useFunctions: false,
+    winningCondition: WinningCondition.ANY_PLAYER_GOT_FLAG,
 
     savingMessage: "",
     saved: true,
@@ -127,6 +129,11 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
             return {
                 ...state,
                 code: action.code
+            };
+        case "SET_WINNING_CONDITION":
+            return {
+                ...state,
+                winningCondition: action.condition
             };
         default:
             return state;

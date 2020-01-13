@@ -10,8 +10,8 @@ export default class Character {
     public collected: Obj[] = [];
 
     private standOffset = {
-        x: (Math.random() - 0.5) * 0.2,
-        y: (Math.random() - 0.5) * 0.2
+        x: (Math.random() - 0.5) * 0.1,
+        y: (Math.random() - 0.5) * 0.1
     };
 
     constructor(private x: number, private y: number, private type: Char) { }
