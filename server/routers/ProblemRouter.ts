@@ -14,7 +14,6 @@ export default class ProblemRouter {
         router.get("/statuses/", catcher(this.getProblemStatuses));
         router.get("/:problemID", catcher(this.getProblem));
 
-        
         router.get("/test/", catcher(this.test));
         return router;
     }
@@ -38,9 +37,6 @@ export default class ProblemRouter {
             difficultyID,
             statusID,
             score,
-            maxUsedBlocks,
-            maxMoveTimes,
-            deduction,
 
             // Editor
             canvas,
@@ -60,9 +56,6 @@ export default class ProblemRouter {
             || difficultyID === undefined
             || statusID === undefined
             || score === undefined
-            || maxUsedBlocks === undefined
-            || maxMoveTimes === undefined
-            || deduction === undefined
             // Editor
             || canvas === undefined
             || code === undefined
@@ -86,6 +79,10 @@ export default class ProblemRouter {
             useCategory: req.body.problem.useCategory,
             useVariables: req.body.problem.useVariables,
             useFunctions: req.body.problem.useFunctions,
+            winningCondition: req.body.problem.winningCondition,
+            maxUsedBlocks: req.body.problem.maxUsedBlocks,
+            maxMoveTimes: req.body.problem.maxMoveTimes,
+            deduction: req.body.problem.deduction
         };
         const problemID = await this.service.editProblem(
             req.user["id"],
@@ -96,9 +93,6 @@ export default class ProblemRouter {
             difficultyID < 1 ? null : difficultyID,
             statusID < 1 ? null : statusID,
             score,
-            // maxUsedBlocks,
-            // maxMoveTimes,
-            // deduction,
             game
         );
 

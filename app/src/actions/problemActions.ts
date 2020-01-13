@@ -1,6 +1,6 @@
 import { CallHistoryMethodAction } from "connected-react-router";
 import { BlockList } from "../components/blockly/toolbox";
-import { ICanvasContent } from "../components/canvas/CanvasContent";
+import { ICanvasContent, WinningCondition } from "../components/canvas/CanvasContent";
 import { IProblemState } from "../reducers/problemReducer";
 import { IProblemInfo } from "../models/Problem";
 
@@ -102,6 +102,13 @@ export function setCode(code: string) {
     };
 }
 
+export function setWinningCondition(condition: WinningCondition) {
+    return {
+        type: "SET_WINNING_CONDITION" as "SET_WINNING_CONDITION",
+        condition
+    };
+}
+
 
 type ActionCreators = typeof toggleCategory
                     | typeof toggleUseVariables
@@ -114,6 +121,7 @@ type ActionCreators = typeof toggleCategory
                     | typeof setSaved
                     | typeof changed
                     | typeof setProblem
-                    | typeof resetProblem;
+                    | typeof resetProblem
+                    | typeof setWinningCondition;
 type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;
