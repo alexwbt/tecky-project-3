@@ -16,11 +16,19 @@ interface IProfileProps {
     username: string;
     email: string;
     exp: number;
-    title: string;
-    difficulty: string;
-    audit: boolean;
-    date: string;
     location: string;
+
+    postsTitle: string;
+    postsName: string;
+    status: boolean;
+    postsCreatedAt: string;
+    postsUpdatedAt: string;
+
+    solvedTitle: string;
+    solvedName: string;
+    score: number;
+    solvedCreatedAt: string;
+
     getProfile: (username: string) => void;
 }
 
@@ -35,7 +43,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     constructor(props: IProfileProps) {
         super(props);
         this.state = {
-            currentTab: "Info" 
+            currentTab: "Info"
         };
     }
 
@@ -49,7 +57,6 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     }
 
     render() {
-        console.log(this.props.location);
         return <>
             <NavBar />
             <div className="container bg-white border shadow" style={{height:"100vh"}}>
@@ -102,19 +109,23 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                             <Table striped bordered hover responsive="lg" size="sm">
                                 <thead>
                                     <tr>
+                                        <th></th>  
                                         <th>Title</th>
                                         <th>Difficulty</th>
                                         <th>Audit</th>
-                                        <th>Public Date</th>
+                                        <th>Created at</th>
+                                        <th>Last edit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>{this.props.title}</td>
-                                    <td>{this.props.difficulty}</td>
-                                    <td>{this.props.audit}</td>
-                                    <td>{this.props.date}</td>
-                                    </tr>
+                                    <td>1</td>
+                                    <td>{this.props.postsTitle}</td>
+                                    <td>{this.props.postsName}</td>
+                                    <td>{String(this.props.status)}</td>
+                                    <td>{this.props.postsCreatedAt.substr(0,10)}</td>
+                                    <td>{this.props.postsUpdatedAt.substr(0,10)}</td>
+                                </tr>
                                 </tbody>
                             </Table>
                         </div>
@@ -128,6 +139,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                             <Table striped bordered hover responsive="lg" size="sm">
                                 <thead>
                                     <tr>
+                                        <th></th>  
                                         <th>Title</th>
                                         <th>Difficulty</th>
                                         <th>Score</th>
@@ -136,11 +148,12 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                    </tr>
+                                    <td>1</td>
+                                    <td>{this.props.solvedTitle}</td>
+                                    <td>{this.props.solvedName}</td>
+                                    <td>{this.props.score}</td>
+                                    <td>{this.props.solvedCreatedAt.substr(0,10)}</td>
+                                </tr>
                                 </tbody>
                             </Table>
                         </div>
@@ -156,7 +169,18 @@ const mapStateToProps = (state: IRootState) => ({
     username: state.profile.username,
     email: state.profile.email,
     exp: state.profile.exp,
-    location: state.profile.location
+    location: state.profile.location,
+
+    postsTitle: state.profile.postsTitle,
+    postsName: state.profile.postsName,
+    status: state.profile.status,
+    postsCreatedAt: state.profile.postsCreatedAt,
+    postsUpdatedAt: state.profile.postsUpdatedAt,
+
+    solvedTitle: state.profile.solvedTitle,
+    solvedName: state.profile.solvedName,
+    score: state.profile.score,
+    solvedCreatedAt: state.profile.solvedCreatedAt,
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
