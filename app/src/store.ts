@@ -1,6 +1,9 @@
 import { createStore, combineReducers, compose, applyMiddleware } from "redux";
 import thunk, { ThunkDispatch } from "redux-thunk";
 
+import { routerMiddleware, connectRouter, RouterState } from 'connected-react-router';
+import { createBrowserHistory } from "history";
+
 import authReducer, { IAuthState } from "./reducers/authReducer";
 import AuthActions from "./actions/authActions";
 import problemReducer, { IProblemState } from "./reducers/problemReducer";
@@ -13,19 +16,20 @@ import IMessageBoxActions from './actions/messageBoxActions';
 import { IMessageBoxState, messageBoxReducer } from "./reducers/messageBoxReducer";
 import { IDifficultyState, difficultyReducer } from "./reducers/difficultyReducer";
 import IDifficultyActions from "./actions/difficultyActions";
+import { IProblemStatusesState, problemStatusesReducer } from "./reducers/problemStatusReducer";
+import IProblemStatusActions from "./actions/problemStatusActions";
 
-import { routerMiddleware, connectRouter, RouterState } from 'connected-react-router';
-import { createBrowserHistory } from "history";
 export const history = createBrowserHistory();
 
 export interface IRootState {
     auth: IAuthState;
+    message: IMessageBoxState;
     problem: IProblemState;
     profile: IProfileState;
     router: RouterState;
     category: ICategoryState;
     difficulty: IDifficultyState;
-    message: IMessageBoxState;
+    problemStatuses: IProblemStatusesState;
 }
 
 type RootActions = AuthActions
@@ -33,16 +37,18 @@ type RootActions = AuthActions
     | ProblemActions
     | ProfileActions
     | ICategoryActions
-    | IDifficultyActions;
+    | IDifficultyActions
+    | IProblemStatusActions;
 
 const rootReducer = combineReducers<IRootState>({
     auth: authReducer,
+    message: messageBoxReducer,
     problem: problemReducer,
     profile: profileReducer,
     router: connectRouter(history),
     category: categoryReducer,
     difficulty: difficultyReducer,
-    message: messageBoxReducer,
+    problemStatuses: problemStatusesReducer,
 });
 
 

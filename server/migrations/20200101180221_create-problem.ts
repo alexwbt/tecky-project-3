@@ -8,9 +8,9 @@ export async function up(knex: Knex): Promise<any> {
         table.foreign("user_id").references("user.id");
         table.string("title", 70).notNullable().defaultTo("");
         table.text("description").notNullable().defaultTo("");
-        table.integer("category_id").unsigned();
+        table.integer("category_id").unsigned().notNullable().defaultTo(1);
         table.foreign("category_id").references("category.id");
-        table.integer("difficulty_id").unsigned();
+        table.integer("difficulty_id").unsigned().notNullable().defaultTo(1);
         table.foreign("difficulty_id").references("difficulty.id");
         table.integer("status_id").unsigned().notNullable().defaultTo(1);
         table.foreign("status_id").references("problem_status.id");

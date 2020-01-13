@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Form } from "react-bootstrap";
-import { IProblemInfo } from "../models/Problem";
+import { IProblemInfo, IProblemStatus } from "../models/Problem";
 import { IRootState, ReduxThunkDispatch } from '../store';
 import { connect } from "react-redux";
 import { changed, setDescription } from "../actions/problemActions";
@@ -13,13 +13,13 @@ interface IDescriptionFormProps extends IProblemInfo {
     height: number;
     categories: ICategory[];
     difficulties: IDifficulty[];
+    problemStatuses: IProblemStatus[];
     changed: () => void;
     setDescription: (description: IProblemInfo) => void;
 }
 
 
 class DescriptionForm extends React.Component<IDescriptionFormProps> {
-
     private inputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         this.props.setDescription({
             ...this.props,
@@ -29,10 +29,41 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
         this.props.changed();
     };
 
-    private categorySelectChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        // const category = this.props.categories.find(category => category.id === parseInt(event.target.value));
-        // this.setState({ ...this.state, category: category });
-        // this.props.changed();
+    private deductionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const deductionSets = [{
+            categoryID: 1,
+            typeIDs: [
+                {
+                    id: 1,
+                    formName: "eachBlocksLose"
+                },
+                {
+                    id: 2,
+                    formName: "moveMoreThanMaxLose"
+                },
+                {
+                    id: 3,
+                    formName: "objectNotGetLose"
+                },
+            ],
+        }]
+
+        const deductionSet = deductionSets.find(set => set.categoryID === this.props.categoryID);
+
+        if (deductionSet) {
+            const deduction = this.props.deduction.slice(0);
+            const arrIndex = deductionSet.typeIDs.findIndex(type => type.formName === event.target.name);
+            if (arrIndex >= 0) {
+                deduction[arrIndex] = {
+                    id: deductionSet.typeIDs[arrIndex].id,
+                    deduct: Number(event.target.value)
+                }
+                this.props.setDescription({
+                    ...this.props,
+                    deduction: deduction,
+                });
+            }
+        }
     }
 
     renderRequirement(categoryID: number) {
@@ -48,7 +79,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                             name="maxUsedBlocks"
                             type="number"
                             min="0"
-                            value={Number(this.props.maxUsedBlocks).toString()}
+                            required
+                            value={this.props.maxUsedBlocks ? Number(this.props.maxUsedBlocks).toString() : ""}
                             onChange={this.inputChange} />
                     </Form.Group>
 
@@ -58,11 +90,44 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                             name="maxMoveTimes"
                             type="number"
                             min="0"
-                            value={Number(this.props.maxMoveTimes).toString()}
+                            required
+                            value={this.props.maxMoveTimes ? Number(this.props.maxMoveTimes).toString() : ""}
                             onChange={this.inputChange} />
                     </Form.Group>
 
                     <h3>Deduction</h3>
+                    <Form.Group controlId="formEachBlocksLose">
+                        <Form.Label>Each blocks more the Max. Used Blocks will lose</Form.Label>
+                        <Form.Control
+                            name="eachBlocksLose"
+                            type="number"
+                            min="0"
+                            required
+                            value={this.props.deduction[0] ? (this.props.deduction[0].deduct !== 0 ? Number(this.props.deduction[0].deduct).toString() : "")  : ""}
+                            onChange={this.deductionChange} />
+                    </Form.Group>
+
+                    <Form.Group controlId="formMoveMoreThanMaxLose">
+                        <Form.Label>Move Times more than Max. Move will lose</Form.Label>
+                        <Form.Control
+                            name="moveMoreThanMaxLose"
+                            type="number"
+                            min="0"
+                            required
+                            value={this.props.deduction[1] ? (this.props.deduction[1].deduct !== 0 ? Number(this.props.deduction[1].deduct).toString() : "") : ""}
+                            onChange={this.deductionChange} />
+                    </Form.Group>
+
+                    <Form.Group controlId="formObjectNotGetLose">
+                        <Form.Label>Move Times more than Max. Move will lose</Form.Label>
+                        <Form.Control
+                            name="objectNotGetLose"
+                            type="number"
+                            min="0"
+                            required
+                            value={this.props.deduction[2] ? (this.props.deduction[2].deduct !== 0 ? Number(this.props.deduction[2].deduct).toString() : "") : ""}
+                            onChange={this.deductionChange} />
+                    </Form.Group>
                 </>
             default:
                 return <></>
@@ -71,8 +136,30 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
     }
 
     render() {
+        let selectableStatuses: number[] = [];
+        switch (this.props.statusID) {
+            case 1:
+            case 2:
+                // WIP & Ready to audit
+                selectableStatuses = [1, 2];
+                break;
+            case 3:
+                // WIP & Rejected
+                selectableStatuses = [1, 3];
+                break;
+            case 4:
+                // Published
+                selectableStatuses = [4];
+                break;
+            default:
+                break;
+        }
+
+        console.log();
+
+
         return <Container style={{ overflowY: "auto", height: this.props.height }}>
-            <Form>
+            <Form className="pb-3">
                 <h2 className="pt-3">Information</h2>
                 <Form.Group controlId="formTitle">
                     <Form.Label>Title:</Form.Label>
@@ -80,6 +167,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                         name="title"
                         type="text"
                         placeholder="Title"
+                        required
                         value={this.props.title}
                         onChange={this.inputChange} />
                 </Form.Group>
@@ -90,12 +178,13 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                         as="textarea"
                         rows="3"
                         placeholder="Description"
+                        required
                         value={this.props.description}
                         onChange={this.inputChange} />
                 </Form.Group>
                 <Form.Group controlId="formCategory">
                     <Form.Label>Category:</Form.Label>
-                    <Form.Control name="category" as="select">
+                    <Form.Control name="categoryID" as="select" value={this.props.categoryID.toString()} onChange={this.inputChange}>
                         {
                             this.props.categories.map(category =>
                                 <option key={category.id} value={category.id}>{category.name}</option>
@@ -105,7 +194,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                 </Form.Group>
                 <Form.Group controlId="formDifficulty">
                     <Form.Label>Difficulty:</Form.Label>
-                    <Form.Control name="difficulty" as="select">
+                    <Form.Control name="difficultyID" as="select" value={this.props.difficultyID.toString()} onChange={this.inputChange}>
                         {
                             this.props.difficulties.map(difficulty =>
                                 <option key={difficulty.id} value={difficulty.id}>{difficulty.name} (Exp: {difficulty.experience})</option>
@@ -119,34 +208,26 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                         name="score"
                         type="number"
                         min="0"
-                        value={Number(this.props.score).toString()}
+                        required
+                        value={this.props.score ? Number(this.props.score).toString() : ""}
                         onChange={this.inputChange} />
                 </Form.Group>
 
                 <hr className="mt-5" />
                 {this.renderRequirement(this.props.categoryID)}
 
-                {/* <Form.Group controlId="formEachBlocksLose">
-                        <Form.Label>Each blocks more the Max. Used Blocks will lose</Form.Label>
-                        <Form.Control
-                            name="eachBlocksLose"
-                            type="number"
-                            min="0"
-                            value={Number(this.state.eachBlocksLose).toString()}
-                            onChange={this.inputChange} />
-                    </Form.Group>
-
-                    <Form.Group controlId="formMoveMoreThanMax">
-                        <Form.Label>Move Times more than Max. Move will lose</Form.Label>
-                        <Form.Control
-                            name="moveMoreThanMax"
-                            type="number"
-                            min="0"
-                            value={Number(this.state.moveMoreThanMax).toString()}
-                            onChange={this.inputChange} />
-                    </Form.Group> */}
-
-
+                <Form.Group controlId="formStatus">
+                    <Form.Label>Status:</Form.Label>
+                    <Form.Control name="status" as="select">
+                        {
+                            this.props.problemStatuses.filter(status =>
+                                selectableStatuses.indexOf(status.id) >= 0
+                            ).map(status =>
+                                <option key={status.id} value={status.id}>{status.name}</option>
+                            )
+                        }
+                    </Form.Control>
+                </Form.Group>
             </Form>
         </Container>
     }
@@ -166,6 +247,7 @@ const mapStateToProps = (state: IRootState) => ({
 
     categories: state.category.list,
     difficulties: state.difficulty.list,
+    problemStatuses: state.problemStatuses.list,
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({

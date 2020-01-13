@@ -17,7 +17,7 @@ export default class UserRouter {
         router.get("/leaderBoard", catcher(this.getProfile));
         return router;
     }
-
+    
     private login = async (req: Request, res: Response) => {
         const { username, password } = req.body;
         if (!username || !password) {
@@ -57,6 +57,7 @@ export default class UserRouter {
             });
             return;
         }
+
         const userId = await this.service.getUserIdWithEmail(email);
         const user = await this.service.getUserWithUsername(username);
         if (user || userId) {
@@ -88,6 +89,7 @@ export default class UserRouter {
             });
             return;
         }
+
         const user = await this.service.getUserWithUsername(username);
         if (!user) {
             res.status(400).json({
@@ -96,20 +98,47 @@ export default class UserRouter {
             });
             return;
         }
+
         const profile = await this.service.getProfileWithId(user.id);
         if (!profile) {
             throw new Error("User Profile Not Found");
         }
+
         const location = await this.service.getLocationWithId(user.id);
         if (!location) {
             throw new Error("User Location Not Found");
         }
+
+        const postsRecord = await this.service.getPostsRecord(user.id);
+        if (!postsRecord) {
+            throw new Error ("Unable to get posts records");
+        } 
+
+        const solvedRecord = await this.service.getSolvedRecord(user.id);
+        if (!solvedRecord) {
+            throw new Error ("Unable to get solved records");
+        }
+
+        console.log (postsRecord);
+        //console.log (solvedRecord);
+
         res.status(200).json({
             success: true,
             username: user.username,
             email: profile.email,
             exp: profile.experience,
             location: location.name,
+
+            postsTitle: postsRecord.title,
+            postsName: postsRecord.name,
+            status: postsRecord.status,
+            postsCreatedAt: postsRecord.created_at,
+            postsUpdatedAt: postsRecord.updated_at,
+
+            solvedTitle: solvedRecord.title,
+            solvedName: solvedRecord.name,
+            score: solvedRecord.score,
+            solvedCreatedAt: solvedRecord.created_at,
         });
     };
 }
