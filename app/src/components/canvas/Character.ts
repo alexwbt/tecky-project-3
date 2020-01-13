@@ -8,6 +8,8 @@ export default class Character {
     private flip = false;
 
     public collected: Obj[] = [];
+    
+    private movedTime = 0;
 
     private standOffset = {
         x: (Math.random() - 0.5) * 0.1,
@@ -37,7 +39,12 @@ export default class Character {
     }
 
     move(dir: number) {
+        this.movedTime++;
         this.moveTo.push(dir);
+    }
+
+    getMovedTime() {
+        return this.movedTime;
     }
 
     update(terrain: Tile[][]) {

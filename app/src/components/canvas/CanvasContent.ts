@@ -82,6 +82,7 @@ export default class CanvasContent {
 
     private chars: Character[];
     private objs: (GameObject | null)[][];
+    private initObjCount = 0;
 
     private winningCondition: WinningCondition = WinningCondition.ANY_PLAYER_GOT_FLAG;
     private score = 0;
@@ -109,16 +110,15 @@ export default class CanvasContent {
         }
 
         this.objs = [];
-        if (content.objs) {
-            for (let x = 0; x < this.terrainSize; x++) {
-                this.objs[x] = [];
+        for (let x = 0; x < this.terrainSize; x++) {
+            this.objs[x] = Array(this.terrainSize).fill(null);
+            if (content.objs) {
                 for (let y = 0; y < this.terrainSize; y++) {
-                    this.objs[x][y] = content.objs[x][y] !== null ? new GameObject(content.objs[x][y] as Obj) : null;
+                    if (content.objs[x][y] !== null) {
+                        this.objs[x][y] = new GameObject(content.objs[x][y] as Obj);
+                        this.initObjCount++;
+                    }
                 }
-            }
-        } else {
-            for (let x = 0; x < this.terrainSize; x++) {
-                this.objs[x] = Array(this.terrainSize).fill(null);
             }
         }
 
@@ -146,15 +146,36 @@ export default class CanvasContent {
         this.chars = this.chars.filter(char => char.getX() !== x || char.getY() !== y);
     }
 
+    getMovedTime() {
+        let movedTime = 0;
+        for (let i = 0; i < this.chars.length; i++) {
+            movedTime += this.chars[i].getMovedTime();
+        }
+        return movedTime;
+    }
+
+    getMissedObjects() {
+        let collected = 0;
+        for (let i = 0; i < this.chars.length; i++) {
+            collected += this.chars[i].collected.length;
+        }
+        return this.initObjCount - collected;
+    }
+
     setTerrainSize(size: number) {
         const rs = Math.min(Math.max(size, 8), 16);
         if (rs !== this.terrainSize) {
             let terrain: Tile[][] = [];
             for (let x = 0; x < rs; x++) {
-                terrain.push(Array(rs).fill(0));
+                terrain.push(Array(rs).fill(Tile.GRASS));
             }
             this.terrainSize = rs;
             this.terrain = terrain;
+
+            this.objs = [];
+            for (let x = 0; x < this.terrainSize; x++) {
+                this.objs[x] = Array(this.terrainSize).fill(null);
+            }
         }
     }
 

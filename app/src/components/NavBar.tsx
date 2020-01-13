@@ -44,8 +44,7 @@ const NavBar: React.FC<INavbarProps> = (props) => {
                     </Link>
                     <button
                         onClick={() => dispatch(createProblem())}
-                        className={`btn btn-dark rounded-0 text-white`}
-                        style={{ backgroundColor: path === "/leaderBoard" ? "rgb(25, 25, 30)" : "" }}>
+                        className={`btn btn-dark rounded-0 text-white`}>
                         Create Callenge
                     </button>
                 </Nav>
