@@ -6,6 +6,17 @@ export interface IProfileState {
     email: string;
     exp: number;
     location: string;
+
+    postsTitle: string;
+    postsName: string;
+    status: boolean;
+    postsCreatedAt: string;
+    postsUpdatedAt: string;
+
+    solvedTitle: string;
+    solvedName: string;
+    score: number;
+    solvedCreatedAt: string;
 }
 
 const initialState: IProfileState = {
@@ -13,6 +24,18 @@ const initialState: IProfileState = {
     email: "",
     exp: 0,
     location: "",
+
+    postsTitle: "",
+    postsName: "",
+    status: false,
+    postsCreatedAt: "",
+    postsUpdatedAt: "",
+
+    solvedTitle: "",
+    solvedName: "",
+    score: 0,
+    solvedCreatedAt: "",
+
 };
 
 const profileReducer = (state: IProfileState = initialState, action: ProfileActions) => {
@@ -23,9 +46,20 @@ const profileReducer = (state: IProfileState = initialState, action: ProfileActi
                 email: action.email,
                 exp: action.exp,
                 location: action.location,
+
+                postsTitle: action.postsTitle,
+                postsName: action.postsName,
+                status: action.status,
+                postsCreatedAt: action.postsCreatedAt,
+                postsUpdatedAt: action.postsUpdatedAt,
+
+                solvedTitle: action.solvedTitle,
+                solvedName: action.solvedName,
+                score: action.score,
+                solvedCreatedAt: action.solvedCreatedAt,
             }
         default:
             return state;
-        }
-    };
+    }
+};
 export default profileReducer;
