@@ -11,6 +11,7 @@ import { setCode, changed } from '../../actions/problemActions';
 interface IBlocklyAreaProps {
     className: string;
     height: number;
+    useInitialCode?: boolean;
     avalibleBlocks?: BlockList;
     avalibleCategories?: string[];
     useVariables: boolean;
@@ -39,12 +40,15 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
             this.props.changed();
             this.props.setCode(this.getCodeXml());
         });
+        if (!this.props.useInitialCode) {
+            this.props.setCode("");
+        }
     }
 
     render() {
         return <BlocklyComponent
             ref={this.component}
-            initialXml={this.props.code}
+            initialXml={this.props.useInitialCode ? this.props.code : ""}
             className={this.props.className}>
             {
                 (this.props.avalibleCategories ? this.props.avalibleCategories : Object.keys(blocklyBlocks)).map((cat, i) => {

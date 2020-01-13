@@ -35,6 +35,7 @@ export interface ICanvasProps {
 interface ICanvasState {
     running: boolean;
     endGameModal: boolean;
+    gameFailed: boolean;
 }
 
 /* eslint no-eval: 0 */
@@ -58,7 +59,8 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
         super(props);
         this.state = {
             running: false,
-            endGameModal: false
+            endGameModal: false,
+            gameFailed: false
         };
         this.canvas = React.createRef();
     }
@@ -187,12 +189,14 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     };
 
     private run = () => {
-        if (this.state.running) {
-            if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
-                this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
-            }
-        } else {
-            // this.props.setContent(this.getContent());
+        this.setState({ ...this.state, running: !this.state.running });
+
+        // if (this.state.running) {
+        //     if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
+        //         this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
+        //     }
+        // }
+        if (!this.state.running) {
             if (this.props.code) {
                 const workspace = new Blockly.Workspace();
                 Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
@@ -210,12 +214,10 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                 }
             }
         }
-
-        this.setState({ ...this.state, running: !this.state.running });
     };
 
-    private gameEnd = () => {
-        this.setState({ ...this.state, endGameModal: true });
+    private gameEnd = (failed: boolean) => {
+        this.setState({ ...this.state, gameFailed: failed, endGameModal: true });
         this.run();
     };
 
@@ -225,7 +227,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
 
     componentDidUpdate() {
         if (this.content) {
-            if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
+            if (this.props.tileSprite && this.props.charSprite && this.props.objSprite && !this.state.running) {
                 this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
             }
             if (this.props.terrainSize) {
@@ -273,7 +275,8 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                         ...this.state,
                         endGameModal: false
                     });
-                }} />
+                }}
+                failed={this.state.gameFailed} />
             <canvas
                 ref={this.canvas}
                 className="w-100 h-100 border"

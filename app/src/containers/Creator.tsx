@@ -196,6 +196,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                             }
                             {
                                 this.state.currentTab === Tab.CODE && <BlocklyArea
+                                    useInitialCode={true}
                                     useCategory={this.props.problem.useCategory}
                                     avalibleBlocks={this.props.problem.avalibleBlocks}
                                     avalibleCategories={this.props.problem.avalibleCategories}

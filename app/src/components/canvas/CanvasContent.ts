@@ -92,7 +92,7 @@ export default class CanvasContent {
         tileSprite: HTMLImageElement,
         charSprite: HTMLImageElement,
         objSprite: HTMLImageElement,
-        private gameEnd: () => void) {
+        private gameEnd: (failed: boolean) => void) {
         if (!content.terrainSize || !content.terrain) {
             this.terrainSize = 0;
             this.terrain = [];
@@ -199,22 +199,60 @@ export default class CanvasContent {
 
         for (let x = 0; x < this.terrainSize; x++) {
             for (let y = 0; y < this.terrainSize; y++) {
-
                 if (this.objs[x][y]) {
                     this.objs[x][y]?.update();
-                    const char = this.chars.find(char => char.getX() === x && char.getY() === y);
-                    if (char) {
-                        this.coinAudio.play();
-                        this.objs[x][y] = new GameObject(Obj.SPARKS);
-                        char.collected.push((this.objs[x][y] as GameObject).getType());
-                        setTimeout(() => this.objs[x][y] = null, 200);
+                    const obj = (this.objs[x][y] as GameObject).getType();
+                    if (obj !== 4) {
+                        const char = this.chars.find(char => char.getX() === x && char.getY() === y);
+                        if (char) {
+                            this.coinAudio.play();
+                            char.collected.push(obj);
+                            this.objs[x][y] = new GameObject(Obj.SPARKS);
+                            setTimeout(() => this.objs[x][y] = null, 200);
+                        }
                     }
                 }
             }
         }
 
         switch (this.winningCondition) {
-            // case WinningCondition.
+            case WinningCondition.ANY_PLAYER_GOT_FLAG:
+                for (let i = 0; i < this.chars.length; i++) {
+                    if (this.chars[i].collected.includes(Obj.FLAG)) {
+                        this.gameEnd(false);
+                        break;
+                    }
+                }
+                break;
+            case WinningCondition.ALL_PLAYER_GOT_FLAG:
+                let allChars = true;
+                for (let i = 0; i < this.chars.length; i++) {
+                    if (!this.chars[i].collected.includes(Obj.FLAG)) {
+                        allChars = false;
+                        break;
+                    }
+                }
+                if (allChars) {
+                    this.gameEnd(false);
+                }
+                break;
+            case WinningCondition.ALL_OBJECT_COLLECTED:
+                let allTarrs = true;
+                out:
+                for (let x = 0; x < this.terrainSize; x++) {
+                    for (let y = 0; y < this.terrainSize; y++) {
+                        if (this.objs[x][y] !== null) {
+                            allTarrs = false;
+                            break out;
+                        }
+                    }
+                }
+                if (allTarrs) {
+                    this.gameEnd(false);
+                }
+                break;
+            default:
+                this.gameEnd(true);
         }
     }
 
