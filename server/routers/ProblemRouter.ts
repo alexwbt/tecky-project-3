@@ -13,10 +13,19 @@ export default class ProblemRouter {
         router.put("/", isLoggedIn, catcher(this.editProblem));
         router.get("/statuses/", catcher(this.getProblemStatuses));
         router.get("/:problemID", catcher(this.getProblem));
+        router.get("/", catcher(this.getProblemList));
 
         router.get("/test/", catcher(this.test));
         return router;
     }
+
+    private getProblemList = async (req: Request, res: Response) => {
+        const list = await this.service.getProblemList();
+        res.status(200).json({
+            success: true,
+            problemList: list
+        });
+    };
 
     private createProblem = async (req: Request, res: Response) => {
         const problemID = await this.service.createProblem(req.user["id"]);

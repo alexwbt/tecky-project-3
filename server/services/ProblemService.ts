@@ -75,6 +75,10 @@ export default class ProblemService {
         return await this.mongodb.collection("game").findOne({ pid: id });
     }
 
+    async getProblemList() {
+        return await this.knex.select(["id", "title", "difficulty_id"]).from("problem");
+    }
+
     // Get Static Table
     async getStatusList() {
         const statuses: IProblemStatus[] = await this.knex.select("id", "name").from(Tables.PROBLEM_STATUS);
