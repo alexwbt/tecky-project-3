@@ -191,11 +191,6 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     private run = () => {
         this.setState({ ...this.state, running: !this.state.running });
 
-        // if (this.state.running) {
-        //     if (this.props.tileSprite && this.props.charSprite && this.props.objSprite) {
-        //         this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
-        //     }
-        // }
         if (!this.state.running) {
             if (this.props.code) {
                 const workspace = new Blockly.Workspace();
@@ -216,7 +211,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
         }
     };
 
-    private gameEnd = (failed: boolean) => {
+    private gameEnd = (failed: boolean, score: number) => {
         this.setState({ ...this.state, gameFailed: failed, endGameModal: true });
         this.run();
     };

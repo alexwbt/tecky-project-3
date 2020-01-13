@@ -84,6 +84,7 @@ export default class CanvasContent {
     private objs: (GameObject | null)[][];
 
     private winningCondition: WinningCondition = WinningCondition.ANY_PLAYER_GOT_FLAG;
+    private score = 0;
 
     private coinAudio = new Audio("/coin.wav");
 
@@ -92,7 +93,7 @@ export default class CanvasContent {
         tileSprite: HTMLImageElement,
         charSprite: HTMLImageElement,
         objSprite: HTMLImageElement,
-        private gameEnd: (failed: boolean) => void) {
+        private gameEnd: (failed: boolean, score: number) => void) {
         if (!content.terrainSize || !content.terrain) {
             this.terrainSize = 0;
             this.terrain = [];
@@ -219,7 +220,7 @@ export default class CanvasContent {
             case WinningCondition.ANY_PLAYER_GOT_FLAG:
                 for (let i = 0; i < this.chars.length; i++) {
                     if (this.chars[i].collected.includes(Obj.FLAG)) {
-                        this.gameEnd(false);
+                        this.gameEnd(false, this.score);
                         break;
                     }
                 }
@@ -233,7 +234,7 @@ export default class CanvasContent {
                     }
                 }
                 if (allChars) {
-                    this.gameEnd(false);
+                    this.gameEnd(false, this.score);
                 }
                 break;
             case WinningCondition.ALL_OBJECT_COLLECTED:
@@ -248,11 +249,9 @@ export default class CanvasContent {
                     }
                 }
                 if (allTarrs) {
-                    this.gameEnd(false);
+                    this.gameEnd(false, this.score);
                 }
                 break;
-            default:
-                this.gameEnd(true);
         }
     }
 
