@@ -21,8 +21,8 @@ const initialState: IProblemState = {
     // Description
     title: "",
     description: "",
-    categoryID: 0,
-    difficultyID: 0,
+    categoryID: 1,
+    difficultyID: 1,
     statusID: 1,
     score: 0,
     maxUsedBlocks: 0,
