@@ -155,9 +155,6 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                 break;
         }
 
-        console.log(this.props.statusID, selectableStatuses);
-
-
         return <Container style={{ overflowY: "auto", height: this.props.height }}>
             <Form className="pb-3">
                 <h2 className="pt-3">Information</h2>
@@ -171,6 +168,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                         value={this.props.title}
                         onChange={this.inputChange} />
                 </Form.Group>
+
                 <Form.Group controlId="formDescription">
                     <Form.Label>Description:</Form.Label>
                     <Form.Control
@@ -182,6 +180,14 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                         value={this.props.description}
                         onChange={this.inputChange} />
                 </Form.Group>
+
+                <Form.Group controlId="formImage">
+                    <Form.Label>Image:</Form.Label>
+                    <Form.Control
+                        name="image"
+                        type="file" />
+                </Form.Group>
+
                 <Form.Group controlId="formCategory">
                     <Form.Label>Category:</Form.Label>
                     <Form.Control name="categoryID" as="select" value={this.props.categoryID.toString()} onChange={this.inputChange}>
