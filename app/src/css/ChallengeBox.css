@@ -1,0 +1,16 @@
+.challenge-box-des {
+    display: none;
+}
+    
+.challenge-box:hover + .challenge-box-des,
+.challenge-box-des:hover {
+    display: block;
+    position: absolute;
+    top: 50%;
+    bottom: 1em;
+    left: 1em;
+    right: 1em;
+    padding: 5%;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+}
