@@ -11,9 +11,10 @@ export default class ProblemRouter {
         const router = Router();
         router.post("/", isLoggedIn, catcher(this.createProblem));
         router.put("/", isLoggedIn, catcher(this.editProblem));
+        router.get("/statuses/", catcher(this.getProblemStatuses));
         router.get("/:problemID", catcher(this.getProblem));
 
-        router.get("/statuses/", catcher(this.getProblemStatuses));
+        
         router.get("/test/", catcher(this.test));
         return router;
     }
