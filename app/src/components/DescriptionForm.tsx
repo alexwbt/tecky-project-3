@@ -103,7 +103,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                             type="number"
                             min="0"
                             required
-                            value={this.props.deduction[0] ? (this.props.deduction[0].deduct !== 0 ? Number(this.props.deduction[0].deduct).toString() : "")  : ""}
+                            value={this.props.deduction[0] ? (this.props.deduction[0].deduct !== 0 ? Number(this.props.deduction[0].deduct).toString() : "") : ""}
                             onChange={this.deductionChange} />
                     </Form.Group>
 
@@ -137,15 +137,15 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
 
     render() {
         let selectableStatuses: number[] = [];
-        switch (this.props.statusID) {
+        switch (Number(this.props.statusID)) {
             case 1:
             case 2:
                 // WIP & Ready to audit
                 selectableStatuses = [1, 2];
                 break;
             case 3:
-                // WIP & Rejected
-                selectableStatuses = [1, 3];
+                // Rejected & Ready to audit
+                selectableStatuses = [3, 2];
                 break;
             case 4:
                 // Published
@@ -155,7 +155,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                 break;
         }
 
-        console.log();
+        console.log(this.props.statusID, selectableStatuses);
 
 
         return <Container style={{ overflowY: "auto", height: this.props.height }}>
@@ -218,11 +218,13 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
 
                 <Form.Group controlId="formStatus">
                     <Form.Label>Status:</Form.Label>
-                    <Form.Control name="status" as="select">
+                    <Form.Control name="statusID" as="select" value={this.props.statusID.toString()} onChange={this.inputChange}>
+                        
                         {
                             this.props.problemStatuses.filter(status =>
                                 selectableStatuses.indexOf(status.id) >= 0
-                            ).map(status =>
+                            )
+                            .map(status =>
                                 <option key={status.id} value={status.id}>{status.name}</option>
                             )
                         }
