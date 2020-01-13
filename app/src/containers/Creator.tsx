@@ -18,6 +18,7 @@ import { editProblem, getProblem } from "../thunks/problemThunk";
 import { IProblemState } from "../reducers/problemReducer";
 import { getCategoriesThunk } from "../thunks/categoryThunk";
 import { getDifficultiesThunk } from "../thunks/difficultyThunks";
+import { getProblemStatusesThunk } from "../thunks/problemStatusThunk";
 
 import { Prompt } from "react-router-dom";
 
@@ -33,6 +34,7 @@ interface ICreatorProps {
     getProblem: (id: number) => void;
     getCategories: () => void;
     getDifficulties: () => void;
+    getProblemStatuses: () => void;
 }
 
 enum Tab {
@@ -117,6 +119,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
         this.props.getCategories();
         this.props.getDifficulties();
+        this.props.getProblemStatuses();
         this.props.getProblem(this.props.match.params.problemId);
 
     }
@@ -331,6 +334,7 @@ const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     getProblem: (id: number) => dispatch(getProblem(id)),
     getCategories: () => dispatch(getCategoriesThunk()),
     getDifficulties: () => dispatch(getDifficultiesThunk()),
+    getProblemStatuses: () => dispatch(getProblemStatusesThunk()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator);

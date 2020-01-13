@@ -1,7 +1,7 @@
 import { ICanvasContent } from "../components/canvas/CanvasContent";
 import ProblemActions from "../actions/problemActions";
 import { BlockList, blocklyBlocks } from "../components/blockly/toolbox";
-import { IProblemInfo } from "../models/Problem";
+import { IProblemInfo, IProblemDeduction } from "../models/Problem";
 
 export interface IProblemState extends IProblemInfo {
     // Editor
@@ -27,7 +27,7 @@ const initialState: IProblemState = {
     score: 0,
     maxUsedBlocks: 0,
     maxMoveTimes: 0,
-    deduction: null,
+    deduction: ([] as IProblemDeduction[]),
 
     // Editor
     canvas: {},

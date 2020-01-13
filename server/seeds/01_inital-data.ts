@@ -37,9 +37,9 @@ export async function seed(knex: Knex): Promise<any> {
 
   // problem deduction type
   await knex(Tables.DEDUCTION_TYPE).insert([
-    { title: "Each blocks more than maximum lose" },
-    { title: "Move Times more than maximum lose" },
-    { title: "Each coin haven't got lose" }
+    { title: "Each blocks more the Max. Used Blocks will lose" },
+    { title: "Move Times more than Max. Move will lose" },
+    { title: "Each object haven't got will lose" }
   ]);
 
   // location

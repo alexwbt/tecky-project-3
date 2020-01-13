@@ -12,7 +12,7 @@ export interface IProblemInfo extends IProblem {
 
     maxUsedBlocks: number;
     maxMoveTimes: number;
-    deduction: IProblemDeduction[] | null;
+    deduction: IProblemDeduction[];
 }
 
 export interface IProblemStatus {
@@ -22,7 +22,6 @@ export interface IProblemStatus {
 
 export interface IProblemDeduction {
     id: number;
-    title: string;
     deduct: number;
 }
 
