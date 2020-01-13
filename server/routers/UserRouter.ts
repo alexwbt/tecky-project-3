@@ -119,26 +119,14 @@ export default class UserRouter {
             throw new Error ("Unable to get solved records");
         }
 
-        console.log (postsRecord);
-        //console.log (solvedRecord);
-
         res.status(200).json({
             success: true,
             username: user.username,
             email: profile.email,
             exp: profile.experience,
             location: location.name,
-
-            postsTitle: postsRecord.title,
-            postsName: postsRecord.name,
-            status: postsRecord.status,
-            postsCreatedAt: postsRecord.created_at,
-            postsUpdatedAt: postsRecord.updated_at,
-
-            solvedTitle: solvedRecord.title,
-            solvedName: solvedRecord.name,
-            score: solvedRecord.score,
-            solvedCreatedAt: solvedRecord.created_at,
+            postsRecord,
+            solvedRecord,
         });
     };
 }

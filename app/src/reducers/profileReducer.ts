@@ -6,17 +6,20 @@ export interface IProfileState {
     email: string;
     exp: number;
     location: string;
+    postsRecord: {
+        title: string;
+        name: string;
+        status: boolean;
+        created_at: string;
+        updated_at: string;
+    }[];
 
-    postsTitle: string;
-    postsName: string;
-    status: boolean;
-    postsCreatedAt: string;
-    postsUpdatedAt: string;
-
-    solvedTitle: string;
-    solvedName: string;
-    score: number;
-    solvedCreatedAt: string;
+    solvedRecord: {
+        title: string;
+        name: string;
+        score: number;
+        created_at: string;
+    }[];
 }
 
 const initialState: IProfileState = {
@@ -24,18 +27,8 @@ const initialState: IProfileState = {
     email: "",
     exp: 0,
     location: "",
-
-    postsTitle: "",
-    postsName: "",
-    status: false,
-    postsCreatedAt: "",
-    postsUpdatedAt: "",
-
-    solvedTitle: "",
-    solvedName: "",
-    score: 0,
-    solvedCreatedAt: "",
-
+    postsRecord: [],
+    solvedRecord: [],
 };
 
 const profileReducer = (state: IProfileState = initialState, action: ProfileActions) => {
@@ -46,17 +39,8 @@ const profileReducer = (state: IProfileState = initialState, action: ProfileActi
                 email: action.email,
                 exp: action.exp,
                 location: action.location,
-
-                postsTitle: action.postsTitle,
-                postsName: action.postsName,
-                status: action.status,
-                postsCreatedAt: action.postsCreatedAt,
-                postsUpdatedAt: action.postsUpdatedAt,
-
-                solvedTitle: action.solvedTitle,
-                solvedName: action.solvedName,
-                score: action.score,
-                solvedCreatedAt: action.solvedCreatedAt,
+                postsRecord: action.postRecord,
+                solvedRecord: action.solvedRecord                
             }
         default:
             return state;
