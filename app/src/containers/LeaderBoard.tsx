@@ -8,6 +8,11 @@ import { IRootState, ReduxThunkDispatch } from "../store";
 interface IProfileProps {
     username: string;
     exp: number;
+    rankingList:{
+        username:string;
+        experience:number;
+        name:string;
+    }[];
     getProfile: (username: string) => void;
 }
 
@@ -25,8 +30,9 @@ class LeaderBoard extends React.Component <IProfileProps> {
             this.props.getProfile(username);
         }
     }
-
+    
     render() {
+        // console.log(rankingList);
         return <div>
             <NavBar />
             <div className="container bg-white border shadow" style={{ height: "100vh" }}>
@@ -76,23 +82,25 @@ class LeaderBoard extends React.Component <IProfileProps> {
                 {/* ranking list (only show big 10) */}
                 <div className="row pt-2 justify-content-center">
                     <div className="col-11 p-2 text-center">
-                        <h6>Ranking list</h6>
+                        <h2>Ranking list</h2>
                         <Table striped bordered hover responsive="lg" size="sm">
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>User Name</th>
+                                    <th>Username</th>
                                     <th>Level</th>
                                     <th>Location</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>{this.props.username}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                                {
+                                    this.props.rankingList.map((ranking, i) => <tr>
+                                    <td>{i + 1}</td>
+                                    <td>{ranking.username}</td>
+                                    <td>{ranking.experience}</td>
+                                    <td>{ranking.name}</td>
+                                </tr>)
+                                }
                             </tbody>
                         </Table>
                     </div>
@@ -105,6 +113,7 @@ class LeaderBoard extends React.Component <IProfileProps> {
 
 const mapStateToProps = (state: IRootState) => ({
     username: state.profile.username,
+    rankingList: state.profile.rankingList,
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({

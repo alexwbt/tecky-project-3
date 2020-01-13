@@ -119,6 +119,11 @@ export default class UserRouter {
             throw new Error ("Unable to get solved records");
         }
 
+        const rankingList = await this.service.getRankingList();
+        if (!rankingList) {
+            throw new Error ("Unable to get ranking list");
+        }
+
         res.status(200).json({
             success: true,
             username: user.username,
@@ -127,6 +132,7 @@ export default class UserRouter {
             location: location.name,
             postsRecord,
             solvedRecord,
+            rankingList,
         });
     };
 }

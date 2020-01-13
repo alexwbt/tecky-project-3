@@ -54,7 +54,7 @@ export default class UserService {
         .from("audit")
         .leftJoin("problem", function(){this.on("problem_id", "=", "problem.id")})
         .leftJoin("difficulty", function(){this.on("difficulty_id","=","difficulty.id")})
-        .where("user_id", id));
+        .where("audit.user_id", id));
     }
 
 
@@ -64,6 +64,14 @@ export default class UserService {
         .from("progress")
         .leftJoin("problem", function(){this.on("problem_id", "=", "problem.id")})
         .leftJoin("difficulty", function(){this.on("difficulty_id","=","difficulty.id")})
-        .where("user_id", id));
+        .where("progress.user_id", id));
+    }
+
+    //SELECT (user_id),(username),(experience),(location.name) FROM "user" FULL JOIN profile ON (user_id = "user".id) LEFT JOIN location ON (location_id = location.id) ORDER BY (experience) DESC LIMIT 5;
+    async getRankingList () {
+        return (await this.knex.select("user_id", "username", "experience", "location.name")
+        .from("user").fullOuterJoin("profile", function(){this.on("user_id","=","user.id")})
+        .leftJoin("location", function(){this.on("location_id", "=", "location.id")})
+        .orderBy("experience", "DESC").limit(5));
     }
 }

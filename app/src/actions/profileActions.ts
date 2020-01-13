@@ -2,7 +2,7 @@ import { CallHistoryMethodAction } from "connected-react-router";
 
 
 export function loadProfile (username:string, email:string, exp:number, location:string, 
-    postRecord: [], solvedRecord: []) {
+    postRecord: [], solvedRecord: [], rankingList:[]) {
     return {
         type: "LOAD_PROFILE" as "LOAD_PROFILE",
         username,
@@ -11,6 +11,7 @@ export function loadProfile (username:string, email:string, exp:number, location
         location,
         postRecord,
         solvedRecord,
+        rankingList,
     };
 
 }

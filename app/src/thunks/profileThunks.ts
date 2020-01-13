@@ -12,7 +12,7 @@ export function getProfile(username: string) {
 
         if (res.status === 200 && result.success) {
             dispatch(loadProfile(result.username, result.email, result.exp, result.location, 
-                result.postsRecord, result.solvedRecord));
+                result.postsRecord, result.solvedRecord, result.rankingList));
         } else {
             dispatch(push("/pageNotFound"));
             console.error(result.message);

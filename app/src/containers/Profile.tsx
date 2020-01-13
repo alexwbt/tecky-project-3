@@ -180,19 +180,8 @@ const mapStateToProps = (state: IRootState) => ({
     email: state.profile.email,
     exp: state.profile.exp,
     location: state.profile.location,
-
     postsRecord: state.profile.postsRecord,
-    // postsTitle: state.profile.postsTitle,
-    // postsName: state.profile.postsName,
-    // status: state.profile.status,
-    // postsCreatedAt: state.profile.postsCreatedAt,
-    // postsUpdatedAt: state.profile.postsUpdatedAt,
-
     solvedRecord: state.profile.solvedRecord,
-    // solvedTitle: state.profile.solvedTitle,
-    // solvedName: state.profile.solvedName,
-    // score: state.profile.score,
-    // solvedCreatedAt: state.profile.solvedCreatedAt,
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
