@@ -8,6 +8,9 @@ import * as express from "express";
 const app = express();
 const PORT = 8080;
 
+// Multer
+import * as multer from 'multer';
+
 // Body Parser
 import * as bodyParser from "body-parser";
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,8 +58,20 @@ app.use("/difficulty", difficultyRouter.router());
 
 import ProblemService from "./services/ProblemService";
 import ProblemRouter from "./routers/ProblemRouter";
+
+const problemImageStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, `${__dirname}/uploads/image/challenge/`);
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${req.user["id"]}.${file.mimetype.split('/')[1]}`);
+    }
+})
+const uploadChallengeImage = multer({problemImageStorage})
+
+
 export const problemService = new ProblemService(knex, mongodb);
-const problemRouter = new ProblemRouter(problemService);
+const problemRouter = new ProblemRouter(problemService, uploadChallengeImage);
 app.use("/problem", problemRouter.router());
 
 // run server

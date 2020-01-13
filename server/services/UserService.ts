@@ -54,7 +54,7 @@ export default class UserService {
         .from("audit")
         .leftJoin("problem", function(){this.on("problem_id", "=", "problem.id")})
         .leftJoin("difficulty", function(){this.on("difficulty_id","=","difficulty.id")})
-        .where("user_id", id))[0];
+        .where("user_id", id));
     }
 
 
@@ -64,6 +64,6 @@ export default class UserService {
         .from("progress")
         .leftJoin("problem", function(){this.on("problem_id", "=", "problem.id")})
         .leftJoin("difficulty", function(){this.on("difficulty_id","=","difficulty.id")})
-        .where("user_id", id))[0];
+        .where("user_id", id));
     }
 }

@@ -89,12 +89,6 @@ class LeaderBoard extends React.Component <IProfileProps> {
                             <tbody>
                                 <tr>
                                     <td>1</td>
-                                    <td>Alex</td>
-                                    <td>100 (10000)</td>
-                                    <td>Hong Kong</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
                                     <td>{this.props.username}</td>
                                     <td></td>
                                     <td></td>

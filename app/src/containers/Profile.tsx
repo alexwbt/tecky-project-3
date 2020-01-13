@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { getProfile } from "../thunks/profileThunks";
 import { IRootState, ReduxThunkDispatch } from "../store";
 
-
 interface IProfileProps {
     match: {
         params: {
@@ -17,18 +16,19 @@ interface IProfileProps {
     email: string;
     exp: number;
     location: string;
-
-    postsTitle: string;
-    postsName: string;
-    status: boolean;
-    postsCreatedAt: string;
-    postsUpdatedAt: string;
-
-    solvedTitle: string;
-    solvedName: string;
-    score: number;
-    solvedCreatedAt: string;
-
+    postsRecord: {
+        title: string;
+        name: string;
+        status: boolean;
+        created_at: string;
+        updated_at: string;
+    }[];
+    solvedRecord: {
+        title: string;
+        name: string;
+        score: number;
+        created_at: string;
+    }[];
     getProfile: (username: string) => void;
 }
 
@@ -59,7 +59,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     render() {
         return <>
             <NavBar />
-            <div className="container bg-white border shadow" style={{height:"100vh"}}>
+            <div className="container bg-white border shadow" style={{ height: "100vh" }}>
                 <div className="row">
                     <div className="col-12 text-center mt-4">
                         <img
@@ -82,6 +82,8 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                             </div>
                         </div>
                     </div>
+
+                    {/* Tab */}
                     <TabSelect tabs={[
                         "Info" as Tab,
                         "Posts" as Tab,
@@ -92,6 +94,8 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                         callback: this.selectTab.bind(this, tab)
                     }))} color="light" color2="info" className="mt-4 mx-auto text-center rounded-pill" />
                 </div>
+
+                {/* Info Tab */}
                 <div className="row pt-2 justify-content-center">
                     {
                         this.state.currentTab === "Info" && <div className="col-6 p-2 text-center">
@@ -101,7 +105,8 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                         </div>
                     }
                 </div>
-
+                
+                {/* Posts Tab */}
                 <div className="row pt-2 justify-content-center">
                     {
                         this.state.currentTab === "Posts" && <div className="col-10 p-2 text-center">
@@ -109,7 +114,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                             <Table striped bordered hover responsive="lg" size="sm">
                                 <thead>
                                     <tr>
-                                        <th></th>  
+                                        <th></th>
                                         <th>Title</th>
                                         <th>Difficulty</th>
                                         <th>Audit</th>
@@ -118,20 +123,23 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>{this.props.postsTitle}</td>
-                                    <td>{this.props.postsName}</td>
-                                    <td>{String(this.props.status)}</td>
-                                    <td>{this.props.postsCreatedAt.substr(0,10)}</td>
-                                    <td>{this.props.postsUpdatedAt.substr(0,10)}</td>
-                                </tr>
+                                    {
+                                        this.props.postsRecord.map((post, i) => <tr>
+                                            <td>{i + 1}</td>
+                                            <td>{post.title}</td>
+                                            <td>{post.name}</td>
+                                            <td>{String(post.status)}</td>
+                                            <td>{post.created_at.substr(0, 10)}</td>
+                                            <td>{post.updated_at.substr(0, 10)}</td>
+                                        </tr>)
+                                    }
                                 </tbody>
                             </Table>
                         </div>
                     }
                 </div>
 
+                {/* Solved Tab */}
                 <div className="row pt-2 justify-content-center">
                     {
                         this.state.currentTab === "Solved" && <div className="col-10 p-2 text-center">
@@ -139,7 +147,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                             <Table striped bordered hover responsive="lg" size="sm">
                                 <thead>
                                     <tr>
-                                        <th></th>  
+                                        <th></th>
                                         <th>Title</th>
                                         <th>Difficulty</th>
                                         <th>Score</th>
@@ -147,13 +155,15 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>{this.props.solvedTitle}</td>
-                                    <td>{this.props.solvedName}</td>
-                                    <td>{this.props.score}</td>
-                                    <td>{this.props.solvedCreatedAt.substr(0,10)}</td>
-                                </tr>
+                                    {
+                                        this.props.solvedRecord.map((solved, i) => <tr>
+                                        <td>{i + 1}</td>
+                                        <td>{solved.title}</td>
+                                        <td>{solved.name}</td>
+                                        <td>{solved.score}</td>
+                                        <td>{solved.created_at.substr(0,10)}</td>
+                                    </tr>)
+                                    } 
                                 </tbody>
                             </Table>
                         </div>
@@ -171,16 +181,18 @@ const mapStateToProps = (state: IRootState) => ({
     exp: state.profile.exp,
     location: state.profile.location,
 
-    postsTitle: state.profile.postsTitle,
-    postsName: state.profile.postsName,
-    status: state.profile.status,
-    postsCreatedAt: state.profile.postsCreatedAt,
-    postsUpdatedAt: state.profile.postsUpdatedAt,
+    postsRecord: state.profile.postsRecord,
+    // postsTitle: state.profile.postsTitle,
+    // postsName: state.profile.postsName,
+    // status: state.profile.status,
+    // postsCreatedAt: state.profile.postsCreatedAt,
+    // postsUpdatedAt: state.profile.postsUpdatedAt,
 
-    solvedTitle: state.profile.solvedTitle,
-    solvedName: state.profile.solvedName,
-    score: state.profile.score,
-    solvedCreatedAt: state.profile.solvedCreatedAt,
+    solvedRecord: state.profile.solvedRecord,
+    // solvedTitle: state.profile.solvedTitle,
+    // solvedName: state.profile.solvedName,
+    // score: state.profile.score,
+    // solvedCreatedAt: state.profile.solvedCreatedAt,
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
