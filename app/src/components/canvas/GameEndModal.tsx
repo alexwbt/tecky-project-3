@@ -3,7 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import { IProblemDeduction } from "../../models/Problem";
 import ReactCountUp from "react-countup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDotCircle, faExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faExclamation } from "@fortawesome/free-solid-svg-icons";
 
 
 interface IGameEndModalProps {
