@@ -12,11 +12,15 @@ interface IChallengeBoxProps {
     problemID: number;
     title: string;
     difficultyID: number;
-    rating: number;
+    rating: {
+        rating: number;
+        rated: number;
+    };
 }
 
 const ChallengeBox: React.FC<IChallengeBoxProps> = (props: IChallengeBoxProps) => {
     const dispatch = useDispatch();
+    const rating = props.rating.rated > 0 ? props.rating.rating / props.rating.rated : 0;
     return <button
         title={props.title}
         className="w-100 h-100 shadow p-0 text-left"
@@ -28,13 +32,16 @@ const ChallengeBox: React.FC<IChallengeBoxProps> = (props: IChallengeBoxProps) =
             alt="problem-icon" />
         <div className="challenge-box-des">
             <h5 style={{ overflow: "hidden" }}>{props.title}</h5>
-            <div>
-                {[0, 1, 2, 3, 4].map(i => <FontAwesomeIcon
-                    key={i}
-                    className={(i < props.rating ? "text-warning" : "text-white") + " pr-1 h4"}
-                    icon={faStar} />)}
-            </div>
-            <DifficultyBox difficultyID={props.difficultyID}/>
+            <h4>
+                {
+                    [0, 1, 2, 3, 4].map(i => <FontAwesomeIcon
+                        key={i}
+                        className={(i < rating ? "text-warning" : "text-white") + " pr-1"}
+                        icon={faStar} />)
+                }
+                ({props.rating.rated})
+            </h4>
+            <DifficultyBox difficultyID={props.difficultyID} />
         </div>
     </button>
 };

@@ -10,6 +10,7 @@ import Canvas from "../components/canvas/Canvas";
 import { IProblemState } from "../reducers/problemReducer";
 import BlocklyArea from "../components/blockly/BlocklyArea";
 import { getProblem } from "../thunks/problemThunk";
+import ProblemRater from "../components/ProblemRater";
 
 
 interface ISolverProps {
@@ -89,6 +90,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                         }
                         {
                             !!this.state.desHeight && <div style={{ overflowY: "auto", maxHeight: this.state.desHeight - 10 }}>
+                                <ProblemRater problemID={this.props.match.params.problemId} />
                                 <h1>{this.props.problem.title}</h1>
                                 <p>{this.props.problem.description}</p>
                             </div>

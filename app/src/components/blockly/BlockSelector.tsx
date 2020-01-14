@@ -5,7 +5,7 @@ import { Collapse } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
-import "./BlockSelector.css";
+import "../../css/BlockSelector.css";
 import { IRootState, ReduxThunkDispatch } from "../../store";
 import { toggleCategory, toggleBlock, toggleUseCategory, changed, toggleUseVariables, toggleUseFunctions } from "../../actions/problemActions";
 

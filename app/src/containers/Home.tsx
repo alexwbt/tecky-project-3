@@ -12,7 +12,7 @@ interface IHomeProps {
 }
 
 interface IHomeState {
-    problemList: { id: number, title: string, difficulty_id: number, rating: number }[];
+    problemList: { id: number, title: string, difficulty_id: number, rating: { rating: number, rated: number } }[];
 }
 
 class Home extends React.Component<IHomeProps, IHomeState> {
@@ -35,6 +35,8 @@ class Home extends React.Component<IHomeProps, IHomeState> {
         try {
             const res = await fetch(`${process.env.REACT_APP_API_SERVER}/problem`);
             const result = await res.json();
+
+            console.log(result);
 
             this.setState({
                 problemList: result.problemList

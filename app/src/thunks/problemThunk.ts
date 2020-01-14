@@ -57,10 +57,10 @@ export function editProblem(problem: IProblemState) {
     };
 }
 
-export function getProblem(problemId: number) {
+export function getProblem(problemID: number) {
     return async (dispatch: Dispatch<ProblemActions>) => {
         try {
-            const res = await fetch(`${REACT_APP_API_SERVER}/problem/${problemId}`, {
+            const res = await fetch(`${REACT_APP_API_SERVER}/problem/${problemID}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -72,6 +72,23 @@ export function getProblem(problemId: number) {
             } else {
                 toast.error(result.message);
             }
+        } catch (err) {
+            toast.error(err.message);
+        }
+    };
+}
+
+export function rateProblem(problemID: number, score: number) {
+    return async () => {
+        try {
+            await fetch(`${REACT_APP_API_SERVER}/problem/rate`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ problemID, score })
+            });
         } catch (err) {
             toast.error(err.message);
         }

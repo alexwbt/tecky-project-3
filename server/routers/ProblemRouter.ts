@@ -6,12 +6,13 @@ import ProblemService from "../services/ProblemService";
 
 export default class ProblemRouter {
 
-    constructor(private service: ProblemService, private upload:multer.Instance) { }
+    constructor(private service: ProblemService, private upload: multer.Instance) { }
 
     router() {
         const router = Router();
         router.post("/", isLoggedIn, catcher(this.createProblem));
         router.put("/", isLoggedIn, this.upload.single("image"), catcher(this.editProblem));
+        router.post("/rate", isLoggedIn, catcher(this.rateProblem));
         router.get("/statuses/", catcher(this.getProblemStatuses));
         router.get("/:problemID", catcher(this.getProblem));
         router.get("/", catcher(this.getProblemList));
@@ -39,7 +40,7 @@ export default class ProblemRouter {
 
     private editProblem = async (req: Request, res: Response) => {
         const problem = JSON.parse(req.body.problem);
-        
+
         const {
             pid,
             // Description
@@ -153,13 +154,31 @@ export default class ProblemRouter {
         }
     };
 
+    private rateProblem = async (req: Request, res: Response) => {
+        const { problemID, score } = req.body;
+
+        if (!problemID || !score) {
+            res.status(500).json({
+                success: false,
+                message: "Problem ID and Score Required"
+            });
+            return;
+        }
+
+        await this.service.rateProblem(req.user["id"], problemID, Math.min(5, Math.max(1, score)));
+        res.json(200).json({
+            success: true,
+            message: "Successfully rated challenge"
+        });
+    };
+
     // Get Static Table
     private getProblemStatuses = async (req: Request, res: Response) => {
         const statuses = await this.service.getStatusList();
         res.json({
             success: true,
             statuses
-        })
+        });
     };
 
     private getProblemCategories = async (req: Request, res: Response) => {
