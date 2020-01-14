@@ -13,6 +13,7 @@ export default class ProblemRouter {
         router.post("/", isLoggedIn, catcher(this.createProblem));
         router.put("/", isLoggedIn, this.upload.single("image"), catcher(this.editProblem));
         router.post("/rate", isLoggedIn, catcher(this.rateProblem));
+        router.get("/userRating/:problemID", isLoggedIn, catcher(this.getProblemRatingOfUser));
         router.get("/statuses/", catcher(this.getProblemStatuses));
         router.get("/:problemID", catcher(this.getProblem));
         router.get("/", catcher(this.getProblemList));
@@ -166,11 +167,29 @@ export default class ProblemRouter {
         }
 
         await this.service.rateProblem(req.user["id"], problemID, Math.min(5, Math.max(1, score)));
-        res.json(200).json({
+        res.status(200).json({
             success: true,
             message: "Successfully rated challenge"
         });
     };
+
+    private getProblemRatingOfUser = async (req: Request, res: Response) => {
+        const { problemID } = req.params;
+
+        if (!problemID) {
+            res.status(500).json({
+                success: false,
+                message: "Problem ID Required"
+            });
+            return;
+        }
+
+        const rating = await this.service.getProblemRatingOfUser(req.user["id"], parseInt(problemID));
+        res.status(200).json({
+            success: true,
+            rating: rating ? rating.rating : 0
+        });
+    }
 
     // Get Static Table
     private getProblemStatuses = async (req: Request, res: Response) => {

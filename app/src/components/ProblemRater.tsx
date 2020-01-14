@@ -7,10 +7,11 @@ import { rateProblem } from "../thunks/problemThunk";
 
 interface IProblemRaterProps {
     problemID: number;
+    default: number;
 }
 
 const ProblemRater: React.FC<IProblemRaterProps> = (props: IProblemRaterProps) => {
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(props.default);
     const dispatch = useDispatch();
 
     return <div className="p-2">
@@ -20,7 +21,7 @@ const ProblemRater: React.FC<IProblemRaterProps> = (props: IProblemRaterProps) =
                 [0, 1, 2, 3, 4].map(i => <button
                     key={i}
                     className={(i < rating ? "text-warning" : "text-muted") + " btn p-1"}
-                    onClick={(event) => {
+                    onClick={() => {
                         dispatch(rateProblem(props.problemID, i + 1));
                         setRating(i + 1);
                     }}>

@@ -36,8 +36,6 @@ class Home extends React.Component<IHomeProps, IHomeState> {
             const res = await fetch(`${process.env.REACT_APP_API_SERVER}/problem`);
             const result = await res.json();
 
-            console.log(result);
-
             this.setState({
                 problemList: result.problemList
             });
@@ -55,7 +53,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                     {
                         this.state.problemList && this.state.problemList.map((problem, i) => <div
                             key={i}
-                            className="col-lg-3 p-3">
+                            className="col-sm-6 col-md-4 col-xl-3 p-3">
                             <ChallengeBox
                                 key={i}
                                 problemID={problem.id}

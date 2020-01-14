@@ -25,6 +25,7 @@ interface ISolverProps {
 
 interface ISolverStates {
     height: number;
+    myRating: number;
 }
 
 class Solver extends React.Component<ISolverProps, ISolverStates> {
@@ -36,7 +37,8 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     constructor(props: ISolverProps) {
         super(props);
         this.state = {
-            height: 0
+            height: 0,
+            myRating: -1
         };
         this.tileSpriteImg = React.createRef();
         this.charSpriteImg = React.createRef();
@@ -51,6 +53,22 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
         });
     };
 
+    async getMyRatingOfThisProblem() {
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/problem/userRating/${this.props.match.params.problemId}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        const result = await res.json();
+
+        if (res.status === 200 && result.success) {
+            this.setState({
+                ...this.state,
+                myRating: result.rating
+            });
+        }
+    }
+
     componentDidMount() {
         window.addEventListener('resize', this.updateHeight);
         this.updateHeight();
@@ -58,6 +76,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
         document.title = "BlockDojo - Solver";
 
         this.props.getProblem(this.props.match.params.problemId);
+        this.getMyRatingOfThisProblem();
     }
 
     componentWillUnmount() {
@@ -84,7 +103,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                                 editable={false} />
                         }
                         <h2>{this.props.problem.title}</h2>
-                        <ProblemRater problemID={this.props.match.params.problemId} />
+                        {this.state.myRating >= 0 && <ProblemRater default={this.state.myRating} problemID={this.props.match.params.problemId} />}
                         <h6>Rules:</h6>
                         <ul className="p-2">
                             <li className="ml-3">

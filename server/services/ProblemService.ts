@@ -84,7 +84,7 @@ export default class ProblemService {
     }
 
     async rateProblem(user_id: number, problem_id: number, rating: number) {
-        const rated = (await this.knex(Tables.RATING).select().where({ user_id, problem_id })).length > 0;
+        const rated = !!await this.getProblemRatingOfUser(user_id, problem_id);
         if (rated) {
             await this.knex(Tables.RATING).where({ user_id, problem_id }).update({ rating });
         } else {
@@ -99,6 +99,10 @@ export default class ProblemService {
             rating += ratings[i].rating;
         }
         return { rating, rated: ratings.length };
+    }
+
+    async getProblemRatingOfUser(user_id: number, problem_id: number) {
+        return (await this.knex(Tables.RATING).select("rating").where({ user_id, problem_id }))[0];
     }
 
     // Get Static Table

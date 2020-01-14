@@ -49,6 +49,8 @@ const GameEndModal: React.FC<IGameEndModalProps> = (props: IGameEndModalProps) =
         score -= missedObjDe;
     }
 
+    score = Math.max(0, score);
+
     let failed = props.failed;
     if (score < props.score / 2) {
         failed = true;
