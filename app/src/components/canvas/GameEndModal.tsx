@@ -3,11 +3,14 @@ import { Button, Modal } from "react-bootstrap";
 import { IProblemDeduction } from "../../models/Problem";
 import ReactCountUp from "react-countup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDotCircle, faExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faExclamation } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import { submitProgress } from "../../thunks/profileThunks";
 
 
 interface IGameEndModalProps {
     show: boolean;
+    problemID?: number;
     failed: boolean;
     score: number;
     blockCount: number;
@@ -20,6 +23,8 @@ interface IGameEndModalProps {
 }
 
 const GameEndModal: React.FC<IGameEndModalProps> = (props: IGameEndModalProps) => {
+    const dispatch = useDispatch();
+
     if (props.deduction.length < 3) {
         return <></>
     }
@@ -43,6 +48,8 @@ const GameEndModal: React.FC<IGameEndModalProps> = (props: IGameEndModalProps) =
     if (missedObjEx) {
         score -= missedObjDe;
     }
+
+    score = Math.max(0, score);
 
     let failed = props.failed;
     if (score < props.score / 2) {
@@ -93,7 +100,12 @@ const GameEndModal: React.FC<IGameEndModalProps> = (props: IGameEndModalProps) =
             </Modal.Body>
 
             <Modal.Footer>
-                <Button variant="secondary" onClick={props.handleClose}>
+                <Button variant="secondary" onClick={() => {
+                    props.handleClose();
+                    if (props.problemID) {
+                        dispatch(submitProgress(props.problemID, score));
+                    }
+                }}>
                     Close
                 </Button>
             </Modal.Footer>

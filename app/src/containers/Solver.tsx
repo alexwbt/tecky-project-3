@@ -10,6 +10,7 @@ import Canvas from "../components/canvas/Canvas";
 import { IProblemState } from "../reducers/problemReducer";
 import BlocklyArea from "../components/blockly/BlocklyArea";
 import { getProblem } from "../thunks/problemThunk";
+import ProblemRater from "../components/ProblemRater";
 
 
 interface ISolverProps {
@@ -24,7 +25,7 @@ interface ISolverProps {
 
 interface ISolverStates {
     height: number;
-    desHeight: number;
+    myRating: number;
 }
 
 class Solver extends React.Component<ISolverProps, ISolverStates> {
@@ -37,7 +38,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
         super(props);
         this.state = {
             height: 0,
-            desHeight: 0
+            myRating: -1
         };
         this.tileSpriteImg = React.createRef();
         this.charSpriteImg = React.createRef();
@@ -46,22 +47,36 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
 
     private updateHeight = () => {
         const nav = document.getElementById("navagation-bar");
-        const canvas = document.getElementById("canvas-container");
         this.setState({
             ...this.state,
-            height: nav ? window.innerHeight - nav.clientHeight : 0,
-            desHeight: nav && canvas ? window.innerHeight - nav.clientHeight - canvas.clientHeight : 0
+            height: nav ? window.innerHeight - nav.clientHeight : 0
         });
     };
 
+    async getMyRatingOfThisProblem() {
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/problem/userRating/${this.props.match.params.problemId}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        const result = await res.json();
+
+        if (res.status === 200 && result.success) {
+            this.setState({
+                ...this.state,
+                myRating: result.rating
+            });
+        }
+    }
+
     componentDidMount() {
         window.addEventListener('resize', this.updateHeight);
-        setTimeout(this.updateHeight, 100);
-        setTimeout(this.updateHeight, 500);
+        this.updateHeight();
 
         document.title = "BlockDojo - Solver";
 
         this.props.getProblem(this.props.match.params.problemId);
+        this.getMyRatingOfThisProblem();
     }
 
     componentWillUnmount() {
@@ -69,32 +84,46 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     }
 
     render() {
-        return <div>
+        return <div style={{ overflow: "hidden" }}>
             <NavBar />
             <img ref={this.tileSpriteImg} src={tileSprite} className={"d-none"} alt={"sprite"} />
             <img ref={this.charSpriteImg} src={charSprite} className={"d-none"} alt={"sprite"} />
             <img ref={this.objSpriteImg} src={objSprite} className={"d-none"} alt={"sprite"} />
             <div className="container-fluid p-0 bg-light">
                 <div className="row w-100 m-0" style={{ height: this.state.height }}>
-                    <div className="col-4 p-1">
+                    <div className="col-4 p-1" style={{ overflowY: "auto", height: this.state.height }}>
                         {
                             this.tileSpriteImg.current &&
                             this.charSpriteImg.current &&
                             this.objSpriteImg.current && <Canvas
+                                problemID={this.props.match.params.problemId}
                                 tileSprite={this.tileSpriteImg.current}
                                 charSprite={this.charSpriteImg.current}
                                 objSprite={this.objSpriteImg.current}
                                 editable={false} />
                         }
-                        {
-                            !!this.state.desHeight && <div style={{ overflowY: "auto", maxHeight: this.state.desHeight - 10 }}>
-                                <h1>{this.props.problem.title}</h1>
-                                <p>{this.props.problem.description}</p>
-                            </div>
-                        }
+                        <h2>{this.props.problem.title}</h2>
+                        {this.state.myRating >= 0 && <ProblemRater default={this.state.myRating} problemID={this.props.match.params.problemId} />}
+                        <h6>Rules:</h6>
+                        <ul className="p-2">
+                            <li className="ml-3">
+                                You can use no more than {this.props.problem.maxUsedBlocks} blocks.
+                                        (-{this.props.problem.deduction[0]?.deduct}points / blocks)
+                                    </li>
+                            <li className="ml-3">
+                                Player can move no more than {this.props.problem.maxMoveTimes} times.
+                                        (-{this.props.problem.deduction[1]?.deduct}points / move)
+                                    </li>
+                            <li className="ml-3">
+                                Collect all collectables.
+                                        (-{this.props.problem.deduction[2]?.deduct}points / collectables missed)
+                                    </li>
+                        </ul>
+                        <h6>Description:</h6>
+                        <p className="p-2">{this.props.problem.description}</p>
                     </div>
                     {
-                        !!this.state.desHeight && <BlocklyArea
+                        !!this.props.problem.avalibleBlocks[this.props.problem.avalibleCategories[0]]?.length && <BlocklyArea
                             useCategory={this.props.problem.useCategory}
                             avalibleBlocks={this.props.problem.avalibleBlocks}
                             avalibleCategories={this.props.problem.avalibleCategories}

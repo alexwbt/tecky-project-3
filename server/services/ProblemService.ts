@@ -42,7 +42,7 @@ export default class ProblemService {
     }
 
     async createProblem(user_id: number) {
-        const pid = (await this.knex("problem").insert({ user_id }, ["id"]))[0].id;
+        const pid = (await this.knex(Tables.PROBLEM).insert({ user_id }, ["id"]))[0].id;
         await this.mongodb.collection("game").insertOne({ pid });
         return pid;
     }
@@ -61,14 +61,14 @@ export default class ProblemService {
         // deduction,
         game: any
     ) {
-        await this.knex("problem").where({ user_id, id }).update({
+        await this.knex(Tables.PROBLEM).where({ user_id, id }).update({
             title, description, category_id, difficulty_id, status_id, score
         });
         await this.mongodb.collection("game").updateOne({ pid: id }, { $set: { ...game, pid: id } });
     }
 
     async getProblemInfo(id: number) {
-        return (await this.knex.select().from("problem").where("id", id))[0];
+        return (await this.knex.select().from(Tables.PROBLEM).where("id", id))[0];
     }
 
     async getProblemContent(id: number) {
@@ -76,7 +76,33 @@ export default class ProblemService {
     }
 
     async getProblemList() {
-        return await this.knex.select(["id", "title", "difficulty_id"]).from("problem");
+        const problems = await this.knex.select(["id", "title", "difficulty_id"]).from(Tables.PROBLEM);
+        for (let i = 0; i < problems.length; i++) {
+            problems[i].rating = await this.getProblemRating(problems[i].id);
+        }
+        return problems;
+    }
+
+    async rateProblem(user_id: number, problem_id: number, rating: number) {
+        const rated = !!await this.getProblemRatingOfUser(user_id, problem_id);
+        if (rated) {
+            await this.knex(Tables.RATING).where({ user_id, problem_id }).update({ rating });
+        } else {
+            await this.knex(Tables.RATING).insert({ user_id, problem_id, rating });
+        }
+    }
+
+    async getProblemRating(problem_id: number) {
+        const ratings = await this.knex(Tables.RATING).select("rating").where({ problem_id });
+        let rating = 0;
+        for (let i = 0; i < ratings.length; i++) {
+            rating += ratings[i].rating;
+        }
+        return { rating, rated: ratings.length };
+    }
+
+    async getProblemRatingOfUser(user_id: number, problem_id: number) {
+        return (await this.knex(Tables.RATING).select("rating").where({ user_id, problem_id }))[0];
     }
 
     // Get Static Table

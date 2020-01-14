@@ -12,7 +12,7 @@ interface IHomeProps {
 }
 
 interface IHomeState {
-    problemList: { id: number, title: string, difficulty_id: number, rating: number }[];
+    problemList: { id: number, title: string, difficulty_id: number, rating: { rating: number, rated: number } }[];
 }
 
 class Home extends React.Component<IHomeProps, IHomeState> {
@@ -53,7 +53,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                     {
                         this.state.problemList && this.state.problemList.map((problem, i) => <div
                             key={i}
-                            className="col-lg-3 p-3">
+                            className="col-sm-6 col-md-4 col-xl-3 p-3">
                             <ChallengeBox
                                 key={i}
                                 problemID={problem.id}

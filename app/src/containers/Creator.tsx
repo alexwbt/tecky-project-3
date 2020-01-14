@@ -134,6 +134,16 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             this.props.editProblem(this.props.problem);
             this.setState({ ...this.state, saving: false });
         }
+        if (this.props.problem.canvas.terrainSize
+            && this.props.problem.canvas.terrainSize !== this.state.canvas.terrainSize) {
+            this.setState({
+                ...this.state,
+                canvas: {
+                    ...this.state.canvas,
+                    terrainSize: this.props.problem.canvas.terrainSize
+                }
+            });
+        }
     }
 
     selectTab(tab: Tab) {

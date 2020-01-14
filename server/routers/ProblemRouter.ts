@@ -6,12 +6,14 @@ import ProblemService from "../services/ProblemService";
 
 export default class ProblemRouter {
 
-    constructor(private service: ProblemService, private upload:multer.Instance) { }
+    constructor(private service: ProblemService, private upload: multer.Instance) { }
 
     router() {
         const router = Router();
         router.post("/", isLoggedIn, catcher(this.createProblem));
         router.put("/", isLoggedIn, this.upload.single("image"), catcher(this.editProblem));
+        router.post("/rate", isLoggedIn, catcher(this.rateProblem));
+        router.get("/userRating/:problemID", isLoggedIn, catcher(this.getProblemRatingOfUser));
         router.get("/statuses/", catcher(this.getProblemStatuses));
         router.get("/:problemID", catcher(this.getProblem));
         router.get("/", catcher(this.getProblemList));
@@ -39,9 +41,7 @@ export default class ProblemRouter {
 
     private editProblem = async (req: Request, res: Response) => {
         const problem = JSON.parse(req.body.problem);
-        console.log(problem);
-        
-        
+
         const {
             pid,
             // Description
@@ -103,9 +103,9 @@ export default class ProblemRouter {
             pid,
             title,
             description,
-            categoryID < 1 ? null : categoryID,
-            difficultyID < 1 ? null : difficultyID,
-            statusID < 1 ? null : statusID,
+            categoryID < 1 ? 1 : categoryID,
+            difficultyID < 1 ? 1 : difficultyID,
+            statusID < 1 ? 1 : statusID,
             score,
             game
         );
@@ -155,13 +155,49 @@ export default class ProblemRouter {
         }
     };
 
+    private rateProblem = async (req: Request, res: Response) => {
+        const { problemID, score } = req.body;
+
+        if (!problemID || !score) {
+            res.status(500).json({
+                success: false,
+                message: "Problem ID and Score Required"
+            });
+            return;
+        }
+
+        await this.service.rateProblem(req.user["id"], problemID, Math.min(5, Math.max(1, score)));
+        res.status(200).json({
+            success: true,
+            message: "Successfully rated challenge"
+        });
+    };
+
+    private getProblemRatingOfUser = async (req: Request, res: Response) => {
+        const { problemID } = req.params;
+
+        if (!problemID) {
+            res.status(500).json({
+                success: false,
+                message: "Problem ID Required"
+            });
+            return;
+        }
+
+        const rating = await this.service.getProblemRatingOfUser(req.user["id"], parseInt(problemID));
+        res.status(200).json({
+            success: true,
+            rating: rating ? rating.rating : 0
+        });
+    }
+
     // Get Static Table
     private getProblemStatuses = async (req: Request, res: Response) => {
         const statuses = await this.service.getStatusList();
         res.json({
             success: true,
             statuses
-        })
+        });
     };
 
     private getProblemCategories = async (req: Request, res: Response) => {

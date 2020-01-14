@@ -1,6 +1,5 @@
 import * as Knex from "knex";
 
-
 type User = {
     id: number;
     username: string;
@@ -50,11 +49,11 @@ export default class UserService {
 
     //SELECT (audit.user_id),(title),(name),(status),(audit.created_at),(audit.updated_at) FROM audit INNER JOIN problem ON (problem_id = problem.id) INNER JOIN difficulty ON (difficulty_id = difficulty.id);
     async getPostsRecord(id:number) {
-        return (await this.knex.select("audit.user_id", "title", "name", "status", "audit.created_at","audit.updated_at")
+        return (await this.knex.select("problem.user_id", "title", "name", "status", "audit.created_at","audit.updated_at")
         .from("audit")
         .leftJoin("problem", function(){this.on("problem_id", "=", "problem.id")})
         .leftJoin("difficulty", function(){this.on("difficulty_id","=","difficulty.id")})
-        .where("audit.user_id", id));
+        .where("problem.user_id", id));
     }
 
 
@@ -71,8 +70,9 @@ export default class UserService {
     async getRankingList () {
         return (await this.knex.select("user_id", "username", "experience", "location.name")
         .from("user")
-        .leftJoin("profile", function(){this.on("user_id","=","user.id")})
+        .innerJoin("profile", "profile.user_id","=","user.id")
         .leftJoin("location", function(){this.on("location_id", "=", "location.id")})
+        .where("profile.role_id", 2) // where role = user only
         .orderBy("experience", "DESC").limit(5));
     }
 }
