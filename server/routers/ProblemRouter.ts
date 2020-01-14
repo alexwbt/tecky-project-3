@@ -39,8 +39,6 @@ export default class ProblemRouter {
 
     private editProblem = async (req: Request, res: Response) => {
         const problem = JSON.parse(req.body.problem);
-        console.log(problem);
-        
         
         const {
             pid,
@@ -103,9 +101,9 @@ export default class ProblemRouter {
             pid,
             title,
             description,
-            categoryID < 1 ? null : categoryID,
-            difficultyID < 1 ? null : difficultyID,
-            statusID < 1 ? null : statusID,
+            categoryID < 1 ? 1 : categoryID,
+            difficultyID < 1 ? 1 : difficultyID,
+            statusID < 1 ? 1 : statusID,
             score,
             game
         );

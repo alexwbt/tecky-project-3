@@ -23,7 +23,6 @@ export function login(username: string, password: string) {
             dispatch(push("/"));
         } else {
             dispatch(loginFailed(result.message));
-            console.error(result.message);
         }
     };
 }
@@ -48,7 +47,6 @@ export function register(email: string, username: string, password: string, cpas
             dispatch(registerSuccess());
         } else {
             dispatch(registerFailed(result.message));
-            console.error(result.message);
         }
     };
 }

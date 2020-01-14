@@ -81,6 +81,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                             this.tileSpriteImg.current &&
                             this.charSpriteImg.current &&
                             this.objSpriteImg.current && <Canvas
+                                problemID={this.props.match.params.problemId}
                                 tileSprite={this.tileSpriteImg.current}
                                 charSprite={this.charSpriteImg.current}
                                 objSprite={this.objSpriteImg.current}

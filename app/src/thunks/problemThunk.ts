@@ -23,7 +23,7 @@ export function createProblem() {
             dispatch(resetProblem());
             dispatch(push("/challenge/edit/" + result.problemID));
         } catch (err) {
-            toast.error("Cannot connect to server!");
+            toast.error(err.message);
         }
     };
 }
@@ -52,7 +52,7 @@ export function editProblem(problem: IProblemState) {
                 toast.error("Failed to save changes. (" + result.message + ")");
             }
         } catch (err) {
-            toast.error("Cannot connect to server!");
+            toast.error(err.message);
         }
     };
 }
@@ -73,7 +73,7 @@ export function getProblem(problemId: number) {
                 toast.error(result.message);
             }
         } catch (err) {
-            toast.error("Cannot connect to server!");
+            toast.error(err.message);
         }
     };
 }
