@@ -17,6 +17,7 @@ const BlocklyJS = require("blockly/javascript");
 export interface ICanvasProps {
     content: ICanvasContent;
     code: string;
+    score: number;
     maxUsedBlocks: number;
     maxMoveTimes: number;
     deduction: IProblemDeduction[];
@@ -280,6 +281,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                         endGameModal: false
                     });
                 }}
+                score={this.props.score}
                 blockCount={this.blockCount}
                 movedTime={this.content ? this.content.getMovedTime() : 0}
                 missedObjects={this.content ? this.content.getMissedObjects() : 0}
@@ -304,6 +306,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
 const mapStateToProps = (state: IRootState) => ({
     content: state.problem.canvas,
     code: state.problem.code,
+    score: state.problem.score,
     maxUsedBlocks: state.problem.maxUsedBlocks,
     maxMoveTimes: state.problem.maxMoveTimes,
     deduction: state.problem.deduction

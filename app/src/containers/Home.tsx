@@ -51,7 +51,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                 <h2 className="pb-0 pt-4 px-4 mb-0">Challenges</h2>
                 <div className="row p-3">
                     {
-                        this.state.problemList.map((problem, i) => <div
+                        this.state.problemList && this.state.problemList.map((problem, i) => <div
                             key={i}
                             className="col-lg-3 p-3">
                             <ChallengeBox
