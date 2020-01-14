@@ -167,7 +167,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                 break;
         }
 
-        return <Container style={{ overflowY: "auto", height: this.props.height }}>
+        return <Container className="shadow" style={{ overflowY: "auto", height: this.props.height, padding: "20px 75px 50% 75px" }}>
             <Form className="pb-3">
                 <h2 className="pt-3">Information</h2>
                 <Form.Group controlId="formTitle">

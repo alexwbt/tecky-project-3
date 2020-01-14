@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { IProblemDeduction } from "../../models/Problem";
+import ReactCountUp from "react-countup";
 
 
 interface IGameEndModalProps {
@@ -55,7 +56,11 @@ const GameEndModal: React.FC<IGameEndModalProps> = (props: IGameEndModalProps) =
                     <Modal.Body>
                         <div className="text-center">
                             <h4>You have completed the challenge.</h4>
-                            <h1 style={{fontSize: 100}}>{score}/{props.score}</h1>
+                            <h6>Your Score:</h6>
+                            <h1 className="pb-3" style={{fontSize: 100}}>
+                                <ReactCountUp end={score} start={props.score} duration={2} />
+                                /{props.score}
+                            </h1>
                         </div>
 
                         <div>You've used {props.blockCount} blocks.</div>
