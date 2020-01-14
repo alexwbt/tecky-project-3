@@ -35,7 +35,7 @@ export function editProblem(problem: IProblemState) {
             if (problem.image !== undefined) {
                 formData.append("image", problem.image);
             }
-            formData.append("problem", JSON.stringify({ ...problem }))
+            formData.append("problem", JSON.stringify(problem))
             
 
             const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
