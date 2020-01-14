@@ -73,6 +73,14 @@ export const problemService = new ProblemService(knex, mongodb);
 const problemRouter = new ProblemRouter(problemService, uploadChallengeImage);
 app.use("/problem", problemRouter.router());
 
+import ProgressService from "./services/ProgressService";
+import ProgressRouter from "./routers/ProgressRouter";
+
+export const progressService = new ProgressService(knex);
+const progressRouter = new ProgressRouter(progressService);
+app.use("/progress", progressRouter.router());
+
+
 // run server
 app.listen(PORT, () => {
     console.log("Running express server on port " + PORT);
