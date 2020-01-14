@@ -8,19 +8,37 @@ import { IRootState, ReduxThunkDispatch } from "../store";
 interface IProfileProps {
     username: string;
     exp: number;
-    rankingList:{
-        username:string;
-        experience:number;
-        name:string;
+    rankingList: {
+        username: string;
+        experience: number;
+        name: string;
     }[];
     getProfile: (username: string) => void;
 }
 
-class LeaderBoard extends React.Component <IProfileProps> {
+interface IProfileState {
+    rankingList: {
+        username: string;
+        experience: number;
+        name: string;
+    }[];
+    search: string;
+}
 
-    constructor (props: IProfileProps) {
+class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
+
+    constructor(props: IProfileProps) {
         super(props);
-        this.state = this.setState;
+        this.state = {
+            rankingList: [],
+            search: ""
+        };
+    }
+
+    componentDidUpdate() {
+        if (!this.state.search && this.state.rankingList !== this.props.rankingList && this.props.rankingList.length > 0) {
+            this.setState({ rankingList: this.props.rankingList });
+        }
     }
 
     componentDidMount() {
@@ -30,59 +48,80 @@ class LeaderBoard extends React.Component <IProfileProps> {
             this.props.getProfile(username);
         }
     }
-    
+
+    filterList = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const search = event.target.value.toLowerCase();
+        this.setState({ search });
+        if (search) {
+            const items = this.props.rankingList.filter((item) => {
+                return item.username.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
+            });
+            this.setState({ rankingList: items });
+        }
+    }
+
     render() {
-        // console.log(rankingList);
         return <div>
             <NavBar />
             <div className="container bg-white border shadow" style={{ height: "100vh" }}>
-
-                <div className="row">
-                    <div className="col-6 mt-4">
-                        {/* search bar & filter tag */}
-                    </div>
-                    
-                    {/* user image */}
-                    <div className="col-2 mt-4">
-                        <img
-                            src="https://cdn.shopify.com/s/files/1/0150/0643/3380/files/patrick.png?7948"
-                            width="130"
-                            className="rounded-circle shadow"
-                            style={{ border: "5px solid white" }}
-                            alt="user-icon" />
-                    </div>
-                        
-                    {/* user information (name,lv,progress bar) */}
-                    <div className="col-2 mt-4 ">
-                        <h2 className="mt-3 mb-0 text-monospace text-warning text-center">{this.props.username}</h2>
-                        <h6 className="mb-0 text-monospace text-warning text-center">Lvl. 10</h6>
-                        <div className="progress rounded-pill">
-                            <div
-                                className="mb-0 progress-bar bg-info progress-bar-striped"
-                                role="progressbar"
-                                aria-valuenow={70}
-                                aria-valuemin={0}
-                                aria-valuemax={100}
-                                style={{ width: "70%" }}>
-                                <span className="sr-only">70% Complete</span>
+                <div className="col-12">
+                    <div className="row">
+                        <div className="col-3 mt-4" style={{ display: "flex", alignItems: "center", padding: "0" }}>
+                            {/* search bar & filter tag */}
+                            {/* <SearchBar rankingList={this.props.rankingList}/> */}
+                            <div>
+                                <input
+                                    value={this.state.search}
+                                    type="Search"
+                                    placeholder="Search"
+                                    onChange={this.filterList}
+                                    style={{ width: "232px" }}
+                                />
                             </div>
                         </div>
-                    </div>
 
-                    {/* user ranking */}
-                    <div className="col-2 mt-4 text-monospace text-center" style={{border:"2px outset", backgroundColor: 'rgba(22, 152, 175, 0.7)'}}>
-                        <h6 style={{marginTop:'25px', marginBottom:'20px'}}>Ranking No</h6>
-                        <h4 style={{marginBottom:'25px'}}>(Number)</h4>
+                        {/* user image */}
+                        <div className="col-3 mt-4" style={{ display: "flex", justifyContent: "center", padding: "0" }}>
+                            <img
+                                src="https://cdn.shopify.com/s/files/1/0150/0643/3380/files/patrick.png?7948"
+                                width="130"
+                                className="rounded-circle shadow"
+                                style={{ border: "5px solid white" }}
+                                alt="user-icon" />
+                        </div>
+
+                        {/* user information (name,lv,progress bar) */}
+                        <div className="col-3 mt-4" style={{ padding: "0" }}>
+                            <h2 className="mt-3 mb-0 text-monospace text-warning text-center">{this.props.username}</h2>
+                            <h6 className="mb-0 text-monospace text-warning text-center">Lvl. 10</h6>
+                            <div className="progress rounded-pill">
+                                <div
+                                    className="mb-0 progress-bar bg-info progress-bar-striped"
+                                    role="progressbar"
+                                    aria-valuenow={70}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                    style={{ width: "70%" }}>
+                                    <span className="sr-only">70% Complete</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* user ranking */}
+                        <div className="col-3 mt-4 text-monospace text-center" style={{ border: "3px outset", backgroundColor: 'rgba(22, 152, 175, 0.7)', padding: "0", }}>
+                            <h6 style={{ marginTop: '25px', marginBottom: '20px' }}>Ranking No</h6>
+                            <h4 style={{ marginBottom: '25px' }}>(Number)</h4>
+                        </div>
                     </div>
                 </div>
 
                 <br />
                 <br />
-                
+
                 {/* ranking list (only show big 10) */}
                 <div className="row pt-2 justify-content-center">
                     <div className="col-11 p-2 text-center">
-                        <h2>Ranking list</h2>
+                        <h3>Ranking list</h3>
                         <Table striped bordered hover responsive="lg" size="sm">
                             <thead>
                                 <tr>
@@ -93,14 +132,23 @@ class LeaderBoard extends React.Component <IProfileProps> {
                                 </tr>
                             </thead>
                             <tbody>
-                                {
+                                {/* {
                                     this.props.rankingList.map((ranking, i) => <tr>
-                                    <td>{i + 1}</td>
-                                    <td>{ranking.username}</td>
-                                    <td>{ranking.experience}</td>
-                                    <td>{ranking.name}</td>
-                                </tr>)
+                                        <td>{i + 1}</td>
+                                        <td>{ranking.username}</td>
+                                        <td>{ranking.experience}</td>
+                                        <td>{ranking.name}</td>
+                                    </tr>)
+                                } */}
+                                {
+                                    this.state.rankingList.map((ranking, i) => <tr key={i}>
+                                        <td>{i + 1}</td>
+                                        <td>{ranking.username}</td>
+                                        <td>{ranking.experience}</td>
+                                        <td>{ranking.name}</td>
+                                    </tr>)
                                 }
+
                             </tbody>
                         </Table>
                     </div>
