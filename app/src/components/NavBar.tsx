@@ -17,12 +17,9 @@ const NavBar: React.FC<INavbarProps> = (props) => {
     const path = history.location.pathname;
     const dispatch = useDispatch();
     const username = localStorage.getItem("username");
-<<<<<<< HEAD
+    const authenticated = useSelector((state:IRootState) => state.auth.authenticated);
     return <div id="navigation-bar">
-=======
-    const authenticated = useSelector((state: IRootState) => state.auth.authenticated);
-    return <div id="navagation-bar">
->>>>>>> ee1d3c7ac36321785e6fce5e1f60f97a065c0519
+
         <Navbar bg="dark" expand="md" className="py-0">
             <Navbar.Brand className="text-white">
                 Block<span className="text-info">Dojo</span>
