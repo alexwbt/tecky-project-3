@@ -80,12 +80,20 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                 </div>
                 <div className="row p-3 px-5">
                     {
-                        this.state.problemList && this.state.problemList.filter(problem => {
+                        this.state.problemList && this.state.problemList.map(problem => {
                             if (!this.state.search) {
-                                return true;
+                                return { ...problem, score: 1 };
                             }
-                            return problem.title.toLowerCase().search(this.state.search.toLowerCase()) !== -1;
-                        }).map((problem, i) => <div
+                            const title = problem.title.toLowerCase();
+                            const search = this.state.search.toLowerCase();
+                            let score = 0;
+                            for (let i = 0; i < title.length; i++) {
+                                if (search.includes(title[i])) {
+                                    score++;
+                                }
+                            }
+                            return { ...problem, score };
+                        }).sort((a, b) => b.score - a.score).filter(p => p.score > 0).map((problem, i) => <div
                             key={i}
                             className="col-xl-3 p-3">
                             <ChallengeBox
