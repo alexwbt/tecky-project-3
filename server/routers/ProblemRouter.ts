@@ -26,6 +26,10 @@ export default class ProblemRouter {
 
     private getProblemList = async (req: Request, res: Response) => {
         const list = await this.service.getProblemList();
+        for (let i = 0; i < list.length; i++) {
+            list[i].user = (await this.userService.getUsernameWithId(list[i].user_id))?.username;
+            list[i].user_id = undefined;
+        }
         res.status(200).json({
             success: true,
             problemList: list

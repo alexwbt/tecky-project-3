@@ -35,23 +35,27 @@ const NavBar: React.FC<INavbarProps> = (props) => {
                         style={{ backgroundColor: path === "/" ? "rgb(25, 25, 30)" : "" }}>
                         Home
                     </Link>
-                    <Link
-                        to={`/profile/${username}`}
-                        className={`btn btn-dark rounded-0 text-white ${path === `/profile/${username}` && "shadow"}`}
-                        style={{ backgroundColor: path === `/profile/${username}` ? "rgb(25, 25, 30)" : "" }}>
-                        Profile
-                    </Link>
-                    <Link
-                        to="/leaderBoard"
-                        className={`btn btn-dark rounded-0 text-white ${path === "/leaderBoard" && "shadow"}`}
-                        style={{ backgroundColor: path === "/leaderBoard" ? "rgb(25, 25, 30)" : "" }}>
-                        Leader Board
-                    </Link>
-                    <button
-                        onClick={() => dispatch(createProblem())}
-                        className={`btn btn-dark rounded-0 text-white`}>
-                        Create Challenge
+                    {
+                        authenticated && <>
+                            <Link
+                                to={`/profile/${username}`}
+                                className={`btn btn-dark rounded-0 text-white ${path === `/profile/${username}` && "shadow"}`}
+                                style={{ backgroundColor: path === `/profile/${username}` ? "rgb(25, 25, 30)" : "" }}>
+                                Profile
+                            </Link>
+                            <Link
+                                to="/leaderBoard"
+                                className={`btn btn-dark rounded-0 text-white ${path === "/leaderBoard" && "shadow"}`}
+                                style={{ backgroundColor: path === "/leaderBoard" ? "rgb(25, 25, 30)" : "" }}>
+                                Leader Board
+                            </Link>
+                            <button
+                                onClick={() => dispatch(createProblem())}
+                                className={`btn btn-dark rounded-0 text-white`}>
+                                Create Challenge
                     </button>
+                        </>
+                    }
                     {
                         role === 1 && <Link
                             to="/auditList"

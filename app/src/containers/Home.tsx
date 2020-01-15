@@ -23,6 +23,7 @@ interface IHomeState {
         };
         created_at: string;
         updated_at: string;
+        user: string;
     }[];
     search: string;
 }
@@ -48,6 +49,8 @@ class Home extends React.Component<IHomeProps, IHomeState> {
         try {
             const res = await fetch(`${process.env.REACT_APP_API_SERVER}/problem`);
             const result = await res.json();
+
+            console.log(result);
 
             this.setState({
                 problemList: result.problemList
@@ -91,6 +94,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                                 title={problem.title}
                                 difficultyID={problem.difficulty_id}
                                 rating={problem.rating}
+                                user={problem.user}
                                 created_at={problem.created_at}
                                 updated_at={problem.updated_at} />
                         </div>)

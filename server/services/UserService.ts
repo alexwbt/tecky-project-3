@@ -1,4 +1,5 @@
 import * as Knex from "knex";
+import Tables from "../tables";
 
 type User = {
     id: number;
@@ -20,11 +21,15 @@ export default class UserService {
     constructor(private knex: Knex) { }
 
     async getUserWithUsername(username: string): Promise<User> {
-        return (await this.knex.select().from("user").where("username", username))[0];
+        return (await this.knex(Tables.USER).select().where("username", username))[0];
     }
 
     async getUserIdWithEmail(email: string): Promise<number> {
-        return (await this.knex.select("user_id").from("profile").where("email", email))[0];
+        return (await this.knex(Tables.PROFILE).select("user_id").where("email", email))[0];
+    }
+
+    async getUsernameWithId(id: number) {
+        return (await this.knex(Tables.USER).select("username").where({ id }))[0];
     }
 
     async register(email: string, username: string, password: string) {
@@ -41,11 +46,11 @@ export default class UserService {
     }
 
     async getProfileWithId(id: number): Promise<Profile> {
-        return (await this.knex.select().from("profile").where("user_id", id))[0];
+        return (await this.knex(Tables.PROFILE).select().where("user_id", id))[0];
     }
 
     async getLocationWithId(id: number) {
-        return (await this.knex.select("user_id", "location_id", "location.name").from("profile").leftJoin("location", function () { this.on("location_id", "=", "location.id") }).where("user_id", id))[0];
+        return (await this.knex(Tables.PROFILE).select("user_id", "location_id", "location.name").leftJoin("location", function () { this.on("location_id", "=", "location.id") }).where("user_id", id))[0];
     }
 
     //SELECT (problem.user_id),(title),(name),(status),(audit.created_at),(audit.updated_at) FROM audit LEFT JOIN problem ON (problem_id = problem.id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) WHERE (problem.user_id = `inputId`);
