@@ -39,7 +39,7 @@ export function submitProgress(problemID: number, score: number) {
             const result = await res.json();
 
             if (res.status === 200 && result.success) {
-                toast.success(`+ ${result.experience}exp`);
+                toast.success(`+ ${result.experience} exp`);
             } else {
                 toast.error(result.message);
             }

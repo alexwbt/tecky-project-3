@@ -47,7 +47,7 @@ export default class UserService {
         return (await this.knex.select("user_id", "location_id", "location.name").from("profile").leftJoin("location", function () { this.on("location_id", "=", "location.id") }).where("user_id", id))[0];
     }
 
-    //SELECT (audit.user_id),(title),(name),(status),(audit.created_at),(audit.updated_at) FROM audit INNER JOIN problem ON (problem_id = problem.id) INNER JOIN difficulty ON (difficulty_id = difficulty.id);
+    //SELECT (problem.user_id),(title),(name),(status),(audit.created_at),(audit.updated_at) FROM audit LEFT JOIN problem ON (problem_id = problem.id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) WHERE (problem.user_id = `inputId`);
     async getPostsRecord(id:number) {
         return (await this.knex.select("problem.user_id", "title", "name", "status", "audit.created_at","audit.updated_at")
         .from("audit")
@@ -57,7 +57,7 @@ export default class UserService {
     }
 
 
-    //SELECT (progress.user_id),(title),(name),(progress.score),(progress.created_at) FROM progress INNER JOIN problem ON (problem_id = problem.id) INNER JOIN difficulty ON (difficulty_id = difficulty.id);
+    //SELECT (progress.user_id),(title),(name),(progress.score),(progress.created_at) FROM progress LEFT JOIN problem ON (problem_id = problem.id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) WHERE (progress.user_id = `inputId`);
     async getSolvedRecord(id:number) {
         return (await this.knex.select("progress.user_id", "title", "name", "progress.score", "progress.created_at")
         .from("progress")
@@ -66,7 +66,7 @@ export default class UserService {
         .where("progress.user_id", id));
     }
 
-    //SELECT (user_id),(username),(experience),(location.name) FROM "user" LEFT JOIN profile ON (user_id = "user".id) LEFT JOIN location ON (location_id = location.id) ORDER BY (experience) DESC LIMIT 5;
+    //SELECT (user_id),(username),(experience),(location.name) FROM "user" INNER JOIN profile ON (profile.user_id = "user".id) LEFT JOIN location ON (location_id = location.id) WHERE (profile.role_id = 2) ORDER BY experience DESC LIMIT 5;
     async getRankingList () {
         return (await this.knex.select("user_id", "username", "experience", "location.name")
         .from("user")

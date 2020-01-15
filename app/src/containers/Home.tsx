@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 
 
 interface IHomeProps {
+    // authenticated: boolean;
     getDifficulties: () => void;
 }
 
@@ -69,7 +70,9 @@ class Home extends React.Component<IHomeProps, IHomeState> {
 
 }
 
-const mapStateToProps = (state: IRootState) => ({});
+const mapStateToProps = (state: IRootState) => ({
+    // authenticated: state.auth.authenticated
+});
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     getDifficulties: () => dispatch(getDifficultiesThunk())

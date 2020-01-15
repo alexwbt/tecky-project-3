@@ -19,6 +19,7 @@ interface ISolverProps {
             problemId: number;
         };
     };
+    authenticated: boolean;
     problem: IProblemState;
     getProblem: (id: number) => void;
 }
@@ -76,7 +77,9 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
         document.title = "BlockDojo - Solver";
 
         this.props.getProblem(this.props.match.params.problemId);
-        this.getMyRatingOfThisProblem();
+        if (this.props.authenticated) {
+            this.getMyRatingOfThisProblem();
+        }
     }
 
     componentWillUnmount() {
@@ -140,6 +143,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
+    authenticated: state.auth.authenticated,
     problem: state.problem
 });
 
