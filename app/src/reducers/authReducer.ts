@@ -5,12 +5,14 @@ export interface IAuthState {
     authenticated: boolean;
     error: boolean;
     message: string;
+    role: number;
 }
 
 const initialState: IAuthState = {
     authenticated: !!localStorage.getItem("token"),
     error: false,
-    message: ""
+    message: "",
+    role: 2
 };
 
 const authReducer = (state: IAuthState = initialState, action: AuthActions) => {
@@ -19,31 +21,36 @@ const authReducer = (state: IAuthState = initialState, action: AuthActions) => {
             return {
                 authenticated: true,
                 error: false,
-                message: ""
+                message: "",
+                role: action.role
             };
         case "LOGIN_FAILED":
             return {
                 authenticated: false,
                 error: true,
-                message: action.message
+                message: action.message,
+                role: 2
             };
         case "REGISTER_SUCCESS":
             return {
                 authenticated: state.authenticated,
                 error: false,
-                message: "Successfully Registered"
+                message: "Successfully Registered",
+                role: 2
             };
         case "REGISTER_FAILED":
             return {
                 authenticated: state.authenticated,
                 error: true,
-                message: action.message
+                message: action.message,
+                role: 2
             };
         case "LOGOUT":
             return {
                 authenticated: false,
                 error: false,
-                message: ""
+                message: "",
+                role: 2
             };
         default:
             return state;

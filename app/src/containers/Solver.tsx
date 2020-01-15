@@ -82,6 +82,10 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
         }
     }
 
+    componentDidUpdate() {
+        console.log(this.props.problem.title);
+    }
+
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateHeight);
     }

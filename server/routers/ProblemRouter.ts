@@ -16,8 +16,8 @@ export default class ProblemRouter {
         router.post("/rate", isLoggedIn, catcher(this.rateProblem));
         router.get("/userRating/:problemID", isLoggedIn, catcher(this.getProblemRatingOfUser));
         router.get("/statuses/", catcher(this.getProblemStatuses));
-        router.get("/:problemID", catcher(this.getProblem));
         router.get("/creator/:problemID", isLoggedIn, catcher(this.getProblemAsCreator));
+        router.get("/:problemID", catcher(this.getProblem));
         router.get("/", catcher(this.getProblemList));
 
         router.get("/test/", catcher(this.test));
