@@ -13,7 +13,6 @@ export interface IProblemState extends IProblemInfo {
     useVariables: boolean;
     useFunctions: boolean;
     winningCondition: WinningCondition,
-    image: File | undefined,
 
     savingMessage: string;
     saved: boolean;
@@ -30,7 +29,7 @@ const initialState: IProblemState = {
     maxUsedBlocks: 0,
     maxMoveTimes: 0,
     deduction: ([] as IProblemDeduction[]),
-    image: new File([""], "filename"),
+    image: "",
 
     // Editor
     canvas: {},
