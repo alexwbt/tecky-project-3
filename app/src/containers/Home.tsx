@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { connect } from "react-redux";
 import { IRootState, ReduxThunkDispatch } from "../store";
 import NavBar from "../components/NavBar";
@@ -13,7 +13,18 @@ interface IHomeProps {
 }
 
 interface IHomeState {
-    problemList: { id: number, title: string, difficulty_id: number, rating: { rating: number, rated: number } }[];
+    problemList: {
+        id: number;
+        title: string;
+        difficulty_id: number;
+        rating: {
+            rating: number;
+            rated: number;
+        };
+        created_at: string;
+        updated_at: string;
+    }[];
+    search: string;
 }
 
 class Home extends React.Component<IHomeProps, IHomeState> {
@@ -21,7 +32,8 @@ class Home extends React.Component<IHomeProps, IHomeState> {
     constructor(props: IHomeProps) {
         super(props);
         this.state = {
-            problemList: []
+            problemList: [],
+            search: ""
         };
     }
 
@@ -45,22 +57,43 @@ class Home extends React.Component<IHomeProps, IHomeState> {
         }
     }
 
+    private searchOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            search: event.target.value
+        });
+    };
+
     render() {
         return <div>
             <NavBar />
             <div className="container-fluid bg-light px-5">
-                <h2 className="pb-0 pt-4 px-4 mb-0">Challenges</h2>
-                <div className="row p-3">
+                <h2 className="pb-0 pt-4 px-4 mb-4">Challenges</h2>
+                <div className="row px-5">
+                    <input
+                        className="rounded-pill border p-2 pl-4 w-100"
+                        placeholder="search"
+                        value={this.state.search}
+                        onChange={this.searchOnChange}
+                    />
+                </div>
+                <div className="row p-3 px-5">
                     {
-                        this.state.problemList && this.state.problemList.map((problem, i) => <div
+                        this.state.problemList && this.state.problemList.filter(problem => {
+                            if (!this.state.search) {
+                                return true;
+                            }
+                            return problem.title.toLowerCase().search(this.state.search.toLowerCase()) !== -1;
+                        }).map((problem, i) => <div
                             key={i}
-                            className="col-sm-6 col-md-4 col-xl-3 p-3">
+                            className="col-xl-3 p-3">
                             <ChallengeBox
                                 key={i}
                                 problemID={problem.id}
                                 title={problem.title}
                                 difficultyID={problem.difficulty_id}
-                                rating={problem.rating} />
+                                rating={problem.rating}
+                                created_at={problem.created_at}
+                                updated_at={problem.updated_at} />
                         </div>)
                     }
                 </div>
