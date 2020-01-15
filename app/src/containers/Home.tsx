@@ -66,11 +66,10 @@ class Home extends React.Component<IHomeProps, IHomeState> {
     render() {
         return <div>
             <NavBar />
-            <div className="container-fluid bg-light px-5">
-                <h2 className="pb-0 pt-4 px-4 mb-4">Challenges</h2>
-                <div className="row px-5">
+            <div className="container-fluid bg-light" style={{ paddingLeft: "5%", paddingRight: "5%" }}>
+                <div className="row px-5 pt-5">
                     <input
-                        className="rounded-pill border p-2 pl-4 w-100"
+                        className="rounded-pill border p-2 pl-4 w-100 mx-3"
                         placeholder="search"
                         value={this.state.search}
                         onChange={this.searchOnChange}

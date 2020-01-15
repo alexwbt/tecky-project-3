@@ -22,7 +22,6 @@ const NavBar: React.FC<INavbarProps> = (props) => {
         role: state.auth.role
     }));
     return <div id="navigation-bar">
-
         <Navbar bg="dark" expand="md" className="py-0">
             <Navbar.Brand className="text-white">
                 Block<span className="text-info">Dojo</span>
