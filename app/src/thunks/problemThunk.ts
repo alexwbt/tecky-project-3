@@ -33,10 +33,26 @@ export function editProblem(problem: IProblemState) {
         try {
             let formData = new FormData();
             if (problem.image !== undefined) {
-                formData.append("image", problem.image);
+                const arr = problem.image.split(',');
+
+                const arr2 = arr[0].match(/:(.*?);/);
+
+                if (arr2) {
+                    const mime = arr2[1];
+                    const bstr = atob(arr[1]);
+                    let n = bstr.length;
+                    const u8arr = new Uint8Array(n);
+                    while (n--) {
+                        u8arr[n] = bstr.charCodeAt(n);
+                    }
+    
+                    const file = new File([u8arr], "cropped.png", { type: mime });
+                    formData.append("image", file);
+                }
+                problem.image = "";
             }
             formData.append("problem", JSON.stringify(problem))
-            
+
 
             const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
                 method: "PUT",

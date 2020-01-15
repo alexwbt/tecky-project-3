@@ -3,3 +3,16 @@
   -webkit-appearance: none; 
   margin: 0; 
 }
+
+.imageSize {
+  width: 300px;
+  height: 300px;
+}
+/* 
+.imagePreview {
+  object-fit: cover;
+} */
+
+.bg-lightgray {
+  background-color: lightgray;
+}
