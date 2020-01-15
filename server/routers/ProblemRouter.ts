@@ -182,6 +182,7 @@ export default class ProblemRouter {
                 success: false,
                 message: "You are not suppose to edit this challenge."
             });
+            return;
         }
 
         if (info && content) {
