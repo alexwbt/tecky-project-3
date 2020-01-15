@@ -43,7 +43,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     constructor(props: IProfileProps) {
         super(props);
         this.state = {
-            currentTab: "Info" 
+            currentTab: "Info"
         };
     }
 
@@ -110,10 +110,9 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                 <div className="row pt-2 justify-content-center">
                     {
                         this.state.currentTab === "Posts" && <div className="col-10 p-2 text-center">
-                            <h6>Posts Challenge </h6>
+                            <h6>Posts Challenge</h6>
+                            {localStorage.getItem("username") === this.props.match.params.username && <Button variant="info">Edit</Button>}
 
-                            {localStorage.getItem("username") === this.props.match.params.username && <Button variant="info">Edit</Button> }
-                            
                             <Table striped bordered hover responsive="lg" size="sm">
                                 <thead>
                                     <tr>
