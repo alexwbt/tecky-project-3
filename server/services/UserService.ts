@@ -49,31 +49,31 @@ export default class UserService {
     }
 
     //SELECT (problem.user_id),(title),(name),(status),(audit.created_at),(audit.updated_at) FROM audit LEFT JOIN problem ON (problem_id = problem.id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) WHERE (problem.user_id = `inputId`);
-    async getPostsRecord(id:number) {
-        return (await this.knex.select("problem.user_id", "title", "name", "status", "audit.created_at","audit.updated_at")
-        .from("audit")
-        .leftJoin("problem", function(){this.on("problem_id", "=", "problem.id")})
-        .leftJoin("difficulty", function(){this.on("difficulty_id","=","difficulty.id")})
-        .where("problem.user_id", id));
+    async getPostsRecord(id: number) {
+        return (await this.knex.select("problem.user_id", "title", "name", "status", "audit.created_at", "audit.updated_at")
+            .from("audit")
+            .leftJoin("problem", function () { this.on("problem_id", "=", "problem.id") })
+            .leftJoin("difficulty", function () { this.on("difficulty_id", "=", "difficulty.id") })
+            .where("problem.user_id", id));
     }
 
 
     //SELECT (progress.user_id),(title),(name),(progress.score),(progress.created_at) FROM progress LEFT JOIN problem ON (problem_id = problem.id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) WHERE (progress.user_id = `inputId`);
-    async getSolvedRecord(id:number) {
+    async getSolvedRecord(id: number) {
         return (await this.knex.select("progress.user_id", "title", "name", "progress.score", "progress.created_at")
-        .from("progress")
-        .leftJoin("problem", function(){this.on("problem_id", "=", "problem.id")})
-        .leftJoin("difficulty", function(){this.on("difficulty_id","=","difficulty.id")})
-        .where("progress.user_id", id));
+            .from("progress")
+            .leftJoin("problem", function () { this.on("problem_id", "=", "problem.id") })
+            .leftJoin("difficulty", function () { this.on("difficulty_id", "=", "difficulty.id") })
+            .where("progress.user_id", id));
     }
 
     //SELECT (user_id),(username),(experience),(location.name) FROM "user" INNER JOIN profile ON (profile.user_id = "user".id) LEFT JOIN location ON (location_id = location.id) WHERE (profile.role_id = 2) ORDER BY experience DESC LIMIT 5;
-    async getRankingList () {
+    async getRankingList() {
         return (await this.knex.select("user_id", "username", "experience", "location.name")
-        .from("user")
-        .innerJoin("profile", "profile.user_id","=","user.id")
-        .leftJoin("location", function(){this.on("location_id", "=", "location.id")})
-        .where("profile.role_id", 2) // where role = user only
-        .orderBy("experience", "DESC").limit(5));
+            .from("user")
+            .innerJoin("profile", "profile.user_id", "=", "user.id")
+            .leftJoin("location", function () { this.on("location_id", "=", "location.id") })
+            .where("profile.role_id", 2) // where role = user only
+            .orderBy("experience", "DESC").limit(5));
     }
 }
