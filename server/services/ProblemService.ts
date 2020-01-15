@@ -61,6 +61,10 @@ export default class ProblemService {
         // deduction,
         game: any
     ) {
+        const problem = (await this.knex(Tables.PROBLEM).select("user_id").where({ id }))[0];
+        if (!problem || problem.user_id !== user_id) {
+            return;
+        }
         await this.knex(Tables.PROBLEM).where({ user_id, id }).update({
             title, description, category_id, difficulty_id, status_id, score
         });
@@ -76,7 +80,7 @@ export default class ProblemService {
     }
 
     async getProblemList() {
-        const problems = await this.knex.select(["id", "title", "difficulty_id"]).from(Tables.PROBLEM);
+        const problems = await this.knex.select(["id", "title", "difficulty_id"]).from(Tables.PROBLEM).where({ status_id: 4 });
         for (let i = 0; i < problems.length; i++) {
             problems[i].rating = await this.getProblemRating(problems[i].id);
         }
