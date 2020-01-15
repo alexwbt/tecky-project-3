@@ -66,22 +66,21 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
             <div className="container bg-white border shadow" style={{ height: "100vh" }}>
                 <div className="col-12">
                     <div className="row">
-                        <div className="col-3 mt-4" style={{ display: "flex", alignItems: "center", padding: "0" }}>
-                            {/* search bar & filter tag */}
-                            {/* <SearchBar rankingList={this.props.rankingList}/> */}
+                        <div className="col-4 mt-4" style={{display:"flex",justifyContent:"flex-end",alignItems:"flex-end",padding:"0"}}>
+                            {/* search bar */}
                             <div>
                                 <input
                                     value={this.state.search}
                                     type="Search"
-                                    placeholder="Search"
+                                    placeholder="Search By Username"
                                     onChange={this.filterList}
-                                    style={{ width: "232px" }}
+                                    style={{width:"232px",borderRadius:"5px",height:"35px"}}
                                 />
                             </div>
                         </div>
 
                         {/* user image */}
-                        <div className="col-3 mt-4" style={{ display: "flex", justifyContent: "center", padding: "0" }}>
+                        <div className="col-2 mt-4" style={{ display: "flex", justifyContent: "center", padding: "0" }}>
                             <img
                                 src="https://cdn.shopify.com/s/files/1/0150/0643/3380/files/patrick.png?7948"
                                 width="130"
@@ -91,26 +90,26 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                         </div>
 
                         {/* user information (name,lv,progress bar) */}
-                        <div className="col-3 mt-4" style={{ padding: "0" }}>
+                        <div className="col-3 mt-4" style={{padding:"0"}}>
                             <h2 className="mt-3 mb-0 text-monospace text-warning text-center">{this.props.username}</h2>
-                            <h6 className="mb-0 text-monospace text-warning text-center">Lvl. 10</h6>
-                            <div className="progress rounded-pill">
-                                <div
-                                    className="mb-0 progress-bar bg-info progress-bar-striped"
+                            <h6 className="mt-3 mb-0 text-monospace text-warning text-center">Lvl. 10</h6>
+                            {/* <h6>user ranking: </h6> */}
+                            <div className="mt-3 progress rounded-pill" style={{margin:"10px"}}>
+                                <div className="mb-0 progress-bar bg-info progress-bar-striped"
                                     role="progressbar"
                                     aria-valuenow={70}
                                     aria-valuemin={0}
                                     aria-valuemax={100}
-                                    style={{ width: "70%" }}>
+                                    style={{width:"70%"}}>
                                     <span className="sr-only">70% Complete</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* user ranking */}
-                        <div className="col-3 mt-4 text-monospace text-center" style={{ border: "3px outset", backgroundColor: 'rgba(22, 152, 175, 0.7)', padding: "0", }}>
-                            <h6 style={{ marginTop: '25px', marginBottom: '20px' }}>Ranking No</h6>
-                            <h4 style={{ marginBottom: '25px' }}>(Number)</h4>
+                        <div className="col-3 mt-4 text-monospace text-center" style={{border:"6px outset",backgroundColor:'rgba(22, 152, 175, 0.7)'}}>
+                            <h4 style={{marginTop:'25px',marginBottom:'20px'}}>Ranking No:</h4>
+                            <h4 style={{marginBottom:'25px'}}>(Number)</h4>
                         </div>
                     </div>
                 </div>
@@ -132,14 +131,6 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* {
-                                    this.props.rankingList.map((ranking, i) => <tr>
-                                        <td>{i + 1}</td>
-                                        <td>{ranking.username}</td>
-                                        <td>{ranking.experience}</td>
-                                        <td>{ranking.name}</td>
-                                    </tr>)
-                                } */}
                                 {
                                     this.state.rankingList.map((ranking, i) => <tr key={i}>
                                         <td>{i + 1}</td>
