@@ -7,6 +7,9 @@ export default class Character {
     private moving = 0;
     private flip = false;
 
+    public fakeX: number;
+    public fakeY: number;
+
     public collected: Obj[] = [];
     
     private movedTime = 0;
@@ -16,7 +19,10 @@ export default class Character {
         y: (Math.random() - 0.5) * 0.1
     };
 
-    constructor(private x: number, private y: number, private type: Char) { }
+    constructor(private x: number, private y: number, private type: Char) {
+        this.fakeX = x;
+        this.fakeY = y;
+    }
 
     getX() {
         return this.x;
@@ -41,6 +47,8 @@ export default class Character {
     move(dir: number) {
         this.movedTime++;
         this.moveTo.push(dir);
+        this.fakeX += EIGHT[dir][0];
+        this.fakeY += EIGHT[dir][1];
     }
 
     getMovedTime() {

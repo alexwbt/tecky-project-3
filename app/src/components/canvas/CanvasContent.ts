@@ -187,11 +187,13 @@ export default class CanvasContent {
 
     isRoad(char: Character, dir: number) {
         if (dir >= 0 && dir < 4) {
-            const x = char.getX() + EIGHT[dir][0];
-            const y = char.getY() + EIGHT[dir][0];
-            if (x >= 0 && x < this.terrainSize && y >= 0 && y < this.terrainSize)
-                return this.terrain[x][y] === Tile.ROAD;
-            else return false;
+            const x = char.fakeX + EIGHT[dir][0];
+            const y = char.fakeY + EIGHT[dir][1];
+            return x >= 0
+                && x < this.terrainSize
+                && y >= 0
+                && y < this.terrainSize
+                && this.terrain[x][y] === Tile.ROAD;
         }
         return false;
     }
