@@ -14,7 +14,7 @@ import { Tile, Char, Obj, WinningCondition } from "../components/canvas/CanvasCo
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
 import objSprite from "../sprites/objectSprite.png";
-import { editProblem, getProblem } from "../thunks/problemThunk";
+import { editProblem, getProblemAsCreator } from "../thunks/problemThunk";
 import { IProblemState } from "../reducers/problemReducer";
 import { getCategoriesThunk } from "../thunks/categoryThunk";
 import { getDifficultiesThunk } from "../thunks/difficultyThunks";
@@ -71,7 +71,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             canvas: {
                 currentTab: "Terrain",
                 pen: 0,
-                terrainSize: 8
+                terrainSize: 0
             },
             saving: false
         };
@@ -121,7 +121,6 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
         this.props.getDifficulties();
         this.props.getProblemStatuses();
         this.props.getProblem(this.props.match.params.problemId);
-
     }
 
     componentWillUnmount() {
@@ -134,7 +133,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
             this.props.editProblem(this.props.problem);
             this.setState({ ...this.state, saving: false });
         }
-        if (this.props.problem.canvas.terrainSize
+        if (this.state.canvas.terrainSize < 8 && this.props.problem.canvas.terrainSize
             && this.props.problem.canvas.terrainSize !== this.state.canvas.terrainSize) {
             this.setState({
                 ...this.state,
@@ -209,7 +208,6 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                             }
                             {
                                 this.state.currentTab === Tab.CODE && <BlocklyArea
-                                    useInitialCode={true}
                                     useCategory={this.props.problem.useCategory}
                                     avalibleBlocks={this.props.problem.avalibleBlocks}
                                     avalibleCategories={this.props.problem.avalibleCategories}
@@ -294,6 +292,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     <h5>Settings</h5>
                     <h6 className="d-inline p-2">Terrain Size:</h6>
                     <input
+                        readOnly
                         type="number"
                         className="border-0 rounded-pill pl-2"
                         style={{ width: "3em" }}
@@ -303,7 +302,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                             this.setState({
                                 ...this.state,
                                 canvas: {
-                                    ...this.state.canvas,
+                                    currentTab: this.state.canvas.currentTab,
+                                    pen: this.state.canvas.pen,
                                     terrainSize: size
                                 }
                             });
@@ -336,7 +336,7 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     editProblem: (problem: IProblemState) => dispatch(editProblem(problem)),
-    getProblem: (id: number) => dispatch(getProblem(id)),
+    getProblem: (id: number) => dispatch(getProblemAsCreator(id)),
     getCategories: () => dispatch(getCategoriesThunk()),
     getDifficulties: () => dispatch(getDifficultiesThunk()),
     getProblemStatuses: () => dispatch(getProblemStatusesThunk()),

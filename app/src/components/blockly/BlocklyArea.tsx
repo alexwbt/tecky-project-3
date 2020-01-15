@@ -11,13 +11,13 @@ import { setCode, changed } from '../../actions/problemActions';
 interface IBlocklyAreaProps {
     className: string;
     height: number;
-    useInitialCode?: boolean;
     avalibleBlocks?: BlockList;
     avalibleCategories?: string[];
     useVariables: boolean;
     useFunctions: boolean;
     useCategory: boolean;
     code: string;
+    saved: boolean;
     setCode: (code: string) => void;
     changed: () => void;
 }
@@ -40,15 +40,13 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
             this.props.changed();
             this.props.setCode(this.getCodeXml());
         });
-        if (!this.props.useInitialCode) {
-            this.props.setCode("");
-        }
     }
 
     render() {
         return <BlocklyComponent
+            changed={!this.props.saved}
             ref={this.component}
-            initialXml={this.props.useInitialCode ? this.props.code : ""}
+            initialXml={this.props.code}
             className={this.props.className}>
             {
                 (this.props.avalibleCategories ? this.props.avalibleCategories : Object.keys(blocklyBlocks)).map((cat, i) => {
@@ -80,7 +78,8 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    code: state.problem.code
+    code: state.problem.code,
+    saved: state.problem.saved
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({

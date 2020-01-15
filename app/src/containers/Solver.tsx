@@ -47,7 +47,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     }
 
     private updateHeight = () => {
-        const nav = document.getElementById("navagation-bar");
+        const nav = document.getElementById("navigation-bar");
         this.setState({
             ...this.state,
             height: nav ? window.innerHeight - nav.clientHeight : 0
@@ -144,7 +144,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
 
 const mapStateToProps = (state: IRootState) => ({
     authenticated: state.auth.authenticated,
-    problem: state.problem
+    problem: state.problem,
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({

@@ -19,7 +19,7 @@ export function login(username: string, password: string) {
         if (res.status === 200 && result.success) {
             localStorage.setItem('token', result.token);
             localStorage.setItem('username', username);
-            dispatch(loginSuccess());
+            dispatch(loginSuccess(result.role));
             dispatch(push("/"));
         } else {
             dispatch(loginFailed(result.message));

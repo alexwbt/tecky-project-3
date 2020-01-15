@@ -61,10 +61,15 @@ export default class ProblemService {
         // deduction,
         game: any
     ) {
+        const problem = (await this.knex(Tables.PROBLEM).select("user_id").where({ id }))[0];
+        if (!problem || problem.user_id !== user_id) {
+            return false;
+        }
         await this.knex(Tables.PROBLEM).where({ user_id, id }).update({
             title, description, category_id, difficulty_id, status_id, score
         });
         await this.mongodb.collection("game").updateOne({ pid: id }, { $set: { ...game, pid: id } });
+        return true;
     }
 
     async getProblemInfo(id: number) {
@@ -76,7 +81,9 @@ export default class ProblemService {
     }
 
     async getProblemList() {
-        const problems = await this.knex.select(["id", "title", "difficulty_id"]).from(Tables.PROBLEM);
+        const problems = await this.knex(Tables.PROBLEM).select([`id`, "title", "difficulty_id", "created_at", "updated_at", "user_id"])
+            .orderBy("created_at")
+            // .where({ status_id : 4 });
         for (let i = 0; i < problems.length; i++) {
             problems[i].rating = await this.getProblemRating(problems[i].id);
         }

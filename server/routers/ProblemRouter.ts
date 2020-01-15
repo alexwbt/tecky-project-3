@@ -3,10 +3,11 @@ import * as multer from 'multer';
 import { catcher } from "../middleware";
 import { isLoggedIn } from "../passport";
 import ProblemService from "../services/ProblemService";
+import UserService from "../services/UserService";
 
 export default class ProblemRouter {
 
-    constructor(private service: ProblemService, private upload: multer.Instance) { }
+    constructor(private service: ProblemService, private userService: UserService, private upload: multer.Instance) { }
 
     router() {
         const router = Router();
@@ -15,6 +16,7 @@ export default class ProblemRouter {
         router.post("/rate", isLoggedIn, catcher(this.rateProblem));
         router.get("/userRating/:problemID", isLoggedIn, catcher(this.getProblemRatingOfUser));
         router.get("/statuses/", catcher(this.getProblemStatuses));
+        router.get("/creator/:problemID", isLoggedIn, catcher(this.getProblemAsCreator));
         router.get("/:problemID", catcher(this.getProblem));
         router.get("/", catcher(this.getProblemList));
 
@@ -24,6 +26,10 @@ export default class ProblemRouter {
 
     private getProblemList = async (req: Request, res: Response) => {
         const list = await this.service.getProblemList();
+        for (let i = 0; i < list.length; i++) {
+            list[i].user = (await this.userService.getUsernameWithId(list[i].user_id))?.username;
+            list[i].user_id = undefined;
+        }
         res.status(200).json({
             success: true,
             problemList: list
@@ -98,7 +104,7 @@ export default class ProblemRouter {
             maxMoveTimes: problem.maxMoveTimes,
             deduction: problem.deduction
         };
-        const problemID = await this.service.editProblem(
+        const success = await this.service.editProblem(
             req.user["id"],
             pid,
             title,
@@ -110,11 +116,17 @@ export default class ProblemRouter {
             game
         );
 
-        res.status(200).json({
-            success: true,
-            message: "Successfully Saved",
-            problemID
-        });
+        if (success) {
+            res.status(200).json({
+                success: true,
+                message: "Successfully Saved"
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: "You are not the creator of this challenge."
+            });
+        }
     };
 
     private getProblem = async (req: Request, res: Response) => {
@@ -131,6 +143,8 @@ export default class ProblemRouter {
         const info = await this.service.getProblemInfo(id);
         const content = await this.service.getProblemContent(id);
 
+        content.code = "";
+
         if (info && content) {
             res.status(200).json({
                 success: true,
@@ -141,9 +155,50 @@ export default class ProblemRouter {
                     difficultyID: info.difficulty_id,
                     statusID: info.status_id,
                     score: info.score,
-                    // maxUsedBlocks: 0,
-                    // maxMoveTimes: 0,
-                    // deduction: null,
+                    ...content
+                }
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: "Failed to get Challenge"
+            });
+        }
+    };
+
+    private getProblemAsCreator = async (req: Request, res: Response) => {
+        const { problemID } = req.params;
+        if (!problemID) {
+            res.status(400).json({
+                success: false,
+                message: "Challege ID Required"
+            });
+            return;
+        }
+
+        const user = await this.userService.getProfileWithId(req.user["id"]);
+        const id = parseInt(problemID);
+        const info = await this.service.getProblemInfo(id);
+        const content = await this.service.getProblemContent(id);
+
+        if (!user || (user.user_id !== info.user_id && user.role_id !== 1)) {
+            res.status(401).json({
+                success: false,
+                message: "You are not suppose to edit this challenge."
+            });
+            return;
+        }
+
+        if (info && content) {
+            res.status(200).json({
+                success: true,
+                problem: {
+                    title: info.title,
+                    description: info.description,
+                    categoryID: info.category_id,
+                    difficultyID: info.difficulty_id,
+                    statusID: info.status_id,
+                    score: info.score,
                     ...content
                 }
             });

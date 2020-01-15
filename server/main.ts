@@ -70,7 +70,7 @@ const problemImageStorage = multer.diskStorage({
 const uploadChallengeImage = multer({ storage: problemImageStorage })
 
 export const problemService = new ProblemService(knex, mongodb);
-const problemRouter = new ProblemRouter(problemService, uploadChallengeImage);
+const problemRouter = new ProblemRouter(problemService, userService, uploadChallengeImage);
 app.use("/problem", problemRouter.router());
 
 import ProgressService from "./services/ProgressService";

@@ -7,7 +7,7 @@ export interface ICategory {
 }
 
 export default class CategoryService {
-    constructor(private knex: Knex) {}
+    constructor(private knex: Knex) { }
 
     async getCategories() {
         const categories: ICategory[] = await this.knex.select("id", "name").from(Tables.CATEGORY);

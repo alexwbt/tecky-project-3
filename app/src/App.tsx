@@ -5,6 +5,7 @@ import store, { history } from './store';
 import { ConnectedRouter } from 'connected-react-router';
 import { Switch, Route } from 'react-router-dom';
 
+import AdminRoute from './components/AdminRoute';
 import PrivateRoute from './components/PrivateRoute';
 import Login from './containers/Login';
 import Home from './containers/Home';
@@ -33,6 +34,7 @@ const App: React.FC = () => {
                     <Route path="/" exact={true} component={Home} />
                     <PrivateRoute path="/profile/:username" component={Profile} />
                     <PrivateRoute path="/leaderBoard" exact={true} component={LeaderBoard} />
+                    <AdminRoute path="/auditList" exact={true} component={LeaderBoard} />
                     <Route path="/challenge/solve/:problemId" exact={true} component={Solver} />
                     <PrivateRoute path="/challenge/edit/:problemId" exact={true} component={Creator} />
                     <Route component={PageNotFound} />
