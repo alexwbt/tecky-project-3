@@ -14,7 +14,7 @@ import { Tile, Char, Obj, WinningCondition } from "../components/canvas/CanvasCo
 import tileSprite from "../sprites/tileSprite.png";
 import charSprite from "../sprites/charSprite.png";
 import objSprite from "../sprites/objectSprite.png";
-import { editProblem, getProblem } from "../thunks/problemThunk";
+import { editProblem, getProblemAsCreator } from "../thunks/problemThunk";
 import { IProblemState } from "../reducers/problemReducer";
 import { getCategoriesThunk } from "../thunks/categoryThunk";
 import { getDifficultiesThunk } from "../thunks/difficultyThunks";
@@ -208,7 +208,6 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                             }
                             {
                                 this.state.currentTab === Tab.CODE && <BlocklyArea
-                                    useInitialCode={true}
                                     useCategory={this.props.problem.useCategory}
                                     avalibleBlocks={this.props.problem.avalibleBlocks}
                                     avalibleCategories={this.props.problem.avalibleCategories}
@@ -337,7 +336,7 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     editProblem: (problem: IProblemState) => dispatch(editProblem(problem)),
-    getProblem: (id: number) => dispatch(getProblem(id)),
+    getProblem: (id: number) => dispatch(getProblemAsCreator(id)),
     getCategories: () => dispatch(getCategoriesThunk()),
     getDifficulties: () => dispatch(getDifficultiesThunk()),
     getProblemStatuses: () => dispatch(getProblemStatusesThunk()),

@@ -63,12 +63,13 @@ export default class ProblemService {
     ) {
         const problem = (await this.knex(Tables.PROBLEM).select("user_id").where({ id }))[0];
         if (!problem || problem.user_id !== user_id) {
-            throw new Error("You are not the creator of this challenge!");
+            return false;
         }
         await this.knex(Tables.PROBLEM).where({ user_id, id }).update({
             title, description, category_id, difficulty_id, status_id, score
         });
         await this.mongodb.collection("game").updateOne({ pid: id }, { $set: { ...game, pid: id } });
+        return true;
     }
 
     async getProblemInfo(id: number) {

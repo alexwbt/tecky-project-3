@@ -12,6 +12,7 @@ type Profile = {
     image?: string,
     experience: number,
     location: string,
+    role_id: number;
 };
 
 export default class UserService {

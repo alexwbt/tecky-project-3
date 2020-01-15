@@ -60,7 +60,24 @@ export function editProblem(problem: IProblemState) {
 export function getProblem(problemID: number) {
     return async (dispatch: Dispatch<ProblemActions>) => {
         try {
-            const res = await fetch(`${REACT_APP_API_SERVER}/problem/${problemID}`, {
+            const res = await fetch(`${REACT_APP_API_SERVER}/problem/${problemID}`);
+            const result = await res.json();
+
+            if (res.status === 200 && result.success) {
+                dispatch(setProblem(result.problem));
+            } else {
+                toast.error(result.message);
+            }
+        } catch (err) {
+            toast.error(err.message);
+        }
+    };
+}
+
+export function getProblemAsCreator(problemID: number) {
+    return async (dispatch: Dispatch<ProblemActions>) => {
+        try {
+            const res = await fetch(`${REACT_APP_API_SERVER}/problem/creator/${problemID}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
