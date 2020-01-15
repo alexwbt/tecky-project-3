@@ -228,6 +228,12 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                 this.content.setWinningCondition(this.props.winningCondition);
             }
         }
+
+        if (this.props.code) {
+            const workspace = new Blockly.Workspace();
+            Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
+            this.blockCount = workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length;
+        }
     }
 
     // react component
