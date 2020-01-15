@@ -29,7 +29,7 @@ const authReducer = (state: IAuthState = initialState, action: AuthActions) => {
                 authenticated: true,
                 error: false,
                 message: "",
-                role: 0
+                role: action.role
             };
         case "LOGIN_FAILED":
             return {

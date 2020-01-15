@@ -60,7 +60,8 @@ export default class UserRouter {
         }
         res.status(200).json({
             success: true,
-            token: getToken(user.id, user.username)
+            token: getToken(user.id, user.username),
+            role: (await this.service.getProfileWithId(user.id)).role_id
         });
     };
 

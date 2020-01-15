@@ -18,7 +18,7 @@ interface IBlocklyAreaProps {
     useCategory: boolean;
     code: string;
     saved: boolean;
-    setCode: (code: string) => void;
+    setCode: (code: string, count: number) => void;
     changed: () => void;
 }
 
@@ -38,7 +38,8 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
     componentDidMount() {
         this.component.current?.workspace.addChangeListener(() => {
             this.props.changed();
-            this.props.setCode(this.getCodeXml());
+            this.props.setCode(this.getCodeXml(),
+                this.component.current?.workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length);
         });
     }
 
@@ -83,7 +84,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    setCode: (code: string) => dispatch(setCode(code)),
+    setCode: (code: string, count: number) => dispatch(setCode(code, count)),
     changed: () => dispatch(changed())
 });
 

@@ -7,6 +7,7 @@ export interface IProblemState extends IProblemInfo {
     // Editor
     canvas: ICanvasContent;
     code: string;
+    count: number;
     avalibleBlocks: BlockList;
     avalibleCategories: string[];
     useCategory: boolean;
@@ -34,6 +35,7 @@ const initialState: IProblemState = {
     // Editor
     canvas: {},
     code: "",
+    count: 0,
     avalibleBlocks: {},
     avalibleCategories: [],
     useCategory: false,
@@ -130,7 +132,8 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
         case "SET_CODE":
             return {
                 ...state,
-                code: action.code
+                code: action.code,
+                count: action.count
             };
         case "SET_WINNING_CONDITION":
             return {

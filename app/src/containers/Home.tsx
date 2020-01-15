@@ -50,8 +50,6 @@ class Home extends React.Component<IHomeProps, IHomeState> {
             const res = await fetch(`${process.env.REACT_APP_API_SERVER}/problem`);
             const result = await res.json();
 
-            console.log(result);
-
             this.setState({
                 problemList: result.problemList
             });

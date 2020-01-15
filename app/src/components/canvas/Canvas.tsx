@@ -20,6 +20,7 @@ export interface ICanvasProps {
 
     content: ICanvasContent;
     code: string;
+    count: number;
     score: number;
     maxUsedBlocks: number;
     maxMoveTimes: number;
@@ -228,12 +229,6 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                 this.content.setWinningCondition(this.props.winningCondition);
             }
         }
-
-        if (this.props.code) {
-            const workspace = new Blockly.Workspace();
-            Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
-            this.blockCount = workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length;
-        }
     }
 
     // react component
@@ -292,7 +287,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                 onClick={this.run}>
                 <FontAwesomeIcon icon={this.state.running ? faStop : faPlay} />
             </button>
-            <h5 className="float-right px-2">Block Used: {this.blockCount}</h5>
+            <h5 className="float-right px-2">Block Used: {this.props.count}</h5>
         </div>
     }
 
@@ -301,6 +296,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
 const mapStateToProps = (state: IRootState) => ({
     content: state.problem.canvas,
     code: state.problem.code,
+    count: state.problem.count,
     score: state.problem.score,
     maxUsedBlocks: state.problem.maxUsedBlocks,
     maxMoveTimes: state.problem.maxMoveTimes,

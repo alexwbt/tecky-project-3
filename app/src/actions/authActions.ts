@@ -1,8 +1,9 @@
 import { CallHistoryMethodAction } from "connected-react-router";
 
-export function loginSuccess() {
+export function loginSuccess(role: number) {
     return {
-        type: "LOGIN_SUCCESS" as "LOGIN_SUCCESS"
+        type: "LOGIN_SUCCESS" as "LOGIN_SUCCESS",
+        role
     };
 }
 
