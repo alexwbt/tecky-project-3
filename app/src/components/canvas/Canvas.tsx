@@ -55,8 +55,6 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     private animationFrameRequestId: number | null = null;
     private renderStartTime: number = 0;
     private renderDelta: number = 0;
-    private fpsStartTime: number = 0;
-    private fps: number = 0;
 
     private buttons = [false, false, false];
     private mouse = { x: -1, y: -1 };
@@ -81,7 +79,6 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
         }
 
-        this.fpsStartTime = this.renderStartTime = performance.now();
         this.animationFrameRequestId = window.requestAnimationFrame(this.gameloop);
     }
 
@@ -100,8 +97,6 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             updated = true;
         }
         if (updated) {
-            this.fps++;
-
             let ctx = this.ctx;
             let canvas = this.canvas.current;
             if (ctx && canvas && this.content) {
@@ -163,13 +158,6 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                     }
                 }
             }
-        }
-
-        // FPS Counter
-        const fpsDelta = timestamp - this.fpsStartTime;
-        if (fpsDelta > 1000) {
-            this.fpsStartTime = timestamp;
-            this.fps = 0;
         }
 
         this.animationFrameRequestId = window.requestAnimationFrame(this.gameloop);
@@ -295,8 +283,10 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             </canvas>
             <button
                 className={"m-1 btn btn-" + (this.state.running ? "danger" : "success")}
-                onClick={this.run}><FontAwesomeIcon icon={this.state.running ? faStop : faPlay}
-                /></button>
+                onClick={this.run}>
+                <FontAwesomeIcon icon={this.state.running ? faStop : faPlay} />
+            </button>
+            <h5 className="float-right px-2">Block Used: {this.blockCount}</h5>
         </div>
     }
 

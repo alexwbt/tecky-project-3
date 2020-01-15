@@ -81,7 +81,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
     }
 
     private updateHeight = () => {
-        const nav = document.getElementById("navagation-bar");
+        const nav = document.getElementById("navigation-bar");
         this.setState({ ...this.state, height: window.innerHeight - (nav ? nav.clientHeight : 0) });
     };
 
