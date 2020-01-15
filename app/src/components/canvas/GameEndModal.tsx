@@ -4,8 +4,9 @@ import { IProblemDeduction } from "../../models/Problem";
 import ReactCountUp from "react-countup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamation } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { submitProgress } from "../../thunks/profileThunks";
+import { IRootState } from "../../store";
 
 
 interface IGameEndModalProps {
@@ -24,6 +25,7 @@ interface IGameEndModalProps {
 
 const GameEndModal: React.FC<IGameEndModalProps> = (props: IGameEndModalProps) => {
     const dispatch = useDispatch();
+    const authenticated = useSelector((state: IRootState) => state.auth.authenticated);
 
     if (props.deduction.length < 3) {
         return <></>
@@ -102,7 +104,7 @@ const GameEndModal: React.FC<IGameEndModalProps> = (props: IGameEndModalProps) =
             <Modal.Footer>
                 <Button variant="secondary" onClick={() => {
                     props.handleClose();
-                    if (props.problemID) {
+                    if (authenticated && props.problemID) {
                         dispatch(submitProgress(props.problemID, score));
                     }
                 }}>

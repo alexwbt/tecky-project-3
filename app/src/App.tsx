@@ -30,10 +30,10 @@ const App: React.FC = () => {
             <ConnectedRouter history={history}>
                 <Switch>
                     <Route path="/login" exact={true} component={Login} />
-                    <PrivateRoute path="/" exact={true} component={Home} />
+                    <Route path="/" exact={true} component={Home} />
                     <PrivateRoute path="/profile/:username" component={Profile} />
                     <PrivateRoute path="/leaderBoard" exact={true} component={LeaderBoard} />
-                    <PrivateRoute path="/challenge/solve/:problemId" exact={true} component={Solver} />
+                    <Route path="/challenge/solve/:problemId" exact={true} component={Solver} />
                     <PrivateRoute path="/challenge/edit/:problemId" exact={true} component={Creator} />
                     <Route component={PageNotFound} />
                 </Switch>

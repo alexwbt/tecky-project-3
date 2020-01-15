@@ -1,10 +1,11 @@
 import React, { memo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { history } from "../store";
+import { history, IRootState } from "../store";
 import { Navbar, Nav } from "react-bootstrap";
 import { logout } from "../thunks/authThunks";
 import { createProblem } from "../thunks/problemThunk";
+import { push } from "connected-react-router";
 
 
 interface INavbarProps {
@@ -16,6 +17,7 @@ const NavBar: React.FC<INavbarProps> = (props) => {
     const path = history.location.pathname;
     const dispatch = useDispatch();
     const username = localStorage.getItem("username");
+    const authenticated = useSelector((state: IRootState) => state.auth.authenticated);
     return <div id="navagation-bar">
         <Navbar bg="dark" expand="md" className="py-0">
             <Navbar.Brand className="text-white">
@@ -30,29 +32,33 @@ const NavBar: React.FC<INavbarProps> = (props) => {
                         style={{ backgroundColor: path === "/" ? "rgb(25, 25, 30)" : "" }}>
                         Home
                     </Link>
-                    <Link
-                        to={`/profile/${username}`}
-                        className={`btn btn-dark rounded-0 text-white ${path === `/profile/${username}` && "shadow"}`}
-                        style={{ backgroundColor: path === `/profile/${username}` ? "rgb(25, 25, 30)" : "" }}>
-                        Profile
-                    </Link>
-                    <Link
-                        to="/leaderBoard"
-                        className={`btn btn-dark rounded-0 text-white ${path === "/leaderBoard" && "shadow"}`}
-                        style={{ backgroundColor: path === "/leaderBoard" ? "rgb(25, 25, 30)" : "" }}>
-                        Leader Board
-                    </Link>
-                    <button
-                        onClick={() => dispatch(createProblem())}
-                        className={`btn btn-dark rounded-0 text-white`}>
-                        Create Callenge
-                    </button>
+                    {
+                        authenticated && <>
+                            <Link
+                                to={`/profile/${username}`}
+                                className={`btn btn-dark rounded-0 text-white ${path === `/profile/${username}` && "shadow"}`}
+                                style={{ backgroundColor: path === `/profile/${username}` ? "rgb(25, 25, 30)" : "" }}>
+                                Profile
+                            </Link>
+                            <Link
+                                to="/leaderBoard"
+                                className={`btn btn-dark rounded-0 text-white ${path === "/leaderBoard" && "shadow"}`}
+                                style={{ backgroundColor: path === "/leaderBoard" ? "rgb(25, 25, 30)" : "" }}>
+                                Leader Board
+                            </Link>
+                            <button
+                                onClick={() => dispatch(createProblem())}
+                                className={`btn btn-dark rounded-0 text-white`}>
+                                Create Callenge
+                            </button>
+                        </>
+                    }
                 </Nav>
                 {props.content}
                 <button
                     className="btn btn-dark rounded-0 text-white"
-                    onClick={() => dispatch(logout())}>
-                    logout
+                    onClick={() => dispatch(authenticated ? logout() : push("/login"))}>
+                    {authenticated ? "Logout" : "Login"}
                 </button>
             </Navbar.Collapse>
         </Navbar>
