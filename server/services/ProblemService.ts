@@ -63,7 +63,7 @@ export default class ProblemService {
     ) {
         const problem = (await this.knex(Tables.PROBLEM).select("user_id").where({ id }))[0];
         if (!problem || problem.user_id !== user_id) {
-            return;
+            throw new Error("You are not the creator of this challenge!");
         }
         await this.knex(Tables.PROBLEM).where({ user_id, id }).update({
             title, description, category_id, difficulty_id, status_id, score
