@@ -95,5 +95,5 @@ Blockly.JavaScript['isRoad'] = function (block: any) {
         case "LEFT": dirNum = 0; break;
         case "RIGHT": dirNum = 1; break;
     }
-    return `this.getContent(this.getPlayer(${player})).isRoad(${dirNum});\n`;
+    return [`this.getContent().isRoad(this.getPlayer(${player}), ${dirNum})`, Blockly.JavaScript.ORDER_MEMBER];
 };

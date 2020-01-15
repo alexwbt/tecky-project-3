@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import GameEndModal from "./GameEndModal";
 import { IProblemDeduction } from "../../models/Problem";
+import { toast } from "react-toastify";
 
 const Blockly = require("blockly");
 const BlocklyJS = require("blockly/javascript");
@@ -141,7 +142,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                                     break;
                                 default:
                             }
-                            this.props.setContent(this.getContent());
+                            this.props.setContent(this.content.getContent());
                             this.props.changed();
                         } else if (this.buttons[2]) {
                             switch (this.props.currentTab) {
@@ -156,7 +157,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                                     break;
                                 default:
                             }
-                            this.props.setContent(this.getContent());
+                            this.props.setContent(this.content.getContent());
                             this.props.changed();
                         }
                     }
@@ -208,7 +209,6 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                 this.blockCount = workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length;
 
                 const code = BlocklyJS.workspaceToCode(workspace);
-                console.log(code);
                 try {
                     (function (code: string) {
                         eval(code);
@@ -217,7 +217,7 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                         getContent: () => this.content
                     }, code);
                 } catch (err) {
-                    console.log(err.message);
+                    toast.error(err.message);
                 }
             }
         }
@@ -228,16 +228,12 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
         this.run();
     };
 
-    getContent() {
-        return this.content ? this.content.getContent() : {};
-    }
-
     componentDidUpdate() {
         if (this.content) {
             if (this.props.tileSprite && this.props.charSprite && this.props.objSprite && !this.state.running) {
                 this.content = new CanvasContent(this.props.content, this.props.tileSprite, this.props.charSprite, this.props.objSprite, this.gameEnd);
             }
-            if (this.props.terrainSize) {
+            if (this.props.terrainSize && this.props.terrainSize !== this.content.getTerrainSize()) {
                 this.content.setTerrainSize(this.props.terrainSize);
             }
             if (this.props.winningCondition) {
