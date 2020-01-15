@@ -16,7 +16,7 @@ const NavBar: React.FC<INavbarProps> = (props) => {
     const path = history.location.pathname;
     const dispatch = useDispatch();
     const username = localStorage.getItem("username");
-    return <div id="navagation-bar">
+    return <div id="navigation-bar">
         <Navbar bg="dark" expand="md" className="py-0">
             <Navbar.Brand className="text-white">
                 Block<span className="text-info">Dojo</span>
@@ -42,10 +42,16 @@ const NavBar: React.FC<INavbarProps> = (props) => {
                         style={{ backgroundColor: path === "/leaderBoard" ? "rgb(25, 25, 30)" : "" }}>
                         Leader Board
                     </Link>
+                    <Link
+                        to="/AuditForm"
+                        className={`btn btn-dark rounded-0 text-white ${path === "/AuditForm" && "shadow"}`}
+                        style={{ backgroundColor: path === "/AuditForm" ? "rgb(25, 25, 30)" : "" }}>
+                        Audit Form
+                    </Link>
                     <button
                         onClick={() => dispatch(createProblem())}
                         className={`btn btn-dark rounded-0 text-white`}>
-                        Create Callenge
+                        Create Challenge
                     </button>
                 </Nav>
                 {props.content}
