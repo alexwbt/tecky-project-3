@@ -14,7 +14,6 @@ import Solver from './containers/Solver';
 import Creator from './containers/Creator';
 import PageNotFound from "./containers/PageNotFound";
 import MessageBox from "./containers/MessageBox";
-import AuditForm from './containers/AuditForm';
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -36,7 +35,6 @@ const App: React.FC = () => {
                     <PrivateRoute path="/leaderBoard" exact={true} component={LeaderBoard} />
                     <Route path="/challenge/solve/:problemId" exact={true} component={Solver} />
                     <PrivateRoute path="/challenge/edit/:problemId" exact={true} component={Creator} />
-                    <PrivateRoute path="/AuditForm" exact={true} component={AuditForm} />
                     <Route component={PageNotFound} />
                 </Switch>
             </ConnectedRouter>

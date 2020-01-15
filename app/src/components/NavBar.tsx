@@ -44,13 +44,7 @@ const NavBar: React.FC<INavbarProps> = (props) => {
                         className={`btn btn-dark rounded-0 text-white ${path === "/leaderBoard" && "shadow"}`}
                         style={{ backgroundColor: path === "/leaderBoard" ? "rgb(25, 25, 30)" : "" }}>
                         Leader Board
-                    </Link>
-                    <Link
-                        to="/AuditForm"
-                        className={`btn btn-dark rounded-0 text-white ${path === "/AuditForm" && "shadow"}`}
-                        style={{ backgroundColor: path === "/AuditForm" ? "rgb(25, 25, 30)" : "" }}>
-                        Audit Form
-                    </Link>
+                    </Link>                    
                     <button
                         onClick={() => dispatch(createProblem())}
                         className={`btn btn-dark rounded-0 text-white`}>
