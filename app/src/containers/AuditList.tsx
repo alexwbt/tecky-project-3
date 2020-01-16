@@ -1,6 +1,7 @@
 import React from "react";
 import NavBar from "../components/NavBar";
 import { Form, Dropdown, Table } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 
 interface IAuditListState {
@@ -23,8 +24,27 @@ class AuditList extends React.Component<{}, IAuditListState> {
         };
     }
 
+    componentDidMount() {
+        this.getAuditList();
+    }
+
     private getAuditList = async () => {
-        
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_SERVER}/audit`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            const result = await res.json();
+
+            if (res.status === 200 && result.success) {
+                this.setState({ auditList: result.list });
+            } else {
+                toast.error(result.message);
+            }
+        } catch (err) {
+            toast.error(err.message);
+        }
     };
 
     render() {

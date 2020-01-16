@@ -153,11 +153,6 @@ export default class UserRouter {
             });
             return;
         }
-
-        const auditList = await this.service.getAuditList();
-        if (!auditList) {
-            throw new Error ("Unable to get audit list")
-        }
         
         res.status(200).json({
             success: true,

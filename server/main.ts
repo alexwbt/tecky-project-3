@@ -93,7 +93,7 @@ import AuditService from "./services/AuditService";
 import AuditRouter from "./routers/AuditRouter";
 
 export const auditService = new AuditService(knex);
-const auditRouter = new AuditRouter(auditService);
+const auditRouter = new AuditRouter(auditService, userService);
 app.use("/audit", isLoggedIn , isAdmin, auditRouter.router());
 
 // run server
