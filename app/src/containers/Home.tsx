@@ -13,19 +13,21 @@ interface IHomeProps {
 }
 
 interface IHomeState {
-    problemList: {
-        id: number;
-        title: string;
-        difficulty_id: number;
-        rating: {
-            rating: number;
-            rated: number;
-        };
-        created_at: string;
-        updated_at: string;
-        user: string;
-    }[];
+    problemList: IProblemBox[];
     search: string;
+}
+
+export interface IProblemBox {
+    id: number;
+    title: string;
+    difficulty_id: number;
+    rating: {
+        rating: number;
+        rated: number;
+    };
+    created_at: string;
+    updated_at: string;
+    user: string;
 }
 
 class Home extends React.Component<IHomeProps, IHomeState> {
@@ -75,35 +77,18 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                         <div className="row px-5 pt-5 border-bottom py-3">
                             <h3 className="col-12">Recents</h3>
                             {
-                                recents.map((r: any) => {
-                                    return this.state.problemList.find((p) => p.id === parseInt(r.pid))
-                                }).map((problem: {
-                                    id: number;
-                                    title: string;
-                                    difficulty_id: number;
-                                    rating: {
-                                        rating: number;
-                                        rated: number;
-                                    };
-                                    created_at: string;
-                                    updated_at: string;
-                                    user: string;
-                                }, i: number) => <React.Fragment key={i}>
-                                        {
-                                            !!problem && <div
+                                recents.map((r: any, i: number) => {
+                                    const problem = this.state.problemList.find((p) => p.id === parseInt(r.pid));
+                                    if (problem) {
+                                        return <React.Fragment key={i}>
+                                            <div
                                                 className="col-xl-3 p-3">
-                                                <ChallengeBox
-                                                    key={i}
-                                                    problemID={problem.id}
-                                                    title={problem.title}
-                                                    difficultyID={problem.difficulty_id}
-                                                    rating={problem.rating}
-                                                    user={problem.user}
-                                                    created_at={problem.created_at}
-                                                    updated_at={problem.updated_at} />
+                                                <ChallengeBox key={i} {...problem} />
                                             </div>
-                                        }
-                                    </React.Fragment>)
+                                        </React.Fragment>
+                                    }
+                                    return <React.Fragment key={i}></React.Fragment>
+                                })
                             }
                         </div>
                     </>
@@ -135,15 +120,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                         }).sort((a, b) => b.score - a.score).filter(p => p.score > 0).map((problem, i) => <div
                             key={i}
                             className="col-xl-3 p-3">
-                            <ChallengeBox
-                                key={i}
-                                problemID={problem.id}
-                                title={problem.title}
-                                difficultyID={problem.difficulty_id}
-                                rating={problem.rating}
-                                user={problem.user}
-                                created_at={problem.created_at}
-                                updated_at={problem.updated_at} />
+                            <ChallengeBox key={i} {...problem} />
                         </div>)
                     }
                 </div>
