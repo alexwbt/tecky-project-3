@@ -16,6 +16,7 @@ export default class UserRouter {
         router.get("/profile/:username", catcher(this.getProfile));
         router.get("/leaderBoard", catcher(this.getProfile));
         router.get("/role", isLoggedIn, catcher(this.getRole));
+        router.get("/rankingList", isLoggedIn, catcher(this.getRankingList));
         return router;
     }
 
@@ -66,8 +67,8 @@ export default class UserRouter {
     };
 
     private register = async (req: Request, res: Response) => {
-        const { email, username, password, cpassword } = req.body;
-        if (!email || !username || !password) {
+        const { email, username, password, cpassword, year } = req.body;
+        if (!email || !username || !password || !year) {
             res.status(400).json({
                 success: false,
                 message: "Email, Username and Password Required"
@@ -91,7 +92,7 @@ export default class UserRouter {
             });
             return;
         }
-        await this.service.register(email, username, await hashPassword(password));
+        await this.service.register(email, username, await hashPassword(password), year);
         res.status(200).json({
             success: true
         });
@@ -118,27 +119,38 @@ export default class UserRouter {
 
         const profile = await this.service.getProfileWithId(user.id);
         if (!profile) {
-            throw new Error("User Profile Not Found");
+            res.status(400).json({
+                success: false,
+                message: "User Profile Not Found"
+            });
+            return;
         }
 
         const location = await this.service.getLocationWithId(user.id);
         if (!location) {
-            throw new Error("User Location Not Found");
+            res.status(400).json({
+                success: false,
+                message: "User Location Not Found"
+            });
+            return;
         }
 
         const postsRecord = await this.service.getPostsRecord(user.id);
         if (!postsRecord) {
-            throw new Error("Unable to get posts records");
+            res.status(400).json({
+                success: false,
+                message: "Unable to get posts records"
+            });
+            return;
         }
 
         const solvedRecord = await this.service.getSolvedRecord(user.id);
         if (!solvedRecord) {
-            throw new Error("Unable to get solved records");
-        }
-
-        const rankingList = await this.service.getRankingList();
-        if (!rankingList) {
-            throw new Error("Unable to get ranking list");
+            res.status(400).json({
+                success: false,
+                message: "Unable to get solved records"
+            });
+            return;
         }
 
         res.status(200).json({
@@ -148,8 +160,23 @@ export default class UserRouter {
             exp: profile.experience,
             location: location.name,
             postsRecord,
-            solvedRecord,
-            rankingList,
+            solvedRecord
         });
     };
+
+    private getRankingList = async (req: Request, res: Response) => {
+        const rankingList = await this.service.getRankingList();
+        if (!rankingList) {
+            res.status(400).json({
+                success: false,
+                message: "Failed to get ranking list"
+            });
+            return;
+        }
+        res.status(200).json({
+            success: true,
+            rankingList
+        });
+    };
+
 }
