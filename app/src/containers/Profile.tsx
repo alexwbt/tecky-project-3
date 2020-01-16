@@ -126,7 +126,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                 </thead>
                                 <tbody>
                                     {
-                                        this.props.postsRecord.map((post, i) => <tr>
+                                        this.props.postsRecord.map((post, i) => <tr key={i}>
                                             <td>{i + 1}</td>
                                             <td>{post.title}</td>
                                             <td>{post.name}</td>
@@ -158,7 +158,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                 </thead>
                                 <tbody>
                                     {
-                                        this.props.solvedRecord.map((solved, i) => <tr>
+                                        this.props.solvedRecord.map((solved, i) => <tr key={i}>
                                             <td>{i + 1}</td>
                                             <td>{solved.title}</td>
                                             <td>{solved.name}</td>
