@@ -16,14 +16,6 @@ export default class AuditRouter {
     }
 
     private getAuditList = async (req: Request, res: Response) => {
-        const user = await this.userService.getProfileWithId(req.user["id"]);
-        if (!user || user.role_id !== 1) {
-            res.status(400).json({
-                success: false,
-                message: "You should not be getting this list"
-            });
-            return;
-        }
         const list = await this.service.getAuditList();
         if (list) {
             res.status(200).json({
