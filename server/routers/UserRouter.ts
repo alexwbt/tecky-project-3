@@ -15,6 +15,7 @@ export default class UserRouter {
         router.post("/register", catcher(this.register));
         router.get("/profile/:username", catcher(this.getProfile));
         router.get("/leaderBoard", catcher(this.getProfile));
+        router.get("/auditList", catcher(this.getProfile));
         router.get("/role", isLoggedIn, catcher(this.getRole));
         router.get("/rankingList", isLoggedIn, catcher(this.getRankingList));
         return router;
@@ -153,6 +154,11 @@ export default class UserRouter {
             return;
         }
 
+        const auditList = await this.service.getAuditList();
+        if (!auditList) {
+            throw new Error ("Unable to get audit list")
+        }
+        
         res.status(200).json({
             success: true,
             username: user.username,

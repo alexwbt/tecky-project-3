@@ -200,7 +200,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                             </div>
                             {
                                 this.state.currentTab === Tab.DES && <div className="col-8">
-                                    <DescriptionForm height={this.state.height} />
+                                    <DescriptionForm height={this.state.height} pid={this.props.match.params.problemId}/>
                                 </div>
                             }
                             {

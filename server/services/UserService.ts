@@ -80,4 +80,15 @@ export default class UserService {
             .where("profile.role_id", 2) // where role = user only
             .orderBy("experience", "DESC").limit(5));
     }
+
+    //SELECT (problem.title),(username),(difficulty.name),(category.name),(problem_status.name),(problem.created_at) FROM problem LEFT JOIN "user" ON (user_id = "user".id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) INNER JOIN category ON (category_id = category.id) INNER JOIN problem_status ON (problem.status_id = problem_status.id) WHERE (problem_status.id >= 2) AND (problem_status.id <= 3);
+    async getAuditList() {
+        return (await this.knex.select("problem.title","username","difficulty.name as diffName","category.name as cateName","problem_status.name as statusName","problem.created_at")
+        .from("problem")
+        .leftJoin("user","problem.user_id","=","user.id")
+        .leftJoin("difficulty", "difficulty_id","=","difficulty.id")
+        .leftJoin("category","category_id","=","category.id")
+        .leftJoin ("problem_status", "problem.status_id","=","problem_status.id")
+        .where ("problem_status.id", 2));
+    }
 }
