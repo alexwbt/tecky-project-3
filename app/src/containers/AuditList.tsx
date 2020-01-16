@@ -104,4 +104,3 @@ const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuditList);
-// export default AuditList;
