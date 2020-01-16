@@ -32,8 +32,13 @@ export function editProblem(problem: IProblemState) {
     return async (dispatch: Dispatch<ProblemActions>) => {
         try {
             let formData = new FormData();
-            if (problem.image !== undefined) {
-                const arr = problem.image.split(',');
+            const image = problem.image.slice();
+
+            problem.image = "";
+            formData.append("problem", JSON.stringify(problem))
+
+            if (image) {
+                const arr = image.split(',');
 
                 const arr2 = arr[0].match(/:(.*?);/);
 
@@ -49,10 +54,7 @@ export function editProblem(problem: IProblemState) {
                     const file = new File([u8arr], "cropped.png", { type: mime });
                     formData.append("image", file);
                 }
-                problem.image = "";
             }
-            formData.append("problem", JSON.stringify(problem))
-
 
             const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
                 method: "PUT",
