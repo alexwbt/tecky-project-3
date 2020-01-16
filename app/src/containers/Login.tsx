@@ -7,7 +7,7 @@ interface ILoginProps {
     message: string;
     error: boolean;
     login: (username: string, password: string) => void;
-    register: (email: string, username: string, password: string, cpassword: string) => void;
+    register: (email: string, username: string, password: string, cpassword: string, year: number) => void;
 }
 
 interface ILoginStates {
@@ -17,6 +17,7 @@ interface ILoginStates {
     username: string;
     password: string;
     cpassword: string;
+    year: number;
 }
 
 type FormInput = "email" | "username" | "password" | "cpassword";
@@ -31,7 +32,8 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
             email: "",
             username: "",
             password: "",
-            cpassword: ""
+            cpassword: "",
+            year: 1900
         };
     }
 
@@ -55,12 +57,14 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
         if (this.state.email
             && this.state.username
             && this.state.password
-            && this.state.cpassword === this.state.password) {
+            && this.state.cpassword === this.state.password
+            && this.state.year) {
             this.props.register(
                 this.state.email,
                 this.state.username,
                 this.state.password,
-                this.state.cpassword
+                this.state.cpassword,
+                this.state.year
             );
         }
     };
@@ -77,6 +81,10 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
     private inputChange(field: FormInput, event: React.ChangeEvent<HTMLInputElement>) {
         this.setState({ ...this.state, [field]: event.target.value });
     }
+
+    private yearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ year: parseInt(event.target.value) });
+    };
 
     renderLoginForm() {
         return <>
@@ -167,6 +175,19 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                 value={this.state.cpassword}
                 onChange={this.inputChange.bind(this, "cpassword")}
                 required />
+            <label htmlFor="cpasswordInput" className="input-group-prepend mt-1">
+                <span className="">Year Of Birth:</span>
+            </label>
+            <input
+                type="number"
+                id="date-of-birth"
+                className="form-control"
+                name="date"
+                min={1900}
+                max={2100}
+                value={this.state.year}
+                onChange={this.yearChange}
+                required />
             <div className={`pt-1 ${this.props.error ? "text-danger" : "text-success"}`}>
                 {this.props.message && this.props.message}
             </div>
@@ -213,8 +234,8 @@ const mapStateToProps = (state: IRootState) => ({
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     login: (username: string, password: string) =>
         dispatch(login(username, password)),
-    register: (email: string, username: string, password: string, cpassword: string) =>
-        dispatch(register(email, username, password, cpassword))
+    register: (email: string, username: string, password: string, cpassword: string, year: number) =>
+        dispatch(register(email, username, password, cpassword, year))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

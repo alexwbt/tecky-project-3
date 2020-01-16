@@ -1,11 +1,10 @@
 import React from "react";
 import NavBar from "../components/NavBar";
 import { Form, Dropdown, Table } from "react-bootstrap";
-import { connect } from "react-redux";
-import { getProfile } from "../thunks/profileThunks";
-import { IRootState, ReduxThunkDispatch } from "../store";
+import { toast } from "react-toastify";
 
-interface IProfileProps {
+
+interface IAuditListState {
     auditList: {
         title: string;
         username: string;
@@ -14,15 +13,39 @@ interface IProfileProps {
         statusName: string;
         created_at: string;
     }[];
-    getProfile: (username: string) => void;
 }
 
+class AuditList extends React.Component<{}, IAuditListState> {
 
-class AuditList extends React.Component<IProfileProps> {
-
-    constructor(props: IProfileProps) {
+    constructor(props: {}) {
         super(props);
+        this.state = {
+            auditList: []
+        };
     }
+
+    componentDidMount() {
+        this.getAuditList();
+    }
+
+    private getAuditList = async () => {
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_SERVER}/audit`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            const result = await res.json();
+
+            if (res.status === 200 && result.success) {
+                this.setState({ auditList: result.list });
+            } else {
+                toast.error(result.message);
+            }
+        } catch (err) {
+            toast.error(err.message);
+        }
+    };
 
     render() {
         return <>
@@ -76,7 +99,7 @@ class AuditList extends React.Component<IProfileProps> {
                             </thead>
                             <tbody>
                                 {
-                                    this.props.auditList.map((audit, i) => <tr key={i}>
+                                    this.state.auditList.map((audit, i) => <tr key={i}>
                                         <td>{i + 1}</td>
                                         <td>{audit.title}</td>
                                         <td>{audit.username}</td>
@@ -94,13 +117,4 @@ class AuditList extends React.Component<IProfileProps> {
         </>
     }
 }
-
-const mapStateToProps = (state: IRootState) => ({
-    auditList: state.profile.auditList,
-});
-
-const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    getProfile: (username: string) => dispatch(getProfile(username))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(AuditList);
+export default AuditList;

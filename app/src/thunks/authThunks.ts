@@ -32,7 +32,7 @@ export function login(username: string, password: string) {
     };
 }
 
-export function register(email: string, username: string, password: string, cpassword: string) {
+export function register(email: string, username: string, password: string, cpassword: string, year: number) {
     return async (dispatch: Dispatch<AuthActions>) => {
         try {
             const res = await fetch(`${REACT_APP_API_SERVER}/user/register`, {
@@ -44,7 +44,8 @@ export function register(email: string, username: string, password: string, cpas
                     email,
                     username,
                     password,
-                    cpassword
+                    cpassword,
+                    year
                 })
             });
             const result = await res.json();

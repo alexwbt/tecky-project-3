@@ -32,15 +32,20 @@ export default class UserService {
         return (await this.knex(Tables.USER).select("username").where({ id }))[0];
     }
 
-    async register(email: string, username: string, password: string) {
+    async getUserRoleID(id: number): Promise<number> {
+        const rows = await this.knex(Tables.PROFILE).select("role_id").where("user_id", id);
+        return rows[0]['role_id'];
+    }
+
+    async register(email: string, username: string, password: string, year: number) {
         const trx = await this.knex.transaction();
         try {
             const user_id = (await trx.returning("id").insert({ username, password }).into("user"))[0];
-            await trx.insert({ user_id, email }).into("profile");
+            await trx.insert({ user_id, email, year, role_id: 2 }).into("profile");
             trx.commit();
         } catch (err) {
             trx.rollback();
-            throw new Error("Failed To Register");
+            throw new Error(err.message);
         }
     }
 
@@ -81,14 +86,4 @@ export default class UserService {
             .orderBy("experience", "DESC").limit(5));
     }
 
-    //SELECT (problem.title),(username),(difficulty.name),(category.name),(problem_status.name),(problem.created_at) FROM problem LEFT JOIN "user" ON (user_id = "user".id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) INNER JOIN category ON (category_id = category.id) INNER JOIN problem_status ON (problem.status_id = problem_status.id) WHERE (problem_status.id >= 2) AND (problem_status.id <= 3);
-    async getAuditList() {
-        return (await this.knex.select("problem.title","username","difficulty.name as diffName","category.name as cateName","problem_status.name as statusName","problem.created_at")
-        .from("problem")
-        .leftJoin("user","problem.user_id","=","user.id")
-        .leftJoin("difficulty", "difficulty_id","=","difficulty.id")
-        .leftJoin("category","category_id","=","category.id")
-        .leftJoin ("problem_status", "problem.status_id","=","problem_status.id")
-        .where ("problem_status.id", 2));
-    }
 }
