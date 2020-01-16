@@ -24,6 +24,14 @@ export interface IProfileState {
         experience:number;
         name:string;
     }[];
+    auditList:{
+        title: string;
+        username: string;
+        diffName: string;
+        cateName: string;
+        statusName: string;
+        created_at: string;
+    }[];
 }
 
 const initialState: IProfileState = {
@@ -34,6 +42,7 @@ const initialState: IProfileState = {
     postsRecord: [],
     solvedRecord: [],
     rankingList: [],
+    auditList: [],
 };
 
 const profileReducer = (state: IProfileState = initialState, action: ProfileActions) => {
@@ -46,7 +55,8 @@ const profileReducer = (state: IProfileState = initialState, action: ProfileActi
                 location: action.location,
                 postsRecord: action.postRecord,
                 solvedRecord: action.solvedRecord,
-                rankingList: action.rankingList,                
+                rankingList: action.rankingList,
+                auditList: action.auditList,
             }
         default:
             return state;
