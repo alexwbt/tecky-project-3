@@ -96,10 +96,11 @@ export function toggleUseFunctions() {
     };
 }
 
-export function setCode(code: string) {
+export function setCode(code: string, count: number) {
     return {
         type: "SET_CODE" as "SET_CODE",
-        code
+        code,
+        count
     };
 }
 

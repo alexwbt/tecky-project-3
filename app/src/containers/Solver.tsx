@@ -11,6 +11,7 @@ import { IProblemState } from "../reducers/problemReducer";
 import BlocklyArea from "../components/blockly/BlocklyArea";
 import { getProblem } from "../thunks/problemThunk";
 import ProblemRater from "../components/ProblemRater";
+import { WinningCondition } from "../components/canvas/CanvasContent";
 
 
 interface ISolverProps {
@@ -47,7 +48,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
     }
 
     private updateHeight = () => {
-        const nav = document.getElementById("navagation-bar");
+        const nav = document.getElementById("navigation-bar");
         this.setState({
             ...this.state,
             height: nav ? window.innerHeight - nav.clientHeight : 0
@@ -107,20 +108,33 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                         }
                         <h2>{this.props.problem.title}</h2>
                         {this.state.myRating >= 0 && <ProblemRater default={this.state.myRating} problemID={this.props.match.params.problemId} />}
+                        <h6>Goal:</h6>
+                        <div className="p-2">
+                            {(() => {
+                                switch(this.props.problem.winningCondition) {
+                                    case WinningCondition.ALL_OBJECT_COLLECTED:
+                                        return "Collect all collectables.";
+                                    case WinningCondition.ALL_PLAYER_GOT_FLAG:
+                                        return "Every player have to get a flag."
+                                    case WinningCondition.ANY_PLAYER_GOT_FLAG:
+                                        return "A player have to get to the flag."
+                                }
+                            })()}
+                        </div>
                         <h6>Rules:</h6>
                         <ul className="p-2">
                             <li className="ml-3">
                                 You can use no more than {this.props.problem.maxUsedBlocks} blocks.
-                                        (-{this.props.problem.deduction[0]?.deduct}points / blocks)
-                                    </li>
+                                (-{this.props.problem.deduction[0]?.deduct}points / blocks)
+                            </li>
                             <li className="ml-3">
                                 Player can move no more than {this.props.problem.maxMoveTimes} times.
-                                        (-{this.props.problem.deduction[1]?.deduct}points / move)
-                                    </li>
+                                (-{this.props.problem.deduction[1]?.deduct}points / move)
+                            </li>
                             <li className="ml-3">
                                 Collect all collectables.
-                                        (-{this.props.problem.deduction[2]?.deduct}points / collectables missed)
-                                    </li>
+                                (-{this.props.problem.deduction[2]?.deduct}points / collectables missed)
+                            </li>
                         </ul>
                         <h6>Description:</h6>
                         <p className="p-2">{this.props.problem.description}</p>
@@ -144,7 +158,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
 
 const mapStateToProps = (state: IRootState) => ({
     authenticated: state.auth.authenticated,
-    problem: state.problem
+    problem: state.problem,
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({

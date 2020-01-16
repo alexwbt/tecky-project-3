@@ -1,5 +1,10 @@
 import React from "react";
-import { Container, Form } from "react-bootstrap";
+import { Container, Form, Modal, Button } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage } from "@fortawesome/free-regular-svg-icons";
+import ReactCrop, { Crop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+
 import { IProblemInfo, IProblemStatus } from "../models/Problem";
 import { IRootState, ReduxThunkDispatch } from '../store';
 import { connect } from "react-redux";
@@ -18,8 +23,39 @@ interface IDescriptionFormProps extends IProblemInfo {
     setDescription: (description: IProblemInfo) => void;
 }
 
+interface IDescriptionFormState {
+    imageSrc: string;
+    croppedImageSrc: string;
+    // croppedImageBlob: Blob;
+    showImageCrop: boolean;
+    imageCropCompleted: boolean;
+    // imageRef: HTMLImageElement;
+    crop: Crop;
+}
 
-class DescriptionForm extends React.Component<IDescriptionFormProps> {
+class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptionFormState> {
+    private imageRef: HTMLImageElement;
+
+    constructor(props: IDescriptionFormProps) {
+        super(props)
+
+        this.imageRef = new Image();
+
+        this.state = {
+            imageSrc: "",
+            croppedImageSrc: "",
+            // croppedImageBlob: new Blob([]),
+            showImageCrop: false,
+            imageCropCompleted: false,
+            // imageRef: new Image(),
+            crop: {
+                width: 300,
+                height: 300,
+                aspect: 1,
+            },
+        }
+    }
+
     private inputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         this.props.setDescription({
             ...this.props,
@@ -29,16 +65,110 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
         this.props.changed();
     };
 
-    private fileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files) {
-            this.props.setDescription({
-                ...this.props,
-                image: event.target.files[0]
-            });
-            // this.setState({ ...this.state, [event.target.name]: event.target.value });
-            this.props.changed();
-        }
+    private onSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const reader = new FileReader();
+            reader.addEventListener('load', () => {
+                if (reader.result) {
+                    this.setState({
+                        ...this.state,
+                        showImageCrop: true,
+                        imageSrc: reader.result as string,
+                    });
+                }
 
+            });
+            reader.readAsDataURL(event.target.files[0]);
+            event.target.value = "";
+
+            this.setState({
+                ...this.state,
+                showImageCrop: true,
+            });
+        }
+    }
+
+    private onHideImagePreview = () => {
+        this.setState({
+            ...this.state,
+            showImageCrop: false,
+        });
+    }
+
+    private onCropChange = (crop: Crop) => {
+        this.setState({
+            ...this.state,
+            crop
+        });
+    }
+
+    private onImageLoaded = (image: HTMLImageElement) => {
+        this.imageRef = image;
+    };
+
+    private onSaveImage = () => {
+        this.setState({
+            ...this.state,
+            showImageCrop: false,
+            imageCropCompleted: true,
+        });
+
+        this.props.setDescription({
+            ...this.props,
+            image: this.state.croppedImageSrc,
+        });
+        this.props.changed();
+    }
+
+    private onCropComplete = (crop: Crop) => {
+        const image = this.imageRef;
+        const canvas = document.createElement('canvas');
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+
+        if (crop.width !== undefined && crop.height !== undefined && crop.x !== undefined && crop.y !== undefined) {
+            console.log("crop true");
+            canvas.width = crop.width;
+            canvas.height = crop.height;
+            const ctx = canvas.getContext('2d');
+
+            if (ctx) {
+                ctx.drawImage(
+                    image,
+                    crop.x * scaleX,
+                    crop.y * scaleY,
+                    crop.width * scaleX,
+                    crop.height * scaleY,
+                    0,
+                    0,
+                    crop.width,
+                    crop.height
+                );
+
+                const dataURL = canvas.toDataURL();
+                this.setState({
+                    ...this.state,
+                    croppedImageSrc: dataURL,
+                    // showImageCrop: false,
+                    imageCropCompleted: false,
+                });
+
+                // canvas.toBlob((blob) => {
+                //     if (blob) {
+                //         const url = URL.createObjectURL(blob);
+                //         console.log("url", url);
+
+                //         this.setState({
+                //             ...this.state,
+                //             croppedImageSrc: url,
+                //             croppedImageBlob: blob,
+                //             // showImageCrop: false,
+                //             imageCropCompleted: false,
+                //         });
+                //     }
+                // });
+            }
+        }
     }
 
     private deductionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,7 +298,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
         }
 
         return <Container className="shadow" style={{ overflowY: "auto", height: this.props.height, padding: "20px 75px 50% 75px" }}>
-            <Form className="pb-3">
+            <Form className="pb-3" id="descForm">
                 <h2 className="pt-3">Information</h2>
                 <Form.Group controlId="formTitle">
                     <Form.Label>Title:</Form.Label>
@@ -194,13 +324,49 @@ class DescriptionForm extends React.Component<IDescriptionFormProps> {
                 </Form.Group>
 
                 <Form.Group controlId="formImage">
-                    <Form.Label>Image:</Form.Label>
+                    <Form.Label className="d-block">
+                        <div className="mb-2">Image:</div>
+
+                        <div className="border bg-lightgray d-block">
+                            <div className="bg-white m-3 imageSize">
+                                {!this.props.image && <FontAwesomeIcon icon={faImage} size="3x" className="text-black-50" />}
+                                {
+                                    this.props.image && this.state.imageCropCompleted &&
+                                    <img src={this.props.image} className="imageSize imagePreview" alt="cropped" />
+                                }
+                            </div>
+                        </div>
+                    </Form.Label>
                     <Form.Control
                         name="image"
                         type="file"
-                        accept="image/png, image/jpeg"
-                        onChange={this.fileChange} />
+                        className="d-none"
+                        accept="image/*"
+                        onChange={this.onSelectFile}
+                    />
                 </Form.Group>
+
+                <Modal centered size="lg" show={this.state.showImageCrop} onHide={this.onHideImagePreview} >
+                    <Modal.Body>
+                        <ReactCrop
+                            minWidth={300}
+                            minHeight={300}
+                            src={this.state.imageSrc}
+                            crop={this.state.crop}
+                            onImageLoaded={this.onImageLoaded}
+                            onComplete={this.onCropComplete}
+                            onChange={this.onCropChange}
+                        />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={this.onHideImagePreview}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={this.onSaveImage}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
 
                 <Form.Group controlId="formCategory">
                     <Form.Label>Category:</Form.Label>
@@ -267,6 +433,7 @@ const mapStateToProps = (state: IRootState) => ({
     maxUsedBlocks: state.problem.maxUsedBlocks,
     maxMoveTimes: state.problem.maxMoveTimes,
     deduction: state.problem.deduction,
+    image: state.problem.image,
 
     categories: state.category.list,
     difficulties: state.difficulty.list,

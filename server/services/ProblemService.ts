@@ -81,7 +81,9 @@ export default class ProblemService {
     }
 
     async getProblemList() {
-        const problems = await this.knex.select(["id", "title", "difficulty_id"]).from(Tables.PROBLEM).where({ status_id: 4 });
+        const problems = await this.knex(Tables.PROBLEM).select([`id`, "title", "difficulty_id", "created_at", "updated_at", "user_id"])
+            .orderBy("created_at")
+            // .where({ status_id : 4 });
         for (let i = 0; i < problems.length; i++) {
             problems[i].rating = await this.getProblemRating(problems[i].id);
         }

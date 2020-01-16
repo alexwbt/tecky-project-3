@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { catcher } from "../middleware";
-import { getToken } from "../passport";
+import { getToken, isLoggedIn } from "../passport";
 import { checkPassword, hashPassword } from "../hash";
 import UserService from "../services/UserService";
 
@@ -15,9 +15,25 @@ export default class UserRouter {
         router.post("/register", catcher(this.register));
         router.get("/profile/:username", catcher(this.getProfile));
         router.get("/leaderBoard", catcher(this.getProfile));
+        router.get("/role", isLoggedIn, catcher(this.getRole));
         return router;
     }
-    
+
+    private getRole = async (req: Request, res: Response) => {
+        const user = await this.service.getProfileWithId(req.user["id"]);
+        if (!user) {
+            res.status(400).json({
+                success: false,
+                message: "Failed to get user"
+            });
+            return;
+        }
+        res.status(200).json({
+            success: true,
+            role: user.role_id
+        });
+    };
+
     private login = async (req: Request, res: Response) => {
         const { username, password } = req.body;
         if (!username || !password) {
@@ -44,7 +60,8 @@ export default class UserRouter {
         }
         res.status(200).json({
             success: true,
-            token: getToken(user.id, user.username)
+            token: getToken(user.id, user.username),
+            role: (await this.service.getProfileWithId(user.id)).role_id
         });
     };
 
@@ -111,17 +128,17 @@ export default class UserRouter {
 
         const postsRecord = await this.service.getPostsRecord(user.id);
         if (!postsRecord) {
-            throw new Error ("Unable to get posts records");
-        } 
+            throw new Error("Unable to get posts records");
+        }
 
         const solvedRecord = await this.service.getSolvedRecord(user.id);
         if (!solvedRecord) {
-            throw new Error ("Unable to get solved records");
+            throw new Error("Unable to get solved records");
         }
 
         const rankingList = await this.service.getRankingList();
         if (!rankingList) {
-            throw new Error ("Unable to get ranking list");
+            throw new Error("Unable to get ranking list");
         }
 
         res.status(200).json({

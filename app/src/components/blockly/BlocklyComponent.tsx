@@ -8,6 +8,7 @@ Blockly.setLocale(locale);
 interface IBlocklyProps {
     className: string;
     initialXml: string;
+    changed: boolean;
 }
 
 export default class BlocklyComponent extends React.Component<IBlocklyProps> {
@@ -34,6 +35,13 @@ export default class BlocklyComponent extends React.Component<IBlocklyProps> {
     }
 
     componentDidUpdate() {
+        if (!this.props.changed) {
+            const { initialXml } = this.props;
+            this.primaryWorkspace.updateToolbox(this.toolbox.current);
+            if (initialXml) {
+                Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), this.primaryWorkspace);
+            }
+        }
         Blockly.svgResize(this.primaryWorkspace);
     }
 

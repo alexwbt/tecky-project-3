@@ -14,7 +14,7 @@ export default class PService {
             if (prevProgress) {
                 // submitted before
                 exp = await this.calculateUserGetExp(trx, problem_id, score, prevProgress.score);
-                
+
                 if (exp > 0) {
                     await trx(Tables.PROFILE)
                         .where("user_id", user_id)
@@ -73,7 +73,7 @@ export default class PService {
 
         const oldExp = Math.floor(prevScore / problem.score * problem.experience);
         console.log(exp, oldExp);
-        
+
         return exp - oldExp > 0 ? exp - oldExp : 0;
     }
 }

@@ -16,6 +16,9 @@ interface IChallengeBoxProps {
         rating: number;
         rated: number;
     };
+    created_at: string;
+    updated_at: string;
+    user: string;
 }
 
 const ChallengeBox: React.FC<IChallengeBoxProps> = (props: IChallengeBoxProps) => {
@@ -42,6 +45,11 @@ const ChallengeBox: React.FC<IChallengeBoxProps> = (props: IChallengeBoxProps) =
                 ({props.rating.rated})
             </h4>
             <DifficultyBox difficultyID={props.difficultyID} />
+            <div className="d-inline-block text-right" style={{ position: "absolute", bottom: 5, right: 10 }}>
+                <div>created by: {props.user}</div>
+                <div>created: {props.created_at.substr(0, 10)}</div>
+                <div>last edit: {props.updated_at.substr(0, 10)}</div>
+            </div>
         </div>
     </button>
 };

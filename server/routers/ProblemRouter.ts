@@ -16,8 +16,8 @@ export default class ProblemRouter {
         router.post("/rate", isLoggedIn, catcher(this.rateProblem));
         router.get("/userRating/:problemID", isLoggedIn, catcher(this.getProblemRatingOfUser));
         router.get("/statuses/", catcher(this.getProblemStatuses));
-        router.get("/:problemID", catcher(this.getProblem));
         router.get("/creator/:problemID", isLoggedIn, catcher(this.getProblemAsCreator));
+        router.get("/:problemID", catcher(this.getProblem));
         router.get("/", catcher(this.getProblemList));
 
         router.get("/test/", catcher(this.test));
@@ -26,6 +26,10 @@ export default class ProblemRouter {
 
     private getProblemList = async (req: Request, res: Response) => {
         const list = await this.service.getProblemList();
+        for (let i = 0; i < list.length; i++) {
+            list[i].user = (await this.userService.getUsernameWithId(list[i].user_id))?.username;
+            list[i].user_id = undefined;
+        }
         res.status(200).json({
             success: true,
             problemList: list

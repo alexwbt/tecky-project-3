@@ -1,8 +1,9 @@
 import { CallHistoryMethodAction } from "connected-react-router";
 
-export function loginSuccess() {
+export function loginSuccess(role: number) {
     return {
-        type: "LOGIN_SUCCESS" as "LOGIN_SUCCESS"
+        type: "LOGIN_SUCCESS" as "LOGIN_SUCCESS",
+        role
     };
 }
 
@@ -32,10 +33,18 @@ export function logoutSuccess() {
     };
 }
 
+export function setRole(role: number) {
+    return {
+        type: "SET_ROLE" as "SET_ROLE",
+        role
+    };
+}
+
 type ActionCreators = typeof loginSuccess
                     | typeof loginFailed
                     | typeof registerSuccess
                     | typeof registerFailed
-                    | typeof logoutSuccess;
+                    | typeof logoutSuccess
+                    | typeof setRole;
 type Actions = ReturnType<ActionCreators> | CallHistoryMethodAction;
 export default Actions;
