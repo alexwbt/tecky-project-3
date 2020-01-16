@@ -32,6 +32,11 @@ export default class UserService {
         return (await this.knex(Tables.USER).select("username").where({ id }))[0];
     }
 
+    async getUserRoleID(id: number): Promise<number> {
+        const rows = await this.knex(Tables.PROFILE).select("role_id").where("user_id", id);
+        return rows[0]['role_id'];
+    }
+
     async register(email: string, username: string, password: string, year: number) {
         const trx = await this.knex.transaction();
         try {
