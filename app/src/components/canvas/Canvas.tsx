@@ -18,6 +18,8 @@ const BlocklyJS = require("blockly/javascript");
 export interface ICanvasProps {
     problemID?: number;
 
+    saveCodeToLocal?: boolean;
+
     content: ICanvasContent;
     code: string;
     count: number;
@@ -190,24 +192,37 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
     private run = () => {
         this.setState({ ...this.state, running: !this.state.running });
 
-        if (!this.state.running) {
-            if (this.props.code) {
-                const workspace = new Blockly.Workspace();
-                Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
-
-                this.blockCount = workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length;
-
-                const code = BlocklyJS.workspaceToCode(workspace);
-                try {
-                    (function (code: string) {
-                        eval(code);
-                    }).call({
-                        getPlayer: (id: number) => this.content ? this.content.getCharacter(id) : null,
-                        getContent: () => this.content
-                    }, code);
-                } catch (err) {
-                    toast.error(err.message);
+        if (!this.state.running && this.props.code) {
+            if (this.props.saveCodeToLocal && this.props.problemID) {
+                let data = localStorage.getItem("savedCodes");
+                if (!data) {
+                    data = "[]";
                 }
+                const saves = JSON.parse(data);
+                const problem = saves.find((save: any) => save.pid === this.props.problemID);
+                if (!problem){
+                    saves.push({ pid: this.props.problemID, code: this.props.code });
+                } else {
+                    problem.code = this.props.code;
+                }
+                localStorage.setItem("savedCodes", JSON.stringify(saves));
+            }
+
+            const workspace = new Blockly.Workspace();
+            Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
+
+            this.blockCount = workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length;
+
+            const code = BlocklyJS.workspaceToCode(workspace);
+            try {
+                (function (code: string) {
+                    eval(code);
+                }).call({
+                    getPlayer: (id: number) => this.content ? this.content.getCharacter(id) : null,
+                    getContent: () => this.content
+                }, code);
+            } catch (err) {
+                toast.error(err.message);
             }
         }
     };

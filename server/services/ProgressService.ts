@@ -72,8 +72,6 @@ export default class PService {
         }
 
         const oldExp = Math.floor(prevScore / problem.score * problem.experience);
-        console.log(exp, oldExp);
-
         return exp - oldExp > 0 ? exp - oldExp : 0;
     }
 }

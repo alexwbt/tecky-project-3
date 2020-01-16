@@ -40,7 +40,6 @@ export default class UserService {
             trx.commit();
         } catch (err) {
             trx.rollback();
-            console.log(err.message);
             throw new Error("Failed To Register");
         }
     }

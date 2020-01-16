@@ -141,7 +141,7 @@ export default class ProblemRouter {
         const info = await this.service.getProblemInfo(id);
         const content = await this.service.getProblemContent(id);
 
-        content.code = "";
+        content.code = "<xml></xml>";
 
         if (info && content) {
             res.status(200).json({
