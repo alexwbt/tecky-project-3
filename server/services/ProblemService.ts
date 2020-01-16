@@ -36,11 +36,6 @@ export default class ProblemService {
         });
     }
 
-    async test() {
-        const data = await this.mongodb.collection("test").find({}).toArray();
-        console.log(data);
-    }
-
     async createProblem(user_id: number) {
         const pid = (await this.knex(Tables.PROBLEM).insert({ user_id }, ["id"]))[0].id;
         await this.mongodb.collection("game").insertOne({ pid });

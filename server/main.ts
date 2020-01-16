@@ -36,6 +36,10 @@ const mongodb = (async () => {
 import * as cors from "cors";
 app.use(cors());
 
+// image file
+import * as path from 'path'
+app.use('/uploads/images/challenge', express.static(path.join(__dirname, 'uploads/', 'image/', 'challenge/')));
+
 // Routers and Services
 import UserService from "./services/UserService";
 import UserRouter from "./routers/UserRouter";
@@ -64,7 +68,8 @@ const problemImageStorage = multer.diskStorage({
         cb(null, `${__dirname}/uploads/image/challenge/`);
     },
     filename: function (req, file, cb) {
-        cb(null, `${req.user["id"]}.${file.mimetype.split('/')[1]}`);
+        const problem = JSON.parse(req["body"].problem)
+        cb(null, `${problem.pid}.${file.mimetype.split('/')[1]}`);
     }
 })
 const uploadChallengeImage = multer({ storage: problemImageStorage })

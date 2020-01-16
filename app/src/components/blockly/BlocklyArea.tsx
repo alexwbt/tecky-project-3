@@ -26,6 +26,8 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
 
     private component: React.RefObject<BlocklyComponent>;
 
+    private shouldSave = false;
+
     constructor(props: IBlocklyAreaProps) {
         super(props);
         this.component = React.createRef();
@@ -36,10 +38,18 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
     }
 
     componentDidMount() {
-        this.component.current?.workspace.addChangeListener(() => {
-            this.props.changed();
-            this.props.setCode(this.getCodeXml(),
-                this.component.current?.workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length);
+        this.component.current?.workspace.addChangeListener((e: any) => {
+            if (e.type === "finished_loading"){
+                this.shouldSave = false;
+            }
+            if (e.type === "ui") {
+                this.shouldSave = true;
+            }
+            if (this.shouldSave) {
+                this.props.changed();
+                this.props.setCode(this.getCodeXml(),
+                    this.component.current?.workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length);
+            }
         });
     }
 

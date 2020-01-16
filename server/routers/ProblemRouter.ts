@@ -19,8 +19,6 @@ export default class ProblemRouter {
         router.get("/creator/:problemID", isLoggedIn, catcher(this.getProblemAsCreator));
         router.get("/:problemID", catcher(this.getProblem));
         router.get("/", catcher(this.getProblemList));
-
-        router.get("/test/", catcher(this.test));
         return router;
     }
 
@@ -143,7 +141,7 @@ export default class ProblemRouter {
         const info = await this.service.getProblemInfo(id);
         const content = await this.service.getProblemContent(id);
 
-        content.code = "";
+        content.code = "<xml></xml>";
 
         if (info && content) {
             res.status(200).json({
@@ -254,18 +252,4 @@ export default class ProblemRouter {
             statuses
         });
     };
-
-    private getProblemCategories = async (req: Request, res: Response) => {
-
-    };
-
-    private getProblemDifficulties = async (req: Request, res: Response) => {
-
-    };
-
-    private test = async (req: Request, res: Response) => {
-        this.service.test();
-
-    };
-
 }

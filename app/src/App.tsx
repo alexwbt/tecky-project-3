@@ -1,6 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { history } from './store';
+import { useDispatch, useSelector } from 'react-redux';
+import { history, IRootState } from './store';
 
 import { ConnectedRouter } from 'connected-react-router';
 import { Switch, Route } from 'react-router-dom';
@@ -23,7 +23,10 @@ import { getRole } from './thunks/authThunks';
 
 const App: React.FC = () => {
     const dispatch = useDispatch();
-    dispatch(getRole());
+    const authenticated = useSelector((state: IRootState) => state.auth.authenticated);
+    if (authenticated) {
+        dispatch(getRole());
+    }
     return <>
         <MessageBox />
         <ToastContainer

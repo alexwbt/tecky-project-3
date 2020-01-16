@@ -1,6 +1,10 @@
 node_modules/
 uploads/
+
 .env
+
 yarn.lock
 package-lock.json
+yarn-error.log
+
 .DS_Store

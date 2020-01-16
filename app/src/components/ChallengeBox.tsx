@@ -6,20 +6,10 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import DifficultyBox from "./DifficultyBox";
 import { useDispatch } from "react-redux";
 import { push } from "connected-react-router";
+import { IProblemBox } from "../containers/Home";
 
 
-interface IChallengeBoxProps {
-    problemID: number;
-    title: string;
-    difficultyID: number;
-    rating: {
-        rating: number;
-        rated: number;
-    };
-    created_at: string;
-    updated_at: string;
-    user: string;
-}
+interface IChallengeBoxProps extends IProblemBox { }
 
 const ChallengeBox: React.FC<IChallengeBoxProps> = (props: IChallengeBoxProps) => {
     const dispatch = useDispatch();
@@ -27,7 +17,7 @@ const ChallengeBox: React.FC<IChallengeBoxProps> = (props: IChallengeBoxProps) =
     return <button
         title={props.title}
         className="w-100 h-100 shadow p-0 text-left"
-        onClick={() => dispatch(push("/challenge/solve/" + props.problemID))}
+        onClick={() => dispatch(push("/challenge/solve/" + props.id))}
         style={{ border: "5px solid black" }}>
         <img
             className="w-100 challenge-box"
@@ -44,7 +34,7 @@ const ChallengeBox: React.FC<IChallengeBoxProps> = (props: IChallengeBoxProps) =
                 }
                 ({props.rating.rated})
             </h4>
-            <DifficultyBox difficultyID={props.difficultyID} />
+            <DifficultyBox difficultyID={props.difficulty_id} />
             <div className="d-inline-block text-right" style={{ position: "absolute", bottom: 5, right: 10 }}>
                 <div>created by: {props.user}</div>
                 <div>created: {props.created_at.substr(0, 10)}</div>

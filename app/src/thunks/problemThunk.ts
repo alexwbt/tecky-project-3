@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import ProblemActions, { setProblem, resetProblem } from "../actions/problemActions";
+import ProblemActions, { setProblem, resetProblem, setCode } from "../actions/problemActions";
 import { IProblemState } from "../reducers/problemReducer";
 import { setSaved } from "../actions/problemActions";
 import { toast } from "react-toastify";
@@ -32,8 +32,13 @@ export function editProblem(problem: IProblemState) {
     return async (dispatch: Dispatch<ProblemActions>) => {
         try {
             let formData = new FormData();
-            if (problem.image !== undefined) {
-                const arr = problem.image.split(',');
+            const image = problem.image.slice();
+
+            problem.image = "";
+            formData.append("problem", JSON.stringify(problem))
+
+            if (image) {
+                const arr = image.split(',');
 
                 const arr2 = arr[0].match(/:(.*?);/);
 
@@ -45,14 +50,11 @@ export function editProblem(problem: IProblemState) {
                     while (n--) {
                         u8arr[n] = bstr.charCodeAt(n);
                     }
-    
+
                     const file = new File([u8arr], "cropped.png", { type: mime });
                     formData.append("image", file);
                 }
-                problem.image = "";
             }
-            formData.append("problem", JSON.stringify(problem))
-
 
             const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
                 method: "PUT",
@@ -81,6 +83,13 @@ export function getProblem(problemID: number) {
 
             if (res.status === 200 && result.success) {
                 dispatch(setProblem(result.problem));
+                const data = localStorage.getItem("savedCodes");
+                if (data) {
+                    const problem = JSON.parse(data).find((save: any) => save.pid === problemID);
+                    if (problem) {
+                        dispatch(setCode(problem.code, 0));
+                    }
+                }
             } else {
                 toast.error(result.message);
             }

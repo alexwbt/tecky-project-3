@@ -100,6 +100,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                             this.tileSpriteImg.current &&
                             this.charSpriteImg.current &&
                             this.objSpriteImg.current && <Canvas
+                                saveCodeToLocal={true}
                                 problemID={this.props.match.params.problemId}
                                 tileSprite={this.tileSpriteImg.current}
                                 charSprite={this.charSpriteImg.current}

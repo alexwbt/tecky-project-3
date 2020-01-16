@@ -15,21 +15,22 @@ import { IDifficulty } from "../models/Difficulty";
 import '../css/descForm.css';
 
 interface IDescriptionFormProps extends IProblemInfo {
+    pid: number;
     height: number;
     categories: ICategory[];
     difficulties: IDifficulty[];
     problemStatuses: IProblemStatus[];
+    roleID: number;
     changed: () => void;
     setDescription: (description: IProblemInfo) => void;
 }
 
 interface IDescriptionFormState {
+    showUploadedImg: boolean;
     imageSrc: string;
     croppedImageSrc: string;
-    // croppedImageBlob: Blob;
     showImageCrop: boolean;
     imageCropCompleted: boolean;
-    // imageRef: HTMLImageElement;
     crop: Crop;
 }
 
@@ -42,12 +43,11 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
         this.imageRef = new Image();
 
         this.state = {
+            showUploadedImg: true,
             imageSrc: "",
             croppedImageSrc: "",
-            // croppedImageBlob: new Blob([]),
             showImageCrop: false,
             imageCropCompleted: false,
-            // imageRef: new Image(),
             crop: {
                 width: 300,
                 height: 300,
@@ -57,13 +57,25 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
     }
 
     private inputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        let value: string | number = event.target.value;
+        if (event.target.type === 'number') {
+            value = Math.max(Number(value), Number(event.target.getAttribute("min")))
+        }
+
         this.props.setDescription({
             ...this.props,
-            [event.target.name]: event.target.value
+            [event.target.name]: value
         });
         // this.setState({ ...this.state, [event.target.name]: event.target.value });
         this.props.changed();
     };
+
+    private handleErrorOnUploadedImg = () => {
+        this.setState({
+            ...this.state,
+            showUploadedImg: false,
+        })
+    }
 
     private onSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -98,7 +110,11 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
     private onCropChange = (crop: Crop) => {
         this.setState({
             ...this.state,
-            crop
+            crop: {
+                ...crop,
+                width: 300,
+                height: 300,
+            }
         });
     }
 
@@ -149,24 +165,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                 this.setState({
                     ...this.state,
                     croppedImageSrc: dataURL,
-                    // showImageCrop: false,
                     imageCropCompleted: false,
                 });
-
-                // canvas.toBlob((blob) => {
-                //     if (blob) {
-                //         const url = URL.createObjectURL(blob);
-                //         console.log("url", url);
-
-                //         this.setState({
-                //             ...this.state,
-                //             croppedImageSrc: url,
-                //             croppedImageBlob: blob,
-                //             // showImageCrop: false,
-                //             imageCropCompleted: false,
-                //         });
-                //     }
-                // });
             }
         }
     }
@@ -208,6 +208,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
         }
     }
 
+    
+
     renderRequirement(categoryID: number) {
         switch (categoryID) {
             case 1:
@@ -222,7 +224,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             type="number"
                             min="0"
                             required
-                            value={this.props.maxUsedBlocks ? Number(this.props.maxUsedBlocks).toString() : ""}
+                            value={this.props.maxUsedBlocks !== null ? this.props.maxUsedBlocks.toString() : ""}
                             onChange={this.inputChange} />
                     </Form.Group>
 
@@ -233,7 +235,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             type="number"
                             min="0"
                             required
-                            value={this.props.maxMoveTimes ? Number(this.props.maxMoveTimes).toString() : ""}
+                            value={this.props.maxMoveTimes !== null ? Number(this.props.maxMoveTimes).toString() : ""}
                             onChange={this.inputChange} />
                     </Form.Group>
 
@@ -245,7 +247,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             type="number"
                             min="0"
                             required
-                            value={this.props.deduction[0] ? (this.props.deduction[0].deduct !== 0 ? Number(this.props.deduction[0].deduct).toString() : "") : ""}
+                            // value={this.props.deduction[0] ? (this.props.deduction[0].deduct !== 0 ? Number(this.props.deduction[0].deduct).toString() : "") : ""}
+                            value={this.props.deduction[0]  ? this.props.deduction[0].deduct.toString() : "0" }
                             onChange={this.deductionChange} />
                     </Form.Group>
 
@@ -256,7 +259,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             type="number"
                             min="0"
                             required
-                            value={this.props.deduction[1] ? (this.props.deduction[1].deduct !== 0 ? Number(this.props.deduction[1].deduct).toString() : "") : ""}
+                            // value={this.props.deduction[1] ? (this.props.deduction[1].deduct !== 0 ? Number(this.props.deduction[1].deduct).toString() : "") : ""}
+                            value={this.props.deduction[1]  ? this.props.deduction[1].deduct.toString() : "0" }
                             onChange={this.deductionChange} />
                     </Form.Group>
 
@@ -267,7 +271,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             type="number"
                             min="0"
                             required
-                            value={this.props.deduction[2] ? (this.props.deduction[2].deduct !== 0 ? Number(this.props.deduction[2].deduct).toString() : "") : ""}
+                            // value={this.props.deduction[2] ? (this.props.deduction[2].deduct !== 0 ? Number(this.props.deduction[2].deduct).toString() : "") : ""}
+                            value={this.props.deduction[2]  ? this.props.deduction[2].deduct.toString() : "0" }
                             onChange={this.deductionChange} />
                     </Form.Group>
                 </>
@@ -277,26 +282,54 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
 
     }
 
-    render() {
-        let selectableStatuses: number[] = [];
-        switch (Number(this.props.statusID)) {
-            case 1:
-            case 2:
-                // WIP & Ready to audit
-                selectableStatuses = [1, 2];
-                break;
-            case 3:
-                // Rejected & Ready to audit
-                selectableStatuses = [3, 2];
-                break;
-            case 4:
-                // Published
-                selectableStatuses = [4];
-                break;
-            default:
-                break;
-        }
+    private getSelectableStatuses = () => {
+        if (this.props.roleID === 1) {
+            const statuses: IProblemStatus[] = [
+                {
+                    id: 4,
+                    name: 'Approved'
+                },
+                {
+                    id: 3,
+                    name: 'Rejected'
+                }
+            ]
 
+            return statuses;
+        } else {
+            let ids: number[] = [];
+
+            switch (Number(this.props.statusID)) {
+                case 1:
+                case 2:
+                    // WIP & Ready to audit
+                    ids = [1, 2];
+                    break;
+                case 3:
+                    // Rejected & Ready to audit
+                    ids = [3, 2];
+                    break;
+                case 4:
+                    // Published
+                    ids = [4];
+                    break;
+                default:
+                    break;
+            }
+
+            const statuses = this.props.problemStatuses.filter(status =>
+                ids.indexOf(status.id) >= 0
+            ).sort((s1, s2) =>
+                ids.indexOf(s1.id) - ids.indexOf(s2.id)
+            )
+
+            return statuses;
+        }
+    }
+
+    render() {
+        console.log(this.state);
+        
         return <Container className="shadow" style={{ overflowY: "auto", height: this.props.height, padding: "20px 75px 50% 75px" }}>
             <Form className="pb-3" id="descForm">
                 <h2 className="pt-3">Information</h2>
@@ -329,10 +362,21 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
 
                         <div className="border bg-lightgray d-block">
                             <div className="bg-white m-3 imageSize">
-                                {!this.props.image && <FontAwesomeIcon icon={faImage} size="3x" className="text-black-50" />}
                                 {
-                                    this.props.image && this.state.imageCropCompleted &&
-                                    <img src={this.props.image} className="imageSize imagePreview" alt="cropped" />
+                                    ((this.props.image && this.state.imageCropCompleted) || (this.state.showUploadedImg)) &&
+                                    <img
+                                    src={this.props.image ? this.props.image : `${process.env.REACT_APP_CHALLENGE_IMAGE_LINK}/${this.props.pid}.png`}
+                                    onError={this.handleErrorOnUploadedImg}
+                                    className="imageSize imagePreview"
+                                    alt="cropped" />
+                                }
+                                {
+
+                                    !this.props.image && !this.state.showUploadedImg &&
+                                    <div className="d-flex flex-column justify-content-center align-items-center h-100 btn btn-light">
+                                        <FontAwesomeIcon icon={faImage} size="3x" className="text-black-50" />
+                                        Upload
+                                    </div>
                                 }
                             </div>
                         </div>
@@ -351,6 +395,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                         <ReactCrop
                             minWidth={300}
                             minHeight={300}
+                            maxWidth={300}
+                            maxHeight={300}
                             src={this.state.imageSrc}
                             crop={this.state.crop}
                             onImageLoaded={this.onImageLoaded}
@@ -395,7 +441,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                         type="number"
                         min="0"
                         required
-                        value={this.props.score ? Number(this.props.score).toString() : ""}
+                        value={this.props.score !== null ? this.props.score.toString() : ""}
                         onChange={this.inputChange} />
                 </Form.Group>
 
@@ -405,13 +451,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                 <Form.Group controlId="formStatus">
                     <Form.Label>Status:</Form.Label>
                     <Form.Control name="statusID" as="select" value={this.props.statusID.toString()} onChange={this.inputChange}>
-
                         {
-                            this.props.problemStatuses.filter(status =>
-                                selectableStatuses.indexOf(status.id) >= 0
-                            ).sort((s1, s2) =>
-                                selectableStatuses.indexOf(s1.id) - selectableStatuses.indexOf(s2.id)
-                            ).map(status =>
+                            this.getSelectableStatuses().map(status =>
                                 <option key={status.id} value={status.id}>{status.name}</option>
                             )
                         }
@@ -438,6 +479,7 @@ const mapStateToProps = (state: IRootState) => ({
     categories: state.category.list,
     difficulties: state.difficulty.list,
     problemStatuses: state.problemStatuses.list,
+    roleID: state.auth.role,
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
