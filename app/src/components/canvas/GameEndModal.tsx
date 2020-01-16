@@ -27,7 +27,7 @@ const GameEndModal: React.FC<IGameEndModalProps> = (props: IGameEndModalProps) =
     const dispatch = useDispatch();
     const authenticated = useSelector((state: IRootState) => state.auth.authenticated);
 
-    if (props.deduction.length < 3) {
+    if (!props.deduction[0] || !props.deduction[1] || !props.deduction[2]) {
         return <></>
     }
 
