@@ -201,10 +201,11 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                 const saves = JSON.parse(data);
                 const problem = saves.find((save: any) => save.pid === this.props.problemID);
                 if (!problem){
-                    saves.push({ pid: this.props.problemID, code: this.props.code });
+                    saves.unshift({ pid: this.props.problemID, code: this.props.code });
                 } else {
                     problem.code = this.props.code;
                 }
+                console.log(saves);
                 localStorage.setItem("savedCodes", JSON.stringify(saves));
             }
 

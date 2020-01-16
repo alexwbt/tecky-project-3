@@ -65,18 +65,59 @@ class Home extends React.Component<IHomeProps, IHomeState> {
     };
 
     render() {
+        const data = localStorage.getItem("savedCodes");
+        const recents = JSON.parse(data ? data : "[]");
         return <div>
             <NavBar />
             <div className="container-fluid bg-light" style={{ paddingLeft: "5%", paddingRight: "5%" }}>
-                <div className="row px-5 pt-5">
-                    <input
-                        className="rounded-pill border p-2 pl-4 w-100 mx-3"
-                        placeholder="search"
-                        value={this.state.search}
-                        onChange={this.searchOnChange}
-                    />
-                </div>
+                {
+                    !!data && this.state.problemList && <>
+                        <div className="row px-5 pt-5 border-bottom py-3">
+                            <h3 className="col-12">Recents</h3>
+                            {
+                                recents.map((r: any) => {
+                                    return this.state.problemList.find((p) => p.id === parseInt(r.pid))
+                                }).map((problem: {
+                                    id: number;
+                                    title: string;
+                                    difficulty_id: number;
+                                    rating: {
+                                        rating: number;
+                                        rated: number;
+                                    };
+                                    created_at: string;
+                                    updated_at: string;
+                                    user: string;
+                                }, i: number) => <React.Fragment key={i}>
+                                        {
+                                            !!problem && <div
+                                                className="col-xl-3 p-3">
+                                                <ChallengeBox
+                                                    key={i}
+                                                    problemID={problem.id}
+                                                    title={problem.title}
+                                                    difficultyID={problem.difficulty_id}
+                                                    rating={problem.rating}
+                                                    user={problem.user}
+                                                    created_at={problem.created_at}
+                                                    updated_at={problem.updated_at} />
+                                            </div>
+                                        }
+                                    </React.Fragment>)
+                            }
+                        </div>
+                    </>
+                }
                 <div className="row p-3 px-5">
+                    <h3 className="col-12">All Challenges</h3>
+                    <div className="col-12 px-3">
+                        <input
+                            className="rounded-pill border p-2 pl-4 w-100"
+                            placeholder="search"
+                            value={this.state.search}
+                            onChange={this.searchOnChange}
+                        />
+                    </div>
                     {
                         this.state.problemList && this.state.problemList.map(problem => {
                             if (!this.state.search) {
