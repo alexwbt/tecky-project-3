@@ -37,15 +37,15 @@ export default class UserService {
         return rows[0]['role_id'];
     }
 
-    async register(email: string, username: string, password: string) {
+    async register(email: string, username: string, password: string, year: number) {
         const trx = await this.knex.transaction();
         try {
             const user_id = (await trx.returning("id").insert({ username, password }).into("user"))[0];
-            await trx.insert({ user_id, email }).into("profile");
+            await trx.insert({ user_id, email, year, role_id: 2 }).into("profile");
             trx.commit();
         } catch (err) {
             trx.rollback();
-            throw new Error("Failed To Register");
+            throw new Error(err.message);
         }
     }
 
