@@ -21,7 +21,9 @@ const ChallengeBox: React.FC<IChallengeBoxProps> = (props: IChallengeBoxProps) =
         <img
             className="w-100 challenge-box"
             src={`${process.env.REACT_APP_CHALLENGE_IMAGE_LINK}/${props.id}.png`}
-            onError={(event) => {event.currentTarget.src = "https://cdn.shopify.com/s/files/1/0150/0643/3380/files/patrick.png?7948"}}
+            onError={(event) => {
+                event.currentTarget.src = "https://cdn.shopify.com/s/files/1/0150/0643/3380/files/patrick.png?7948";
+            }}
             alt="problem-icon" />
         <div className="challenge-box-des">
             <h5 style={{ overflow: "hidden" }}>{props.title}</h5>
