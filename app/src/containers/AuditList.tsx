@@ -1,6 +1,6 @@
 import React , {ChangeEvent} from "react";
 import NavBar from "../components/NavBar";
-import { Form, Dropdown, Table } from "react-bootstrap";
+import { Form, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { push } from "connected-react-router";
 import { connect } from "react-redux";
@@ -80,7 +80,7 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
                                 onChange={this.searchOnChange}
                             />
 
-                            {/* Difficulty dropdown list */}
+                            {/* Difficulty dropdown list
                             <Dropdown>
                                 <Dropdown.Toggle id="difficulty" variant="info" style={{ width: "130px", marginRight: "10px" }}>Difficulty</Dropdown.Toggle>
                                 <Dropdown.Menu >
@@ -91,13 +91,13 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
                                 </Dropdown.Menu>
                             </Dropdown>
 
-                            {/* Category dropdown list */}
+                            Category dropdown list
                             <Dropdown>
                                 <Dropdown.Toggle id="category" variant="info" style={{ width: "130px", justifyContent: "flex-end" }}>Category</Dropdown.Toggle>
                                 <Dropdown.Menu >
                                     <Dropdown.Item eventKey="1">Maze</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
+                                </Dropdown.Menu> */}
+                            {/* </Dropdown> */}
                         </Form>
                     </div>
 

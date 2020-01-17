@@ -1,10 +1,12 @@
 import React from "react";
-import { Button, Table } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import TabSelect from "../components/TabSelect";
+import DifficultyBox from "../components/DifficultyBox";
+import { Button, Table } from "react-bootstrap";
 import { connect } from "react-redux";
 import { getProfile } from "../thunks/profileThunks";
 import { IRootState, ReduxThunkDispatch } from "../store";
+import { getDifficultiesThunk } from "../thunks/difficultyThunks";
 
 interface IProfileProps {
     match: {
@@ -23,18 +25,19 @@ interface IProfileProps {
     location: string;
     postsRecord: {
         title: string;
-        diffName: string;
+        difficulty_id: number;
         statusName: string;
         created_at: string;
         updated_at: string;
     }[];
     solvedRecord: {
         title: string;
-        name: string;
+        difficulty_id: number;
         score: number;
         created_at: string;
     }[];
     getProfile: (username: string) => void;
+    getDifficulties: () => void;
 }
 
 interface IProfileState {
@@ -54,6 +57,8 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 
     componentDidMount() {
         document.title = "BlockDojo - Profile";
+        
+        this.props.getDifficulties();
         this.props.getProfile(this.props.match.params.username);
     }
 
@@ -68,7 +73,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
         }
         return <>
             <NavBar />
-            <div className="container bg-white border shadow" style={{ height: "100vh" }}>
+            <div className="container bg-white border shadow" style={{ height: "100vh", overflow: "auto" }}>
                 <div className="row">
                     <div className="col-12 text-center mt-4">
                         <img
@@ -139,7 +144,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                         this.props.postsRecord.map((post, i) => <tr key={i}>
                                             <td>{i + 1}</td>
                                             <td>{post.title}</td>
-                                            <td>{post.diffName}</td>
+                                            <td className="text-white"><DifficultyBox difficultyID={post.difficulty_id} /></td>
                                             <td>{post.statusName}</td>
                                             <td>{post.created_at.substr(0, 10)}</td>
                                             <td>{post.updated_at.substr(0, 10)}</td>
@@ -171,7 +176,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                         this.props.solvedRecord.map((solved, i) => <tr key={i}>
                                             <td>{i + 1}</td>
                                             <td>{solved.title}</td>
-                                            <td>{solved.name}</td>
+                                            <td className="text-white"><DifficultyBox difficultyID={solved.difficulty_id} /></td>
                                             <td>{solved.score}</td>
                                             <td>{solved.created_at.substr(0, 10)}</td>
                                         </tr>)
@@ -198,7 +203,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    getProfile: (username: string) => dispatch(getProfile(username))
+    getProfile: (username: string) => dispatch(getProfile(username)),
+    getDifficulties: () => dispatch(getDifficultiesThunk())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

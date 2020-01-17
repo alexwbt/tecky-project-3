@@ -78,9 +78,8 @@ export default class UserService {
     //with public records only
     async getPublishedPostsRecord(id: number) {
         return (await this.knex.select
-            (`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}.name as diffName`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
+            (`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}_id`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
             .from(`${Tables.PROBLEM}`)
-            .leftJoin(`${Tables.DIFFICULTY}`,`difficulty_id`,`=`,`${Tables.DIFFICULTY}.id`)
             .leftJoin(`${Tables.PROBLEM_STATUS}`,`problem.status_id`,`=`,`${Tables.PROBLEM_STATUS}.id`)
             .where(`${Tables.PROBLEM}.user_id`,id)
             .andWhere(`${Tables.PROBLEM_STATUS}.id`,4));
@@ -89,15 +88,14 @@ export default class UserService {
     //with all status posted records
     async getOwnPostsRecord(id:number) { 
         return (await this.knex.select
-            (`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}.name as diffName`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
+            (`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}_id`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
             .from(`${Tables.PROBLEM}`)
-            .leftJoin(`${Tables.DIFFICULTY}`,`difficulty_id`,`=`,`${Tables.DIFFICULTY}.id`)
             .leftJoin(`${Tables.PROBLEM_STATUS}`,`problem.status_id`,`=`,`${Tables.PROBLEM_STATUS}.id`)
             .where(`${Tables.PROBLEM}.user_id`,id));
         }
 
     async getSolvedRecord(id: number) {
-        return (await this.knex.select("progress.user_id", "title", "name", "progress.score", "progress.created_at")
+        return (await this.knex.select("progress.user_id", "title", "problem.difficulty_id", "progress.score", "progress.created_at")
             .from("progress")
             .leftJoin("problem", function () { this.on("problem_id", "=", "problem.id") })
             .leftJoin("difficulty", function () { this.on("difficulty_id", "=", "difficulty.id") })

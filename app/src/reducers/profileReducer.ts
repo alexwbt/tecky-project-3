@@ -13,14 +13,14 @@ export interface IProfileState {
     location: string;
     postsRecord: {
         title: string;
-        diffName: string;
+        difficulty_id: number;
         statusName: string;
         created_at: string;
         updated_at: string;
     }[];
     solvedRecord: {
         title: string;
-        name: string;
+        difficulty_id: number;
         score: number;
         created_at: string;
     }[];

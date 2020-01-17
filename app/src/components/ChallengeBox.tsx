@@ -1,12 +1,11 @@
 import React from "react";
-
 import "../css/ChallengeBox.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
 import DifficultyBox from "./DifficultyBox";
-import { useDispatch } from "react-redux";
 import { push } from "connected-react-router";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
 import { IProblemBox } from "../containers/Home";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 interface IChallengeBoxProps extends IProblemBox { }
