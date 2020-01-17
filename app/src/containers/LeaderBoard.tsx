@@ -10,6 +10,11 @@ import { toast } from "react-toastify";
 interface IProfileProps {
     username: string;
     exp: number;
+    level: {
+        lvl: number,
+        exp: number,
+        req: number
+    };
     rankingList: {
         username: string;
         experience: number;
@@ -71,14 +76,6 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
         }
     }
 
-    private filterList = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        this.setState({ search: event.target.value });
-        const search = event.target.value.toLowerCase();
-        if (search) {
-
-        }
-    };
-
     render() {
         return <div>
             <NavBar />
@@ -93,7 +90,7 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                             alt="user-icon" />
                         <div className="pl-3 pr-5 d-inline-block align-top">
                             <h2 className="my-0 text-monospace">{this.props.username}</h2>
-                            <h6 className="my-0 text-monospace text-warning pl-1">Lvl. 10</h6>
+                            <h6 className="my-0 text-monospace text-warning pl-1">Lvl. {this.props.level?.lvl}</h6>
                             <h2 className="my-0 text-monospace text-warning">Rank.{this.state.userRank}</h2>
                         </div>
                     </div>
@@ -102,14 +99,8 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                             className="rounded-pill border p-2 pl-4 w-100"
                             value={this.state.search}
                             placeholder="Search for user"
-                            onChange={this.filterList} />
+                            onChange={(event) => this.setState({ search: event.target.value })} />
                     </div>
-
-                    {/* user ranking */}
-                    {/* <div className="col-3 mt-4 text-monospace text-center" style={{ border: "6px outset", backgroundColor: 'rgba(22, 152, 175, 0.7)' }}>
-                        <h4 style={{ marginTop: '25px', marginBottom: '20px' }}>Ranking No:</h4>
-                        <h4 style={{ marginBottom: '25px' }}>(Number)</h4>
-                    </div> */}
 
                 </div>
 
@@ -157,7 +148,8 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    username: state.profile.username
+    username: state.profile.username,
+    level: state.profile.level
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({

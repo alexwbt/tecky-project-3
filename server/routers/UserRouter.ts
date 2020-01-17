@@ -159,6 +159,7 @@ export default class UserRouter {
             username: user.username,
             email: profile.email,
             exp: profile.experience,
+            level: profile.level,
             location: location.name,
             postsRecord,
             solvedRecord

@@ -7,7 +7,6 @@ import { faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { submitProgress } from "../../thunks/profileThunks";
 import { IRootState } from "../../store";
-import { toast } from "react-toastify";
 
 
 interface IGameEndModalProps {

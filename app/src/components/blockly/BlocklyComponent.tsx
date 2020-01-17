@@ -36,10 +36,19 @@ export default class BlocklyComponent extends React.Component<IBlocklyProps> {
 
     componentDidUpdate() {
         if (!this.props.changed) {
-            this.primaryWorkspace.updateToolbox(this.toolbox.current);
-            if (this.props.initialXml) {
+            const { initialXml, children, ...rest } = this.props;
+            try {
+                this.primaryWorkspace.updateToolbox(this.toolbox.current);
+            } catch (err) {
+                this.primaryWorkspace = Blockly.inject(this.blocklyDiv.current, {
+                    toolbox: this.toolbox.current,
+                    ...rest
+                });
+                this.forceUpdate();
+            }
+            if (initialXml) {
                 this.primaryWorkspace.clear();
-                Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(this.props.initialXml), this.primaryWorkspace);
+                Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), this.primaryWorkspace);
             }
         }
         Blockly.svgResize(this.primaryWorkspace);

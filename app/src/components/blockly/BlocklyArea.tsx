@@ -6,7 +6,6 @@ import "./customBlocks.ts";
 import { getBlock, BlockList, blocklyBlocks } from './toolbox';
 import { IRootState, ReduxThunkDispatch } from '../../store';
 import { setCode, changed } from '../../actions/problemActions';
-import { toast } from 'react-toastify';
 
 const Blockly = require('blockly/core');
 
@@ -70,7 +69,7 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
             {
                 (this.props.avalibleCategories ? this.props.avalibleCategories : Object.keys(blocklyBlocks)).map((cat, i) => {
                     if (this.props.useCategory) {
-                        return <Category name={cat} categorystyle={`${cat.toLowerCase()}_category`} key={i}>
+                        return <Category name={cat} /*categorystyle={`${cat.toLowerCase()}_category`}*/ key={i}>
                             {(this.props.avalibleBlocks ? this.props.avalibleBlocks : blocklyBlocks)[cat]
                                 .map((block: string, i: number) => <React.Fragment key={i}>
                                     {getBlock(block)}
@@ -86,11 +85,11 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
             }
             {
                 this.props.useVariables &&
-                <Category name="Variables" categorystyle="variable_category" custom="VARIABLE"></Category>
+                <Category name="Variables" /*categorystyle="variable_category"*/ custom="VARIABLE"></Category>
             }
             {
                 this.props.useFunctions &&
-                <Category name="Functions" categorystyle="procedure_category" custom="PROCEDURE"></Category>
+                <Category name="Functions" /*categorystyle="procedure_category"*/ custom="PROCEDURE"></Category>
             }
         </BlocklyComponent>
     }
