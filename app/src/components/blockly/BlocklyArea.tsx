@@ -6,6 +6,9 @@ import "./customBlocks.ts";
 import { getBlock, BlockList, blocklyBlocks } from './toolbox';
 import { IRootState, ReduxThunkDispatch } from '../../store';
 import { setCode, changed } from '../../actions/problemActions';
+import { toast } from 'react-toastify';
+
+const Blockly = require('blockly/core');
 
 
 interface IBlocklyAreaProps {
@@ -39,16 +42,21 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
 
     componentDidMount() {
         this.component.current?.workspace.addChangeListener((e: any) => {
-            if (e.type === "finished_loading"){
+            if (e.type === "finished_loading") {
                 this.shouldSave = false;
             }
             if (e.type === "ui") {
                 this.shouldSave = true;
             }
+
             if (this.shouldSave) {
                 this.props.changed();
-                this.props.setCode(this.getCodeXml(),
-                    this.component.current?.workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length);
+                this.props.setCode(this.getCodeXml(), this.component.current?.workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length);
+            } else if (this.props.code) {
+                const workspace = new Blockly.Workspace();
+                Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
+                const blockCount = workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length;
+                this.props.setCode(this.props.code, blockCount);
             }
         });
     }

@@ -95,7 +95,7 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
             <img ref={this.objSpriteImg} src={objSprite} className={"d-none"} alt={"sprite"} />
             <div className="container-fluid p-0 bg-light">
                 <div className="row w-100 m-0" style={{ height: this.state.height }}>
-                    <div className="col-4 p-1" style={{ overflowY: "auto", height: this.state.height }}>
+                    <div className="col-4 p-2" style={{ overflowY: "auto", height: this.state.height }}>
                         {
                             this.tileSpriteImg.current &&
                             this.charSpriteImg.current &&
@@ -107,38 +107,40 @@ class Solver extends React.Component<ISolverProps, ISolverStates> {
                                 objSprite={this.objSpriteImg.current}
                                 editable={false} />
                         }
-                        <h2>{this.props.problem.title}</h2>
-                        {this.state.myRating >= 0 && <ProblemRater default={this.state.myRating} problemID={this.props.match.params.problemId} />}
-                        <h6>Goal:</h6>
-                        <div className="p-2">
-                            {(() => {
-                                switch(this.props.problem.winningCondition) {
-                                    case WinningCondition.ALL_OBJECT_COLLECTED:
-                                        return "Collect all collectables.";
-                                    case WinningCondition.ALL_PLAYER_GOT_FLAG:
-                                        return "Every player have to get a flag."
-                                    case WinningCondition.ANY_PLAYER_GOT_FLAG:
-                                        return "A player have to get to the flag."
-                                }
-                            })()}
-                        </div>
-                        <h6>Rules:</h6>
-                        <ul className="p-2">
-                            <li className="ml-3">
-                                You can use no more than {this.props.problem.maxUsedBlocks} blocks.
+                        <div className="p-2 border mt-2 mb-5">
+                            <h2>{this.props.problem.title}</h2>
+                            {this.state.myRating >= 0 && <ProblemRater default={this.state.myRating} problemID={this.props.match.params.problemId} />}
+                            <h6>Goal:</h6>
+                            <div className="p-2">
+                                {(() => {
+                                    switch (this.props.problem.winningCondition) {
+                                        case WinningCondition.ALL_OBJECT_COLLECTED:
+                                            return "Collect all collectables.";
+                                        case WinningCondition.ALL_PLAYER_GOT_FLAG:
+                                            return "Every player have to get a flag."
+                                        case WinningCondition.ANY_PLAYER_GOT_FLAG:
+                                            return "A player have to get to the flag."
+                                    }
+                                })()}
+                            </div>
+                            <h6>Rules:</h6>
+                            <ul className="p-2">
+                                <li className="ml-3">
+                                    You can use no more than {this.props.problem.maxUsedBlocks} blocks.
                                 (-{this.props.problem.deduction[0]?.deduct}points / blocks)
                             </li>
-                            <li className="ml-3">
-                                Player can move no more than {this.props.problem.maxMoveTimes} times.
+                                <li className="ml-3">
+                                    Player can move no more than {this.props.problem.maxMoveTimes} times.
                                 (-{this.props.problem.deduction[1]?.deduct}points / move)
                             </li>
-                            <li className="ml-3">
-                                Collect all collectables.
+                                <li className="ml-3">
+                                    Collect all collectables.
                                 (-{this.props.problem.deduction[2]?.deduct}points / collectables missed)
                             </li>
-                        </ul>
-                        <h6>Description:</h6>
-                        <p className="p-2">{this.props.problem.description}</p>
+                            </ul>
+                            <h6>Description:</h6>
+                            <p className="p-2">{this.props.problem.description}</p>
+                        </div>
                     </div>
                     {
                         !!this.props.problem.avalibleBlocks[this.props.problem.avalibleCategories[0]]?.length && <BlocklyArea
