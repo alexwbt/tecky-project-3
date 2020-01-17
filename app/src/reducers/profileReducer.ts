@@ -13,8 +13,8 @@ export interface IProfileState {
     location: string;
     postsRecord: {
         title: string;
-        name: string;
-        status: boolean;
+        diffName: string;
+        statusName: string;
         created_at: string;
         updated_at: string;
     }[];
@@ -49,7 +49,7 @@ const profileReducer = (state: IProfileState = initialState, action: ProfileActi
                 exp: action.exp,
                 location: action.location,
                 level: action.level,
-                postsRecord: action.postRecord,
+                postsRecord: action.postsRecord,
                 solvedRecord: action.solvedRecord
             }
         default:

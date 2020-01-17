@@ -1,4 +1,4 @@
-import React from "react";
+import React , {ChangeEvent} from "react";
 import NavBar from "../components/NavBar";
 import { Form, Dropdown, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -19,6 +19,7 @@ interface IAuditListState {
         statusName: string;
         created_at: string;
     }[];
+    search:string;
 }
 
 class AuditList extends React.Component<IAuditListProps, IAuditListState> {
@@ -26,7 +27,8 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
     constructor(props: IAuditListProps) {
         super(props);
         this.state = {
-            auditList: []
+            auditList: [],
+            search: ""
         };
     }
 
@@ -44,7 +46,7 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
             const result = await res.json();
 
             if (res.status === 200 && result.success) {
-                this.setState({ auditList: result.list });
+                this.setState({auditList: result.list});
             } else {
                 toast.error(result.message);
             }
@@ -53,6 +55,11 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
         }
     };
 
+    private searchOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            search: event.target.value
+        });
+    };
     private openEditor = (id: number) => {
         console.log(id);
         this.props.open(`/challenge/audit/${id}`)
@@ -69,8 +76,8 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
                             <input
                                 className="rounded-pill border p-2 pl-4 w-50 mx-3"
                                 placeholder="search"
-                            // value={this.state.search}
-                            // onChange={this.searchOnChange}
+                                value={this.state.search}
+                                onChange={this.searchOnChange}
                             />
 
                             {/* Difficulty dropdown list */}

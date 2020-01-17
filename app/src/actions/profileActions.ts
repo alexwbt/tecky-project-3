@@ -5,7 +5,7 @@ export function loadProfile(username: string, email: string, exp: number, level:
         lvl: number,
         exp: number,
         req: number
-    }, location: string, postRecord: [], solvedRecord: []) {
+    }, location: string, postsRecord: [], solvedRecord: []) {
     return {
         type: "LOAD_PROFILE" as "LOAD_PROFILE",
         username,
@@ -13,7 +13,7 @@ export function loadProfile(username: string, email: string, exp: number, level:
         exp,
         level,
         location,
-        postRecord,
+        postsRecord,
         solvedRecord
     };
 

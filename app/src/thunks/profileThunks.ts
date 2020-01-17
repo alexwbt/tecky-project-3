@@ -12,9 +12,11 @@ export function getProfile(username: string) {
             const res = await fetch(`${REACT_APP_API_SERVER}/user/profile/${username}`);
             const result = await res.json();
 
+            const self = localStorage.getItem("username");
+            
             if (res.status === 200 && result.success) {
                 dispatch(loadProfile(result.username, result.email, result.exp, result.level, result.location,
-                    result.postsRecord, result.solvedRecord));
+                    self === username ? result.postsRecord : result.getPublishedPostsRecord, result.solvedRecord));
             } else {
                 dispatch(push("/pageNotFound"));
                 console.error(result.message);

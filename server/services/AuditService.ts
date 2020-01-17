@@ -28,7 +28,6 @@ export default class AuditService {
             .leftJoin(`${Tables.DIFFICULTY}`, `difficulty_id`, `=`, `${Tables.DIFFICULTY}.id`)
             .leftJoin(`${Tables.CATEGORY}`, `category_id`, `=`, `${Tables.CATEGORY}.id`)
             .leftJoin(`${Tables.PROBLEM_STATUS}`, `${Tables.PROBLEM}.status_id`, `=`, `${Tables.PROBLEM_STATUS}.id`)
-            .where(`${Tables.PROBLEM_STATUS}.id`, 2).orWhere(`${Tables.PROBLEM_STATUS}.id`, 3));
+            .where(`${Tables.PROBLEM_STATUS}.id`, 2));
     }
-
 }
