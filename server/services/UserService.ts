@@ -69,7 +69,7 @@ export default class UserService {
         let req = 50;
         while (exp - req >= 0) {
             exp -= req;
-            req *= 1.1;
+            req *= 1.5;
             lvl++;
         }
         return { lvl, exp, req }
