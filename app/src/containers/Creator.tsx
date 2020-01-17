@@ -31,6 +31,9 @@ interface ICreatorProps {
         };
     };
     problem: IProblemState;
+
+    mode: "edit" | "audit";
+
     editProblem: (problem: IProblemState) => void;
     getProblem: (id: number) => void;
     getCategories: () => void;
@@ -200,7 +203,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                             </div>
                             {
                                 this.state.currentTab === Tab.DES && <div className="col-8">
-                                    <DescriptionForm height={this.state.height} pid={this.props.match.params.problemId}/>
+                                    <DescriptionForm height={this.state.height} pid={this.props.match.params.problemId} mode={this.props.mode}/>
                                 </div>
                             }
                             {

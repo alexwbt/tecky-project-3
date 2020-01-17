@@ -5,16 +5,17 @@ import { IRootState } from '../store';
 
 interface IPrivateRouteProps extends RouteProps {
     authenticated: boolean;
+    componentProps?: any;
 }
 
-const PrivateRoute = ({ component, authenticated, ...rest }: IPrivateRouteProps) => {
+const PrivateRoute = ({ component, authenticated, componentProps, ...rest }: IPrivateRouteProps) => {
     const Component = component;
     if (Component == null) {
         return null;
     }
     let render: (props: any) => JSX.Element;
     if (authenticated) {
-        render = (props: any) => <Component {...props} />
+        render = (props: any) => <Component {...props} {...componentProps} />
     } else {
         render = (props: any) => <Redirect to={{
             pathname: '/login',

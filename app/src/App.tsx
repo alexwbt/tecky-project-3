@@ -40,9 +40,10 @@ const App: React.FC = () => {
                 <Route path="/" exact={true} component={Home} />
                 <PrivateRoute path="/profile/:username" component={Profile} />
                 <PrivateRoute path="/leaderBoard" exact={true} component={LeaderBoard} />
-                <AdminRoute path="/auditList" exact={true} component={AuditList} />
+                <AdminRoute path="/auditList" exact={true} component={AuditList}/> 
                 <Route path="/challenge/solve/:problemId" exact={true} component={Solver} />
-                <PrivateRoute path="/challenge/edit/:problemId" exact={true} component={Creator} />
+                <PrivateRoute path="/challenge/edit/:problemId" exact={true} component={Creator} componentProps={{mode: "edit"}}/>
+                <AdminRoute path="/challenge/audit/:problemId" exact={true} component={Creator} componentProps={{mode: "audit"}}/>
                 <Route component={PageNotFound} />
             </Switch>
         </ConnectedRouter>
