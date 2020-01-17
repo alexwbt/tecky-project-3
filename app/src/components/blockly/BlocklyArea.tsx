@@ -65,6 +65,7 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
             changed={!this.props.saved}
             ref={this.component}
             initialXml={this.props.code}
+            useCategory={this.props.useCategory}
             className={this.props.className}>
             {
                 (this.props.avalibleCategories ? this.props.avalibleCategories : Object.keys(blocklyBlocks)).map((cat, i) => {

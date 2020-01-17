@@ -9,23 +9,26 @@ interface IBlocklyProps {
     className: string;
     initialXml: string;
     changed: boolean;
+    useCategory: boolean;
 }
 
 export default class BlocklyComponent extends React.Component<IBlocklyProps> {
 
     private primaryWorkspace: any;
     private blocklyDiv: React.RefObject<HTMLDivElement>;
+    private blocklyCatDiv: React.RefObject<HTMLDivElement>;
     private toolbox: React.RefObject<HTMLDivElement>;
 
     constructor(props: IBlocklyProps) {
         super(props);
         this.blocklyDiv = React.createRef();
+        this.blocklyCatDiv = React.createRef();
         this.toolbox = React.createRef();
     }
 
     componentDidMount() {
         const { initialXml, children, ...rest } = this.props;
-        this.primaryWorkspace = Blockly.inject(this.blocklyDiv.current, {
+        this.primaryWorkspace = Blockly.inject(this.props.useCategory ? this.blocklyCatDiv.current : this.blocklyDiv.current, {
             toolbox: this.toolbox.current,
             ...rest
         });
@@ -40,15 +43,14 @@ export default class BlocklyComponent extends React.Component<IBlocklyProps> {
             try {
                 this.primaryWorkspace.updateToolbox(this.toolbox.current);
             } catch (err) {
-                this.primaryWorkspace = Blockly.inject(this.blocklyDiv.current, {
+                this.primaryWorkspace = Blockly.inject(this.props.useCategory ? this.blocklyCatDiv.current : this.blocklyDiv.current, {
                     toolbox: this.toolbox.current,
                     ...rest
                 });
-                this.forceUpdate();
             }
-            if (initialXml) {
+            if (this.props.initialXml) {
                 this.primaryWorkspace.clear();
-                Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), this.primaryWorkspace);
+                Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(this.props.initialXml), this.primaryWorkspace);
             }
         }
         Blockly.svgResize(this.primaryWorkspace);
@@ -68,7 +70,8 @@ export default class BlocklyComponent extends React.Component<IBlocklyProps> {
 
     render() {
         return <>
-            <div ref={this.blocklyDiv} className={this.props.className} />
+            {!this.props.useCategory && <div ref={this.blocklyDiv} className={this.props.className} />}
+            {this.props.useCategory && <div ref={this.blocklyCatDiv} className={this.props.className} />}
             <div
                 is="blockly"
                 style={{ display: 'none' }}
