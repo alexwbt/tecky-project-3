@@ -77,9 +77,9 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
     }
 
     render() {
-        return <div>
+        return <div className="d-flex flex-column vh-100">
             <NavBar />
-            <div className="container bg-white border shadow">
+            <div className="container bg-white border shadow flex-grow-1" style={{overflow: "auto"}}>
                 <div className="row p-2">
                     <div className="m-2 bg-light rounded-pill" style={{ minWidth: 300 }}>
                         <img
