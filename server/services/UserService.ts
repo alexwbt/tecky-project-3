@@ -57,15 +57,24 @@ export default class UserService {
         return (await this.knex(Tables.PROFILE).select("user_id", "location_id", "location.name").leftJoin("location", function () { this.on("location_id", "=", "location.id") }).where("user_id", id))[0];
     }
 
-    //SELECT (problem.user_id),(title),(name),(status),(audit.created_at),(audit.updated_at) FROM audit LEFT JOIN problem ON (problem_id = problem.id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) WHERE (problem.user_id = `inputId`);
-    async getPostsRecord(id: number) {
-        return (await this.knex.select("problem.user_id", "title", "name", "status", "audit.created_at", "audit.updated_at")
-            .from("audit")
-            .leftJoin("problem", function () { this.on("problem_id", "=", "problem.id") })
-            .leftJoin("difficulty", function () { this.on("difficulty_id", "=", "difficulty.id") })
-            .where("problem.user_id", id));
-    }
 
+    //SELECT (title),(difficulty.name),(problem_status.name),(problem.created_at),(problem.updated_at) FROM problem LEFT JOIN difficulty ON (difficulty_id = difficulty.id) LEFT JOIN problem_status on (problem.status_id = problem_status.id);
+    // only specify user post records
+    // async getPostsRecord(id: number) {  
+    //     return (await this.knex.select("problem.title","difficulty.name as diffName","problem_status.name as statusName","problem.created_at","problem.updated_at")
+    //     .from("problem")
+    //     .leftJoin("difficulty", function(){this.on("difficulty_id", "=", "difficulty.id")})
+    //     .leftJoin("problem_status", function(){this.on("problem.status_id", "=", "problem_status.id")})
+    //     .where("problem.user_id", id));
+    // }
+
+    //all the user post records
+    async getPostsRecord() { 
+        return (await this.knex.select("problem.title","difficulty.name as diffName","problem_status.name as statusName","problem.created_at","problem.updated_at")
+        .from("problem")
+        .leftJoin("difficulty", "difficulty_id", "=", "difficulty.id")
+        .leftJoin("problem_status", "problem.status_id", "=", "problem_status.id"));
+    }
 
     //SELECT (progress.user_id),(title),(name),(progress.score),(progress.created_at) FROM progress LEFT JOIN problem ON (problem_id = problem.id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) WHERE (progress.user_id = `inputId`);
     async getSolvedRecord(id: number) {

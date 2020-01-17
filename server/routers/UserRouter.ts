@@ -136,7 +136,16 @@ export default class UserRouter {
             return;
         }
 
-        const postsRecord = await this.service.getPostsRecord(user.id);
+        // const postsRecord = await this.service.getPostsRecord(user.id);
+        // if (!postsRecord) {
+        //     res.status(400).json({
+        //         success: false,
+        //         message: "Unable to get posts records"
+        //     });
+        //     return;
+        // }
+
+        const postsRecord = await this.service.getPostsRecord();
         if (!postsRecord) {
             res.status(400).json({
                 success: false,

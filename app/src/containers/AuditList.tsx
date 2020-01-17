@@ -1,4 +1,4 @@
-import React from "react";
+import React , {ChangeEvent} from "react";
 import NavBar from "../components/NavBar";
 import { Form, Dropdown, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -13,6 +13,7 @@ interface IAuditListState {
         statusName: string;
         created_at: string;
     }[];
+    search:string;
 }
 
 class AuditList extends React.Component<{}, IAuditListState> {
@@ -20,7 +21,8 @@ class AuditList extends React.Component<{}, IAuditListState> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            auditList: []
+            auditList: [],
+            search: ""
         };
     }
 
@@ -38,13 +40,19 @@ class AuditList extends React.Component<{}, IAuditListState> {
             const result = await res.json();
 
             if (res.status === 200 && result.success) {
-                this.setState({ auditList: result.list });
+                this.setState({auditList: result.list});
             } else {
                 toast.error(result.message);
             }
         } catch (err) {
             toast.error(err.message);
         }
+    };
+
+    private searchOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            search: event.target.value
+        });
     };
 
     render() {
@@ -58,8 +66,8 @@ class AuditList extends React.Component<{}, IAuditListState> {
                             <input
                                 className="rounded-pill border p-2 pl-4 w-50 mx-3"
                                 placeholder="search"
-                            // value={this.state.search}
-                            // onChange={this.searchOnChange}
+                                value={this.state.search}
+                                onChange={this.searchOnChange}
                             />
 
                             {/* Difficulty dropdown list */}
@@ -98,8 +106,34 @@ class AuditList extends React.Component<{}, IAuditListState> {
                                 </tr>
                             </thead>
                             <tbody>
-                                {
+                                {/* {
                                     this.state.auditList.map((audit, i) => <tr key={i}>
+                                        <td>{i + 1}</td>
+                                        <td>{audit.title}</td>
+                                        <td>{audit.username}</td>
+                                        <td>{audit.diffName}</td>
+                                        <td>{audit.cateName}</td>
+                                        <td>{audit.statusName}</td>
+                                        <td>{audit.created_at.substr(0, 10)}</td>
+                                    </tr>)
+                                } */}
+
+
+
+                                {
+                                    this.state.auditList && this.state.auditList.map(audit => {
+                                        if (!this.state.search){
+                                            return {...audit};
+                                        }
+                                        const title = audit.title.toLowerCase();
+                                        const search =this.state.search.toLowerCase();
+                                        for (let i = 0; i < title.length; i++) {
+                                            if (search.includes(title[i])) {
+
+                                            }
+                                        }
+                                        return {...audit};
+                                    }).filter((p => p.title.length > this.state.search).map((audit, i) => <tr key={i}>
                                         <td>{i + 1}</td>
                                         <td>{audit.title}</td>
                                         <td>{audit.username}</td>

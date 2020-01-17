@@ -8,8 +8,8 @@ export interface IProfileState {
     location: string;
     postsRecord: {
         title: string;
-        name: string;
-        status: boolean;
+        diffName: string;
+        statusName: string;
         created_at: string;
         updated_at: string;
     }[];

@@ -18,8 +18,8 @@ interface IProfileProps {
     location: string;
     postsRecord: {
         title: string;
-        name: string;
-        status: boolean;
+        diffName: string;
+        statusName: string;
         created_at: string;
         updated_at: string;
     }[];
@@ -112,14 +112,15 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                         this.state.currentTab === "Posts" && <div className="col-10 p-2 text-center">
                             <h6>Posts Challenge</h6>
                             {localStorage.getItem("username") === this.props.match.params.username && <Button variant="info">Edit</Button>}
+                            {localStorage.getItem("username") === this.props.match.params.username && <Button variant="info" style={{marginLeft:"5px"}}>Delete</Button>}
 
-                            <Table striped bordered hover responsive="lg" size="sm">
+                            <Table striped bordered hover responsive="lg" size="sm" style={{marginTop:"5px"}}>
                                 <thead>
                                     <tr>
                                         <th></th>
                                         <th>Title</th>
                                         <th>Difficulty</th>
-                                        <th>Audit</th>
+                                        <th>Status</th>
                                         <th>Created at</th>
                                         <th>Last edit</th>
                                     </tr>
@@ -129,8 +130,8 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                         this.props.postsRecord.map((post, i) => <tr key={i}>
                                             <td>{i + 1}</td>
                                             <td>{post.title}</td>
-                                            <td>{post.name}</td>
-                                            <td>{String(post.status)}</td>
+                                            <td>{post.diffName}</td>
+                                            <td>{post.statusName}</td>
                                             <td>{post.created_at.substr(0, 10)}</td>
                                             <td>{post.updated_at.substr(0, 10)}</td>
                                         </tr>)
