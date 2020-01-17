@@ -14,6 +14,11 @@ type Profile = {
     experience: number,
     location: string,
     role_id: number;
+    level: {
+        lvl: number,
+        exp: number,
+        req: number
+    };
 };
 
 export default class UserService {
@@ -50,13 +55,25 @@ export default class UserService {
     }
 
     async getProfileWithId(id: number): Promise<Profile> {
-        return (await this.knex(Tables.PROFILE).select().where("user_id", id))[0];
+        const profile = (await this.knex(Tables.PROFILE).select().where("user_id", id))[0];
+        profile.level = this.getUserLevel(profile.experience);
+        return profile;
     }
 
     async getLocationWithId(id: number) {
         return (await this.knex(Tables.PROFILE).select("user_id", "location_id", "location.name").leftJoin("location", function () { this.on("location_id", "=", "location.id") }).where("user_id", id))[0];
     }
 
+    getUserLevel(exp: number) {
+        let lvl = 0;
+        let req = 50;
+        while (exp - req >= 0) {
+            exp -= req;
+            req *= 1.1;
+            lvl++;
+        }
+        return { lvl, exp, req }
+    }
 
     //SELECT (title),(difficulty.name),(problem_status.name),(problem.created_at),(problem.updated_at) FROM problem LEFT JOIN difficulty ON (difficulty_id = difficulty.id) LEFT JOIN problem_status on (problem.status_id = problem_status.id);
     // only specify user post records

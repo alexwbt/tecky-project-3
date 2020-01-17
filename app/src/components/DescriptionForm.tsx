@@ -21,6 +21,9 @@ interface IDescriptionFormProps extends IProblemInfo {
     difficulties: IDifficulty[];
     problemStatuses: IProblemStatus[];
     roleID: number;
+
+    mode: "edit" | "audit";
+
     changed: () => void;
     setDescription: (description: IProblemInfo) => void;
 }
@@ -283,7 +286,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
     }
 
     private getSelectableStatuses = () => {
-        if (this.props.roleID === 1) {
+        if (this.props.roleID === 1 && this.props.mode === "audit") {
             const statuses: IProblemStatus[] = [
                 {
                     id: 4,
@@ -328,8 +331,6 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
     }
 
     render() {
-        console.log(this.state);
-        
         return <Container className="shadow" style={{ overflowY: "auto", height: this.props.height, padding: "20px 75px 50% 75px" }}>
             <Form className="pb-3" id="descForm">
                 <h2 className="pt-3">Information</h2>

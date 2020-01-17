@@ -21,7 +21,7 @@ import { getDifficultiesThunk } from "../thunks/difficultyThunks";
 import { getProblemStatusesThunk } from "../thunks/problemStatusThunk";
 
 import { Prompt } from "react-router-dom";
-import { setWinningCondition } from "../actions/problemActions";
+import { setWinningCondition, changed } from "../actions/problemActions";
 
 
 interface ICreatorProps {
@@ -31,12 +31,16 @@ interface ICreatorProps {
         };
     };
     problem: IProblemState;
+
+    mode: "edit" | "audit";
+
     editProblem: (problem: IProblemState) => void;
     getProblem: (id: number) => void;
     getCategories: () => void;
     getDifficulties: () => void;
     getProblemStatuses: () => void;
     setWinningCondition: (condition: WinningCondition) => void;
+    changed: () => void;
 }
 
 enum Tab {
@@ -195,12 +199,11 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     pen={this.state.canvas.pen}
                                     currentTab={this.state.canvas.currentTab}
                                     terrainSize={this.state.canvas.terrainSize}
-                                    winningCondition={this.props.problem.winningCondition}
                                     editable={this.state.currentTab === Tab.EDITOR} />
                             </div>
                             {
                                 this.state.currentTab === Tab.DES && <div className="col-8">
-                                    <DescriptionForm height={this.state.height} pid={this.props.match.params.problemId}/>
+                                    <DescriptionForm height={this.state.height} pid={this.props.match.params.problemId} mode={this.props.mode}/>
                                 </div>
                             }
                             {
@@ -292,7 +295,6 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     <h5>Settings</h5>
                     <h6 className="d-inline p-2">Terrain Size:</h6>
                     <input
-                        readOnly
                         type="number"
                         className="border-0 rounded-pill pl-2"
                         style={{ width: "3em" }}
@@ -307,6 +309,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                                     terrainSize: size
                                 }
                             });
+                            this.props.changed();
                         }} />
                     <br />
                     <h6 className="d-inline p-2">End Game Condition:</h6>
@@ -314,6 +317,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                         value={this.props.problem.winningCondition}
                         onChange={(event) => {
                             this.props.setWinningCondition(event.target.value as WinningCondition);
+                            this.props.changed();
                         }}
                         className="border-0 rounded-pill pl-2">
                         <option>{WinningCondition.ALL_OBJECT_COLLECTED}</option>
@@ -340,7 +344,8 @@ const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     getCategories: () => dispatch(getCategoriesThunk()),
     getDifficulties: () => dispatch(getDifficultiesThunk()),
     getProblemStatuses: () => dispatch(getProblemStatusesThunk()),
-    setWinningCondition: (condition: WinningCondition) => dispatch(setWinningCondition(condition))
+    setWinningCondition: (condition: WinningCondition) => dispatch(setWinningCondition(condition)),
+    changed: () => dispatch(changed())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator);

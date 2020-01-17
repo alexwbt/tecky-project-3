@@ -1,6 +1,13 @@
 import * as Knex from "knex";
 import Tables from "../tables";
 
+export interface Audit {
+    id: number;
+    problem_id: number;
+    status: boolean;
+    reason: string;
+    user_id: number;
+}
 
 export default class AuditService {
 
@@ -9,6 +16,7 @@ export default class AuditService {
     //SELECT (problem.title),(username),(difficulty.name),(category.name),(problem_status.name),(problem.created_at) FROM problem LEFT JOIN "user" ON (user_id = "user".id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) INNER JOIN category ON (category_id = category.id) INNER JOIN problem_status ON (problem.status_id = problem_status.id) WHERE (problem_status.id >= 2) AND (problem_status.id <= 3);
     async getAuditList() {
         return (await this.knex.select(
+            `${Tables.PROBLEM}.id as problemID`,
             `${Tables.PROBLEM}.title`,
             `username`,
             `${Tables.DIFFICULTY}.name as diffName`,

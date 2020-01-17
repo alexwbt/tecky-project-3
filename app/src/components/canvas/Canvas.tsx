@@ -200,12 +200,11 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                 }
                 const saves = JSON.parse(data);
                 const problem = saves.find((save: any) => save.pid === this.props.problemID);
-                if (!problem){
+                if (!problem) {
                     saves.unshift({ pid: this.props.problemID, code: this.props.code });
                 } else {
                     problem.code = this.props.code;
                 }
-                console.log(saves);
                 localStorage.setItem("savedCodes", JSON.stringify(saves));
             }
 
@@ -316,7 +315,8 @@ const mapStateToProps = (state: IRootState) => ({
     score: state.problem.score,
     maxUsedBlocks: state.problem.maxUsedBlocks,
     maxMoveTimes: state.problem.maxMoveTimes,
-    deduction: state.problem.deduction
+    deduction: state.problem.deduction,
+    winningCondition: state.problem.winningCondition
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({

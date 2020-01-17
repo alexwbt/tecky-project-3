@@ -13,7 +13,7 @@ export function getProfile(username: string) {
             const result = await res.json();
 
             if (res.status === 200 && result.success) {
-                dispatch(loadProfile(result.username, result.email, result.exp, result.location,
+                dispatch(loadProfile(result.username, result.email, result.exp, result.level, result.location,
                     result.postsRecord, result.solvedRecord));
             } else {
                 dispatch(push("/pageNotFound"));

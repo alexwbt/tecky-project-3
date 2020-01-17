@@ -2,10 +2,16 @@ import React , {ChangeEvent} from "react";
 import NavBar from "../components/NavBar";
 import { Form, Dropdown, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { push } from "connected-react-router";
+import { connect } from "react-redux";
+import { Dispatch } from 'redux';
 
-
+interface IAuditListProps {
+    open: (path: string) => void
+}
 interface IAuditListState {
     auditList: {
+        problemID: number;
         title: string;
         username: string;
         diffName: string;
@@ -16,9 +22,9 @@ interface IAuditListState {
     search:string;
 }
 
-class AuditList extends React.Component<{}, IAuditListState> {
+class AuditList extends React.Component<IAuditListProps, IAuditListState> {
 
-    constructor(props: {}) {
+    constructor(props: IAuditListProps) {
         super(props);
         this.state = {
             auditList: [],
@@ -54,6 +60,10 @@ class AuditList extends React.Component<{}, IAuditListState> {
             search: event.target.value
         });
     };
+    private openEditor = (id: number) => {
+        console.log(id);
+        this.props.open(`/challenge/audit/${id}`)
+    }
 
     render() {
         return <>
@@ -106,42 +116,18 @@ class AuditList extends React.Component<{}, IAuditListState> {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* {
-                                    this.state.auditList.map((audit, i) => <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>{audit.title}</td>
-                                        <td>{audit.username}</td>
-                                        <td>{audit.diffName}</td>
-                                        <td>{audit.cateName}</td>
-                                        <td>{audit.statusName}</td>
-                                        <td>{audit.created_at.substr(0, 10)}</td>
-                                    </tr>)
-                                } */}
-
-
-
                                 {
-                                    this.state.auditList && this.state.auditList.map(audit => {
-                                        if (!this.state.search){
-                                            return {...audit};
-                                        }
-                                        const title = audit.title.toLowerCase();
-                                        const search =this.state.search.toLowerCase();
-                                        for (let i = 0; i < title.length; i++) {
-                                            if (search.includes(title[i])) {
-
-                                            }
-                                        }
-                                        return {...audit};
-                                    }).filter((p => p.title.length > this.state.search).map((audit, i) => <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>{audit.title}</td>
-                                        <td>{audit.username}</td>
-                                        <td>{audit.diffName}</td>
-                                        <td>{audit.cateName}</td>
-                                        <td>{audit.statusName}</td>
-                                        <td>{audit.created_at.substr(0, 10)}</td>
-                                    </tr>)
+                                    this.state.auditList.map((audit, i) =>
+                                        <tr key={i} onClick={() => this.openEditor(audit.problemID)}>
+                                            <td>{i + 1}</td>
+                                            <td>{audit.title}</td>
+                                            <td>{audit.username}</td>
+                                            <td>{audit.diffName}</td>
+                                            <td>{audit.cateName}</td>
+                                            <td>{audit.statusName}</td>
+                                            <td>{audit.created_at.substr(0, 10)}</td>
+                                        </tr>
+                                    )
                                 }
                             </tbody>
                         </Table>
@@ -151,4 +137,13 @@ class AuditList extends React.Component<{}, IAuditListState> {
         </>
     }
 }
-export default AuditList;
+
+const mapStateToProps = () => ({
+    
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    open: (path: string) => dispatch(push(path)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuditList);

@@ -27,31 +27,34 @@ const GameEndModal: React.FC<IGameEndModalProps> = (props: IGameEndModalProps) =
     const dispatch = useDispatch();
     const authenticated = useSelector((state: IRootState) => state.auth.authenticated);
 
-    if (!props.deduction[0] || !props.deduction[1] || !props.deduction[2]) {
-        return <></>
-    }
-
     let score = props.score;
+    let blockCountEx = false;
+    let blockCountDe = 0;
+    let movedTimesEx = false;
+    let movedTimesDe = 0;
+    let missedObjEx = false;
+    let missedObjDe = 0;
+    if (props.deduction[0] && props.deduction[1] && props.deduction[2]) {
+        blockCountEx = props.blockCount > props.maxUsedBlocks;
+        blockCountDe = (props.blockCount - props.maxUsedBlocks) * props.deduction[0].deduct;
+        if (blockCountEx) {
+            score -= blockCountDe;
+        }
 
-    const blockCountEx = props.blockCount > props.maxUsedBlocks;
-    const blockCountDe = (props.blockCount - props.maxUsedBlocks) * props.deduction[0].deduct;
-    if (blockCountEx) {
-        score -= blockCountDe;
+        movedTimesEx = props.movedTime > props.maxMoveTimes;
+        movedTimesDe = (props.movedTime - props.maxMoveTimes) * props.deduction[1].deduct;
+        if (movedTimesEx) {
+            score -= movedTimesDe;
+        }
+
+        missedObjEx = props.missedObjects > 0;
+        missedObjDe = props.missedObjects * props.deduction[2].deduct;
+        if (missedObjEx) {
+            score -= missedObjDe;
+        }
+
+        score = Math.max(0, score);
     }
-
-    const movedTimesEx = props.movedTime > props.maxMoveTimes;
-    const movedTimesDe = (props.movedTime - props.maxMoveTimes) * props.deduction[1].deduct;
-    if (movedTimesEx) {
-        score -= movedTimesDe;
-    }
-
-    const missedObjEx = props.missedObjects > 0;
-    const missedObjDe = props.missedObjects * props.deduction[2].deduct;
-    if (missedObjEx) {
-        score -= missedObjDe;
-    }
-
-    score = Math.max(0, score);
 
     let failed = props.failed;
     if (score < props.score / 2) {

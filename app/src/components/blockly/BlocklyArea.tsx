@@ -7,6 +7,8 @@ import { getBlock, BlockList, blocklyBlocks } from './toolbox';
 import { IRootState, ReduxThunkDispatch } from '../../store';
 import { setCode, changed } from '../../actions/problemActions';
 
+const Blockly = require('blockly/core');
+
 
 interface IBlocklyAreaProps {
     className: string;
@@ -39,16 +41,21 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
 
     componentDidMount() {
         this.component.current?.workspace.addChangeListener((e: any) => {
-            if (e.type === "finished_loading"){
+            if (e.type === "finished_loading") {
                 this.shouldSave = false;
             }
             if (e.type === "ui") {
                 this.shouldSave = true;
             }
+
             if (this.shouldSave) {
                 this.props.changed();
-                this.props.setCode(this.getCodeXml(),
-                    this.component.current?.workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length);
+                this.props.setCode(this.getCodeXml(), this.component.current?.workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length);
+            } else if (this.props.code) {
+                const workspace = new Blockly.Workspace();
+                Blockly.Xml.appendDomToWorkspace(Blockly.Xml.textToDom(this.props.code), workspace);
+                const blockCount = workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length;
+                this.props.setCode(this.props.code, blockCount);
             }
         });
     }
@@ -62,7 +69,7 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
             {
                 (this.props.avalibleCategories ? this.props.avalibleCategories : Object.keys(blocklyBlocks)).map((cat, i) => {
                     if (this.props.useCategory) {
-                        return <Category name={cat} categorystyle={`${cat.toLowerCase()}_category`} key={i}>
+                        return <Category name={cat} /*categorystyle={`${cat.toLowerCase()}_category`}*/ key={i}>
                             {(this.props.avalibleBlocks ? this.props.avalibleBlocks : blocklyBlocks)[cat]
                                 .map((block: string, i: number) => <React.Fragment key={i}>
                                     {getBlock(block)}
@@ -78,11 +85,11 @@ class BlocklyArea extends React.Component<IBlocklyAreaProps> {
             }
             {
                 this.props.useVariables &&
-                <Category name="Variables" categorystyle="variable_category" custom="VARIABLE"></Category>
+                <Category name="Variables" /*categorystyle="variable_category"*/ custom="VARIABLE"></Category>
             }
             {
                 this.props.useFunctions &&
-                <Category name="Functions" categorystyle="procedure_category" custom="PROCEDURE"></Category>
+                <Category name="Functions" /*categorystyle="procedure_category"*/ custom="PROCEDURE"></Category>
             }
         </BlocklyComponent>
     }
