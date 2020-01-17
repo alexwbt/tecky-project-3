@@ -15,6 +15,11 @@ interface IProfileProps {
     username: string;
     email: string;
     exp: number;
+    level: {
+        lvl: number,
+        exp: number,
+        req: number
+    };
     location: string;
     postsRecord: {
         title: string;
@@ -57,6 +62,10 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     }
 
     render() {
+        let expbar = 0;
+        if (this.props.level) {
+            expbar = this.props.level.exp / this.props.level.req * 100;
+        }
         return <>
             <NavBar />
             <div className="container bg-white border shadow" style={{ height: "100vh" }}>
@@ -69,16 +78,16 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                             style={{ border: "5px solid white" }}
                             alt="user-icon" />
                         <h2 className="mt-3 mb-0 text-warning">{this.props.username}</h2>
-                        <h4 className="text-monospace text-warning">Lvl. 10</h4>
+                        <h4 className="text-monospace text-warning">Lvl. {this.props.level?.lvl}</h4>
                         <div className="progress w-25 m-auto rounded-pill">
                             <div
                                 className="progress-bar bg-info progress-bar-striped"
                                 role="progressbar"
-                                aria-valuenow={70}
+                                aria-valuenow={expbar}
                                 aria-valuemin={0}
                                 aria-valuemax={100}
-                                style={{ width: "70%" }}>
-                                <span className="sr-only">70% Complete</span>
+                                style={{ width: `${expbar}%` }}>
+                                <span className="sr-only">{expbar}% Complete</span>
                             </div>
                         </div>
                     </div>
@@ -181,6 +190,7 @@ const mapStateToProps = (state: IRootState) => ({
     username: state.profile.username,
     email: state.profile.email,
     exp: state.profile.exp,
+    level: state.profile.level,
     location: state.profile.location,
     postsRecord: state.profile.postsRecord,
     solvedRecord: state.profile.solvedRecord,
