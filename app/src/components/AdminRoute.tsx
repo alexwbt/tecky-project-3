@@ -6,16 +6,17 @@ import { IRootState } from '../store';
 interface IAdminRouteProps extends RouteProps {
     authenticated: boolean;
     role: number;
+    componentProps?: any;
 }
 
-const AdminRoute = ({ component, authenticated, role, ...rest }: IAdminRouteProps) => {
+const AdminRoute = ({ component, authenticated, role, componentProps, ...rest }: IAdminRouteProps) => {
     const Component = component;
     if (Component == null) {
         return null;
     }
     let render: (props: any) => JSX.Element;
     if (authenticated && role === 1) {
-        render = (props: any) => <Component {...props} />
+        render = (props: any) => <Component {...props} {...componentProps} />
     } else {
         render = (props: any) => <Redirect to={{
             pathname: '/login',
