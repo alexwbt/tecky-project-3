@@ -75,22 +75,25 @@ export default class UserService {
         return { lvl, exp, req }
     }
 
-    //SELECT (title),(difficulty.name),(problem_status.name),(problem.created_at),(problem.updated_at) FROM problem LEFT JOIN difficulty ON (difficulty_id = difficulty.id) LEFT JOIN problem_status on (problem.status_id = problem_status.id);
-    // only specify user post records
-    // async getPostsRecord(id: number) {  
-    //     return (await this.knex.select("problem.title","difficulty.name as diffName","problem_status.name as statusName","problem.created_at","problem.updated_at")
-    //     .from("problem")
-    //     .leftJoin("difficulty", function(){this.on("difficulty_id", "=", "difficulty.id")})
-    //     .leftJoin("problem_status", function(){this.on("problem.status_id", "=", "problem_status.id")})
-    //     .where("problem.user_id", id));
-    // }
-
-    //all the user post records
-    async getPostsRecord() { 
+    //SELECT (username),(problem.title),(difficulty.name),(problem_status.name),(problem.created_at),(problem.updated_at) FROM problem LEFT JOIN "user" ON (problem.user_id = "user".id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) LEFT JOIN problem_status ON (problem.status_id = problem_status.id) WHERE ("user".id = 3) AND (problem_status.id = 4);
+    //with public records only
+    async getPublishedPostsRecord(id: number) {  
         return (await this.knex.select("problem.title","difficulty.name as diffName","problem_status.name as statusName","problem.created_at","problem.updated_at")
         .from("problem")
         .leftJoin("difficulty", "difficulty_id", "=", "difficulty.id")
-        .leftJoin("problem_status", "problem.status_id", "=", "problem_status.id"));
+        .leftJoin("problem_status", "problem.status_id", "=", "problem_status.id")
+        .where("problem.user_id", id)
+        .andWhere("problem_status.id", 4));
+    }
+
+    //SELECT (username),(problem.title),(difficulty.name),(problem_status.name),(problem.created_at),(problem.updated_at) FROM problem LEFT JOIN "user" ON (problem.user_id = "user".id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) LEFT JOIN problem_status ON (problem.status_id = problem_status.id) WHERE ("user".id = 2);
+    //with all status posted records
+    async getOwnPostsRecord(id:number) { 
+        return (await this.knex.select("problem.title","difficulty.name as diffName","problem_status.name as statusName","problem.created_at","problem.updated_at")
+        .from("problem")
+        .leftJoin("difficulty", "difficulty_id", "=", "difficulty.id")
+        .leftJoin("problem_status", "problem.status_id", "=", "problem_status.id")
+        .where("problem.user_id", id));
     }
 
     //SELECT (progress.user_id),(title),(name),(progress.score),(progress.created_at) FROM progress LEFT JOIN problem ON (problem_id = problem.id) LEFT JOIN difficulty ON (difficulty_id = difficulty.id) WHERE (progress.user_id = `inputId`);

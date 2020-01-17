@@ -49,7 +49,7 @@ const profileReducer = (state: IProfileState = initialState, action: ProfileActi
                 exp: action.exp,
                 location: action.location,
                 level: action.level,
-                postsRecord: action.postRecord,
+                postsRecord: action.postsRecord,
                 solvedRecord: action.solvedRecord
             }
         default:

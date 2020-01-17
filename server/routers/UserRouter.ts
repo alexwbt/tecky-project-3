@@ -136,16 +136,16 @@ export default class UserRouter {
             return;
         }
 
-        // const postsRecord = await this.service.getPostsRecord(user.id);
-        // if (!postsRecord) {
-        //     res.status(400).json({
-        //         success: false,
-        //         message: "Unable to get posts records"
-        //     });
-        //     return;
-        // }
+        const getPublishedPostsRecord = await this.service.getPublishedPostsRecord(user.id);
+        if (!getPublishedPostsRecord) {
+            res.status(400).json({
+                success: false,
+                message: "Unable to get posts records"
+            });
+            return;
+        }
 
-        const postsRecord = await this.service.getPostsRecord();
+        const postsRecord = await this.service.getOwnPostsRecord(user.id);
         if (!postsRecord) {
             res.status(400).json({
                 success: false,
@@ -162,7 +162,7 @@ export default class UserRouter {
             });
             return;
         }
-        
+
         res.status(200).json({
             success: true,
             username: user.username,
@@ -170,6 +170,7 @@ export default class UserRouter {
             exp: profile.experience,
             level: profile.level,
             location: location.name,
+            getPublishedPostsRecord,
             postsRecord,
             solvedRecord
         });
