@@ -162,7 +162,7 @@ export default class UserRouter {
             });
             return;
         }
-
+        
         res.status(200).json({
             success: true,
             username: user.username,

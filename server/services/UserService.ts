@@ -78,7 +78,7 @@ export default class UserService {
     //with public records only
     async getPublishedPostsRecord(id: number) {
         return (await this.knex.select
-            (`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}_id`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
+            (`${Tables.PROBLEM}.id as problemID`,`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}_id`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
             .from(`${Tables.PROBLEM}`)
             .leftJoin(`${Tables.PROBLEM_STATUS}`,`problem.status_id`,`=`,`${Tables.PROBLEM_STATUS}.id`)
             .where(`${Tables.PROBLEM}.user_id`,id)
@@ -88,7 +88,7 @@ export default class UserService {
     //with all status posted records
     async getOwnPostsRecord(id:number) { 
         return (await this.knex.select
-            (`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}_id`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
+            (`${Tables.PROBLEM}.id as problemID`,`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}_id`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
             .from(`${Tables.PROBLEM}`)
             .leftJoin(`${Tables.PROBLEM_STATUS}`,`problem.status_id`,`=`,`${Tables.PROBLEM_STATUS}.id`)
             .where(`${Tables.PROBLEM}.user_id`,id));
