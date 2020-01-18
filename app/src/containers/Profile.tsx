@@ -2,11 +2,12 @@ import React from "react";
 import NavBar from "../components/NavBar";
 import TabSelect from "../components/TabSelect";
 import DifficultyBox from "../components/DifficultyBox";
-import { Button, Table } from "react-bootstrap";
+import { push } from "connected-react-router";
 import { connect } from "react-redux";
 import { getProfile } from "../thunks/profileThunks";
-import { IRootState, ReduxThunkDispatch } from "../store";
+import { Button, Table } from "react-bootstrap";
 import { getDifficultiesThunk } from "../thunks/difficultyThunks";
+import { IRootState, ReduxThunkDispatch } from "../store";
 
 interface IProfileProps {
     match: {
@@ -24,6 +25,7 @@ interface IProfileProps {
     };
     location: string;
     postsRecord: {
+        problemID: number;
         title: string;
         difficulty_id: number;
         statusName: string;
@@ -38,6 +40,7 @@ interface IProfileProps {
     }[];
     getProfile: (username: string) => void;
     getDifficulties: () => void;
+    open: (path: string) => void
 }
 
 interface IProfileState {
@@ -57,13 +60,18 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 
     componentDidMount() {
         document.title = "BlockDojo - Profile";
-        
+
         this.props.getDifficulties();
         this.props.getProfile(this.props.match.params.username);
     }
 
     selectTab(tab: Tab) {
         this.setState({ ...this.state, currentTab: tab });
+    }
+
+    private openEditor = (id: number) => {
+        console.log(id);
+        this.props.open(`/challenge/edit/${id}`)
     }
 
     render() {
@@ -125,10 +133,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                     {
                         this.state.currentTab === "Posts" && <div className="col-10 p-2 text-center">
                             <h6>Posts Challenge</h6>
-                            {localStorage.getItem("username") === this.props.match.params.username && <Button variant="info">Edit</Button>}
-                            {localStorage.getItem("username") === this.props.match.params.username && <Button variant="info" style={{marginLeft:"5px"}}>Delete</Button>}
-
-                            <Table striped bordered hover responsive="lg" size="sm" style={{marginTop:"5px"}}>
+                            <Table striped bordered hover responsive="lg" size="sm" style={{ marginTop: "5px" }}>
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -137,18 +142,21 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                         <th>Status</th>
                                         <th>Created at</th>
                                         <th>Last edit</th>
+                                        <th>Delete?</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        this.props.postsRecord.map((post, i) => <tr key={i}>
-                                            <td>{i + 1}</td>
-                                            <td>{post.title}</td>
-                                            <td className="text-white"><DifficultyBox difficultyID={post.difficulty_id} /></td>
-                                            <td>{post.statusName}</td>
-                                            <td>{post.created_at.substr(0, 10)}</td>
-                                            <td>{post.updated_at.substr(0, 10)}</td>
-                                        </tr>)
+                                        this.props.postsRecord.map((post, i) =>
+                                            <tr key={i} onClick={() => this.openEditor(post.problemID)}>
+                                                <td>{i + 1}</td>
+                                                <td>{post.title}</td>
+                                                <td className="text-white"><DifficultyBox difficultyID={post.difficulty_id} /></td>
+                                                <td>{post.statusName}</td>
+                                                <td>{post.created_at.substr(0, 10)}</td>
+                                                <td>{post.updated_at.substr(0, 10)}</td>
+                                                <td><Button variant="info">Delete</Button></td>
+                                            </tr>)
                                     }
                                 </tbody>
                             </Table>
@@ -204,7 +212,8 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     getProfile: (username: string) => dispatch(getProfile(username)),
-    getDifficulties: () => dispatch(getDifficultiesThunk())
+    getDifficulties: () => dispatch(getDifficultiesThunk()),
+    open: (path: string) => dispatch(push(path))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

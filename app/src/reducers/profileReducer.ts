@@ -12,6 +12,7 @@ export interface IProfileState {
     };
     location: string;
     postsRecord: {
+        problemID:number;
         title: string;
         difficulty_id: number;
         statusName: string;

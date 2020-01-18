@@ -1,4 +1,5 @@
-import React , {ChangeEvent} from "react";
+import React from "react";
+// import React, { ChangeEvent } from "react";
 import NavBar from "../components/NavBar";
 import { Form, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -19,7 +20,7 @@ interface IAuditListState {
         statusName: string;
         created_at: string;
     }[];
-    search:string;
+    search: string;
 }
 
 class AuditList extends React.Component<IAuditListProps, IAuditListState> {
@@ -46,7 +47,7 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
             const result = await res.json();
 
             if (res.status === 200 && result.success) {
-                this.setState({auditList: result.list});
+                this.setState({ auditList: result.list });
             } else {
                 toast.error(result.message);
             }
@@ -55,11 +56,11 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
         }
     };
 
-    private searchOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({
-            search: event.target.value
-        });
-    };
+    // private searchOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    //     this.setState({
+    //         search: event.target.value
+    //     });
+    // };
     private openEditor = (id: number) => {
         console.log(id);
         this.props.open(`/challenge/audit/${id}`)
@@ -75,29 +76,10 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
                             {/* Search Bar */}
                             <input
                                 className="rounded-pill border p-2 pl-4 w-50 mx-3"
-                                placeholder="search"
+                                placeholder="Search username..."
                                 value={this.state.search}
-                                onChange={this.searchOnChange}
+                                onChange={(event) => this.setState({ search: event.target.value })}
                             />
-
-                            {/* Difficulty dropdown list
-                            <Dropdown>
-                                <Dropdown.Toggle id="difficulty" variant="info" style={{ width: "130px", marginRight: "10px" }}>Difficulty</Dropdown.Toggle>
-                                <Dropdown.Menu >
-                                    <Dropdown.Item eventKey="1">Easy</Dropdown.Item>
-                                    <Dropdown.Item eventKey="2">Medium</Dropdown.Item>
-                                    <Dropdown.Item eventKey="3">Hard</Dropdown.Item>
-                                    <Dropdown.Item eventKey="1">Very Hard</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-
-                            Category dropdown list
-                            <Dropdown>
-                                <Dropdown.Toggle id="category" variant="info" style={{ width: "130px", justifyContent: "flex-end" }}>Category</Dropdown.Toggle>
-                                <Dropdown.Menu >
-                                    <Dropdown.Item eventKey="1">Maze</Dropdown.Item>
-                                </Dropdown.Menu> */}
-                            {/* </Dropdown> */}
                         </Form>
                     </div>
 
@@ -117,17 +99,28 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
                             </thead>
                             <tbody>
                                 {
-                                    this.state.auditList.map((audit, i) =>
-                                        <tr key={i} onClick={() => this.openEditor(audit.problemID)}>
-                                            <td>{i + 1}</td>
-                                            <td>{audit.title}</td>
-                                            <td>{audit.username}</td>
-                                            <td>{audit.diffName}</td>
-                                            <td>{audit.cateName}</td>
-                                            <td>{audit.statusName}</td>
-                                            <td>{audit.created_at.substr(0, 10)}</td>
-                                        </tr>
-                                    )
+                                    this.state.auditList && this.state.auditList.map(audit => {
+                                        if (!this.state.search) {
+                                            return { ...audit, score:1 };
+                                        }
+                                        const title = audit.username.toLowerCase();
+                                        const search = this.state.search.toLowerCase();
+                                        let score = 0;
+                                        for (let i = 0; i < title.length; i++) {
+                                            if (search.includes(title[i])) {
+                                                score++;
+                                            }
+                                        }
+                                        return { ...audit, score };
+                                    }).sort((a, b) => b.score - a.score).filter(p => p.score > 0).map((audit, i) => <tr key={i} onClick={() => this.openEditor(audit.problemID)}>
+                                        <td>{i + 1}</td>
+                                        <td>{audit.title}</td>
+                                        <td>{audit.username}</td>
+                                        <td>{audit.diffName}</td>
+                                        <td>{audit.cateName}</td>
+                                        <td>{audit.statusName}</td>
+                                        <td>{audit.created_at.substr(0, 10)}</td>
+                                    </tr>)
                                 }
                             </tbody>
                         </Table>
@@ -139,7 +132,7 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
 }
 
 const mapStateToProps = () => ({
-    
+
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

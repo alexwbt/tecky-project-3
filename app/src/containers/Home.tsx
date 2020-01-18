@@ -95,6 +95,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                 }
                 <div className="row p-3 px-5">
                     <h3 className="col-12">All Challenges</h3>
+                    {/* searchBar */}
                     <div className="col-12 px-3">
                         <input
                             className="rounded-pill border p-2 pl-4 w-100"
@@ -103,6 +104,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                             onChange={this.searchOnChange}
                         />
                     </div>
+                    {/* ChallengeBox */}
                     {
                         this.state.problemList && this.state.problemList.map(problem => {
                             if (!this.state.search) {

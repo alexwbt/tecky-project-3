@@ -81,6 +81,7 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
             <NavBar />
             <div className="container bg-white border shadow flex-grow-1" style={{overflow: "auto"}}>
                 <div className="row p-2">
+                    {/* userInfo */}
                     <div className="m-2 bg-light rounded-pill" style={{ minWidth: 300 }}>
                         <img
                             src="https://cdn.shopify.com/s/files/1/0150/0643/3380/files/patrick.png?7948"
@@ -94,6 +95,8 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                             <h2 className="my-0 text-monospace text-warning">Rank.{this.state.userRank}</h2>
                         </div>
                     </div>
+
+                    {/* SearchBar */}
                     <div className="col d-flex align-items-end px-5">
                         <input
                             className="rounded-pill border p-2 pl-4 w-100"
@@ -101,11 +104,11 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                             placeholder="Search for user"
                             onChange={(event) => this.setState({ search: event.target.value })} />
                     </div>
-
                 </div>
 
                 <div className="row justify-content-center">
                     <div className="col-11 p-2 text-center">
+                        {/* rankingTable */}
                         <Table bordered striped hover responsive="lg" size="sm">
                             <thead>
                                 <tr>
