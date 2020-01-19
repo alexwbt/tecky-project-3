@@ -48,6 +48,11 @@ export default class UserService {
             const user_id = (await trx.returning("id").insert({ username, password }).into("user"))[0];
             await trx.insert({ user_id, email, year, role_id: 2 }).into("profile");
             trx.commit();
+            return {
+                id: user_id,
+                username: username,
+                password: password
+            }
         } catch (err) {
             trx.rollback();
             throw new Error(err.message);

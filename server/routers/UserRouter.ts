@@ -85,19 +85,26 @@ export default class UserRouter {
                 return ;
             }
             console.log(result);
-            let user = (await this.service.getUserIdWithEmail(result.email))[0];
-
-            // Create a new user if the user does not exist
-            // or redirect to register page 
-            if (!user) {
+            const userId = await this.service.getUserIdWithEmail(result.email);
+            let user = await this.service.getUserWithUsername(result.email.split("@")[0]);
+            if (user || userId) {
+                res.status(400).json({
+                    success: false,
+                    message: "Email or Username has been taken"
+                });
+                return;
+            } else {
                 user = await this.service.register(result.email, result.email.split("@")[0], await hashPassword("123"), new Date(result.birthday).getFullYear());
             }
             const payload = {
                 id: user.id,
                 username: user.username
             };
-            const token = jwtSimple.encode(payload, jwt.jwtSecret);
-            res.json({ token });
+            res.status(200).json({
+                success: true,
+                token: getToken(user.id, user.username),
+                role: (await this.service.getProfileWithId(user.id)).role_id
+            });
         }catch(e){
             console.log(e);
             res.status(500).json({msg:e.toString()})

@@ -145,7 +145,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                     <ReactFacebookLogin
                         appId={process.env.REACT_APP_FACEBOOK_APP_ID || ''}
                         autoLoad={false}
-                        fields="name,email"
+                        fields="name,email,birthday"
                         cssClass="btn FbButton"
                         onClick={this.fBOnCLick}
                         callback={this.fBCallback}
