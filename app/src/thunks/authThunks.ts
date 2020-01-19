@@ -17,10 +17,35 @@ export function login(username: string, password: string) {
                 body: JSON.stringify({ username, password })
             });
             const result = await res.json();
-    
+
             if (res.status === 200 && result.success) {
                 localStorage.setItem('token', result.token);
                 localStorage.setItem('username', username);
+                dispatch(loginSuccess(result.role));
+                dispatch(push("/"));
+            } else {
+                dispatch(loginFailed(result.message));
+            }
+        } catch (err) {
+            toast.error(err.message);
+        }
+    };
+}
+
+export function loginFacebook(accessToken: string) {
+    return async (dispatch: Dispatch<AuthActions>) => {
+        try {
+            const res = await fetch(`${REACT_APP_API_SERVER}/user/login/facebook`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify({ accessToken })
+            })
+            const result = await res.json();
+
+            if (res.status === 200 && result.success) {
+                localStorage.setItem('token', result.token);
                 dispatch(loginSuccess(result.role));
                 dispatch(push("/"));
             } else {
@@ -49,7 +74,7 @@ export function register(email: string, username: string, password: string, cpas
                 })
             });
             const result = await res.json();
-    
+
             if (res.status === 200 && result.success) {
                 dispatch(registerSuccess());
             } else {
@@ -79,7 +104,7 @@ export function getRole() {
                 }
             });
             const result = await res.json();
-    
+
             if (res.status === 200 && result.success) {
                 dispatch(setRole(result.role));
             } else {

@@ -1,8 +1,11 @@
+import UserService from "../services/UserService";
+import * as jwtSimple from "jwt-simple";
+import jwt from "../jwt";
+import fetch from "node-fetch";
 import { Router, Request, Response } from "express";
 import { catcher } from "../middleware";
 import { getToken, isLoggedIn } from "../passport";
 import { checkPassword, hashPassword } from "../hash";
-import UserService from "../services/UserService";
 
 
 export default class UserRouter {
@@ -11,7 +14,8 @@ export default class UserRouter {
 
     router() {
         const router = Router();
-        router.post("/login", catcher(this.login));
+        router.post("/login", catcher(this.login)); 
+        router.post("/login/facebook", catcher(this.loginFacebook));
         router.post("/register", catcher(this.register));
         router.get("/profile/:username", catcher(this.getProfile));
         router.get("/leaderBoard", catcher(this.getProfile));
@@ -66,6 +70,39 @@ export default class UserRouter {
             role: (await this.service.getProfileWithId(user.id)).role_id
         });
     };
+
+    private loginFacebook = async (req:Request,res:Response)=>{
+        try{
+            if(!req.body.accessToken){
+                res.status(401).json({msg:"Wrong Access Token!"});
+                return;
+            }
+            const {accessToken} = req.body;
+            const fetchResponse =await fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email`);
+            const result = await fetchResponse.json();
+            if(result.error){
+                res.status(401).json({msg:"Wrong Access Token!"});
+                return ;
+            }
+            console.log(result);
+            let user = (await this.service.getUserIdWithEmail(result.email))[0];
+
+            // Create a new user if the user does not exist
+            // or redirect to register page 
+            if (!user) {
+                user = await this.service.register(result.email, result.username,await hashPassword(result.password), result.year);
+            }
+            const payload = {
+                id: user.id,
+                username: user.username
+            };
+            const token = jwtSimple.encode(payload, jwt.jwtSecret);
+            res.json({ token });
+        }catch(e){
+            console.log(e);
+            res.status(500).json({msg:e.toString()})
+        }
+    }
 
     private register = async (req: Request, res: Response) => {
         const { email, username, password, cpassword, year } = req.body;

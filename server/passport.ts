@@ -1,15 +1,16 @@
 import * as passport from 'passport';
 import * as passportJWT from 'passport-jwt';
 import * as jwtSimple from "jwt-simple";
+import jwt from "./jwt";
 import { userService } from './main';
 
 const JWTStrategy = passportJWT.Strategy;
 const { ExtractJwt } = passportJWT;
 
-const jwt = {
-    jwtSecret: "Iamasecretthatyoushouldneverrevealtoanyone",
-    jwtSession: { session: false }
-};
+// const jwt = {
+//     jwtSecret: "Iamasecretthatyoushouldneverrevealtoanyone",
+//     jwtSession: { session: false }
+// };
 
 passport.use(new JWTStrategy({
     secretOrKey: jwt.jwtSecret,

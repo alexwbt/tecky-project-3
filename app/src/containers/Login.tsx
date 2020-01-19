@@ -1,13 +1,17 @@
 import React from "react";
+import "../css/FbButton.css";
+import { FormGroup } from "react-bootstrap";
 import { ReduxThunkDispatch, IRootState } from "../store";
 import { connect } from "react-redux";
-import { login, register } from "../thunks/authThunks";
+import { login, loginFacebook, register } from "../thunks/authThunks";
+import ReactFacebookLogin,{ ReactFacebookLoginInfo } from  "react-facebook-login";
 
 interface ILoginProps {
     message: string;
     error: boolean;
     login: (username: string, password: string) => void;
     register: (email: string, username: string, password: string, cpassword: string, year: number) => void;
+    loginFacebook: (accessToken: string) => void;
 }
 
 interface ILoginStates {
@@ -86,6 +90,17 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
         this.setState({ year: parseInt(event.target.value) });
     };
 
+    private fBOnCLick() {
+        return null;
+    }
+
+    private fBCallback = (userInfo: ReactFacebookLoginInfo & { accessToken: string }) => {
+        if (userInfo.accessToken) {
+            this.props.loginFacebook(userInfo.accessToken);
+        }
+        return null;
+    }
+
     renderLoginForm() {
         return <>
             <label htmlFor="usernameInput" className="input-group-prepend">
@@ -123,8 +138,22 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                 onClick={this.toggleRegister}>
                 Register
             </button>
+
+            < br/>
+            <FormGroup>
+                <div className="fb-button">
+                    <ReactFacebookLogin
+                        appId={process.env.REACT_APP_FACEBOOK_APP_ID || ''}
+                        autoLoad={false}
+                        fields="name,email"
+                        cssClass="btn FbButton"
+                        onClick={this.fBOnCLick}
+                        callback={this.fBCallback}
+                    />  
+                </div>
+            </FormGroup>
         </>
-    }
+    } 
 
     renderRegisterForm() {
         return <>
@@ -235,7 +264,8 @@ const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     login: (username: string, password: string) =>
         dispatch(login(username, password)),
     register: (email: string, username: string, password: string, cpassword: string, year: number) =>
-        dispatch(register(email, username, password, cpassword, year))
+        dispatch(register(email, username, password, cpassword, year)),
+    loginFacebook: (accessToken:string) => dispatch(loginFacebook(accessToken))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
