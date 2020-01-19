@@ -78,7 +78,7 @@ export default class UserRouter {
                 return;
             }
             const {accessToken} = req.body;
-            const fetchResponse =await fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email`);
+            const fetchResponse =await fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email,birthday`);
             const result = await fetchResponse.json();
             if(result.error){
                 res.status(401).json({msg:"Wrong Access Token!"});
@@ -90,7 +90,7 @@ export default class UserRouter {
             // Create a new user if the user does not exist
             // or redirect to register page 
             if (!user) {
-                user = await this.service.register(result.email, result.username,await hashPassword(result.password), result.year);
+                user = await this.service.register(result.email, result.email.split("@")[0], await hashPassword("123"), new Date(result.birthday).getFullYear());
             }
             const payload = {
                 id: user.id,
