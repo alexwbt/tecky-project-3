@@ -82,9 +82,9 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
             <div className="container bg-white border shadow flex-grow-1" style={{overflow: "auto"}}>
                 <div className="row p-2">
                     {/* userInfo */}
-                    <div className="m-2 bg-light rounded-pill" style={{ minWidth: 300 }}>
+                    <div className="ml-5 mt-2 rounded-pill" style={{ minWidth: 300, background: "rgba(240, 240, 240)" }}>
                         <img
-                            src="https://cdn.shopify.com/s/files/1/0150/0643/3380/files/patrick.png?7948"
+                            src="https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"
                             width="130"
                             className="rounded-circle d-inline-block"
                             style={{ border: "5px solid white" }}
@@ -112,10 +112,10 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                         <Table bordered striped hover responsive="lg" size="sm">
                             <thead>
                                 <tr>
-                                    <th>Rank</th>
-                                    <th>Username</th>
-                                    <th>Level</th>
-                                    <th>Location</th>
+                                    <th className="border-0">Rank</th>
+                                    <th className="border-0">Username</th>
+                                    <th className="border-0">Level</th>
+                                    <th className="border-0">Location</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -149,7 +149,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                         cssClass="btn FbButton"
                         onClick={this.fBOnCLick}
                         callback={this.fBCallback}
-                    />  
+                    />
                 </div>
             </FormGroup>
         </>
