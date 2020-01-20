@@ -56,13 +56,7 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
         }
     };
 
-    // private searchOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-    //     this.setState({
-    //         search: event.target.value
-    //     });
-    // };
     private openEditor = (id: number) => {
-        console.log(id);
         this.props.open(`/challenge/audit/${id}`)
     }
 
