@@ -61,7 +61,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
 
     private inputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         console.log(event.target.name, event.target.value);
-        
+
         let value: string | number = event.target.value;
         if (event.target.type === 'number') {
             value = Math.max(Number(value), Number(event.target.getAttribute("min")))
@@ -294,21 +294,13 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
     }
 
     private getSelectableStatuses = () => {
-        if (this.props.roleID === 1 && this.props.mode === "audit") {
-            const statuses: IProblemStatus[] = [
-                {
-                    id: 4,
-                    name: 'Approved'
-                },
-                {
-                    id: 3,
-                    name: 'Rejected'
-                }
-            ]
+        let ids: number[] = [];
 
-            return statuses;
+        if (this.props.roleID === 1 && this.props.mode === "audit") {
+            // WIP & Ready to audit
+            ids = [2, 4, 3];
         } else {
-            let ids: number[] = [];
+
 
             switch (Number(this.props.statusID)) {
                 case 1:
@@ -327,15 +319,15 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                 default:
                     break;
             }
-
-            const statuses = this.props.problemStatuses.filter(status =>
-                ids.indexOf(status.id) >= 0
-            ).sort((s1, s2) =>
-                ids.indexOf(s1.id) - ids.indexOf(s2.id)
-            )
-
-            return statuses;
         }
+
+        const statuses = this.props.problemStatuses.filter(status =>
+            ids.indexOf(status.id) >= 0
+        ).sort((s1, s2) =>
+            ids.indexOf(s1.id) - ids.indexOf(s2.id)
+        )
+
+        return statuses;
     }
 
     render() {
