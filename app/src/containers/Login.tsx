@@ -1,6 +1,5 @@
 import React from "react";
 import "../css/FbButton.css";
-import { FormGroup } from "react-bootstrap";
 import { ReduxThunkDispatch, IRootState } from "../store";
 import { connect } from "react-redux";
 import { login, loginFacebook, register } from "../thunks/authThunks";
