@@ -138,7 +138,6 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                         <th className="border-0">Status</th>
                                         <th className="border-0">Created at</th>
                                         <th className="border-0">Last edit</th>
-                                        <th className="border-0"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
