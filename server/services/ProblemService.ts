@@ -1,7 +1,8 @@
 import * as Knex from "knex";
 import Tables from "../tables";
-import { MongoClient, Db } from "mongodb";
 import UserService from "../services/UserService"; 
+import { Db } from "mongodb";
+import { Audit } from "./AuditService";
 
 export interface IProblem {
     title: string;
@@ -24,6 +25,13 @@ export interface IProblemDeduction {
     id: number;
     title: string;
     deduct: number;
+}
+
+export enum ProblemStatus {
+    WorkInProgress = 1,
+    ReadyToAudit = 2,
+    Rejected = 3,
+    Published = 4,
 }
 
 export default class ProblemService {
@@ -56,29 +64,73 @@ export default class ProblemService {
         // deduction,
         game: any
     ) {
-        const problem = (await this.knex(Tables.PROBLEM).select("user_id").where({ id }))[0];
-        if (!problem || problem.user_id !== user_id) {
-            return false;
+        const trx = await this.knex.transaction();
+
+        try {
+            const problem = (await trx(Tables.PROBLEM).select("user_id", "status_id").where({ id }))[0];
+            if (!problem || problem.user_id !== user_id) {
+                return {
+                    success: false,
+                    message: "You are not the creator of this challenge."
+                };
+            }
+            if (problem.status_id === ProblemStatus.ReadyToAudit || problem.status_id === ProblemStatus.Published) {
+                // Ready to audit or Published
+                return {
+                    success: false,
+                    message: "This challenge is auditing or published. You are not allowed to edit."
+                };
+            }
+            
+            await trx(Tables.PROBLEM).where({ user_id, id }).update({
+                title, description, category_id, difficulty_id, status_id, score
+            });
+
+            if (status_id === ProblemStatus.ReadyToAudit) {
+                await trx(Tables.AUDIT).insert({
+                    problem_id: id,
+                    status: false,
+                    reason: "",
+                    user_id: 1,
+                })
+            }
+
+            await trx.commit();
+            await this.mongodb.collection("game").updateOne({ pid: id }, { $set: { ...game, pid: id } });
+
+            return {
+                success: true,
+                message: "Successfully Saved"
+            };
+        } catch (error) {
+            await trx.rollback();
+            throw Error
         }
-        await this.knex(Tables.PROBLEM).where({ user_id, id }).update({
-            title, description, category_id, difficulty_id, status_id, score
-        });
-        await this.mongodb.collection("game").updateOne({ pid: id }, { $set: { ...game, pid: id } });
-        return true;
+
     }
 
     async getProblemInfo(id: number) {
-        return (await this.knex.select().from(Tables.PROBLEM).where("id", id))[0];
+        const problem = (await this.knex.select().from(Tables.PROBLEM).where("id", id))[0]
+        if (problem.status_id === ProblemStatus.Rejected) {
+            const audit = await this.knex.select("reason").from(Tables.AUDIT).where("problem_id", id).orderBy("id", "desc").first();
+            problem.reason = audit.reason;
+        }
+        return problem;
     }
 
     async getProblemContent(id: number) {
         return await this.mongodb.collection("game").findOne({ pid: id });
     }
 
+    async getProblemLatestAuditInfo(id: number) {
+        const audit: Audit = (await this.knex.select().from(Tables.AUDIT).where("problem_id", id).orderBy("id", "desc"))[0]
+        return audit;
+    }
+
     async getProblemList() {
         const problems = await this.knex(Tables.PROBLEM).select([`id`, "title", "difficulty_id", "created_at", "updated_at", "user_id"])
             .orderBy("created_at")
-            // .where({ status_id : 4 });
+        // .where({ status_id : 4 });
         for (let i = 0; i < problems.length; i++) {
             problems[i].rating = await this.getProblemRating(problems[i].id);
         }

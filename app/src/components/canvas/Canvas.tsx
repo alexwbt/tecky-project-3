@@ -214,12 +214,21 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             this.blockCount = workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length;
 
             const code = BlocklyJS.workspaceToCode(workspace);
+            console.log(code);
             try {
                 (function (code: string) {
                     eval(code);
                 }).call({
                     getPlayer: (id: number) => this.content ? this.content.getCharacter(id) : null,
-                    getContent: () => this.content
+                    getContent: () => this.content,
+                    turnDir: (dir: number, right: boolean) => {
+                        switch (dir) {
+                            case 0: return right ? 3 : 2;
+                            case 1: return right ? 2 : 3;
+                            case 2: return right ? 0 : 1;
+                            case 3: return right ? 1 : 0;
+                        }
+                    }
                 }, code);
             } catch (err) {
                 toast.error(err.message);

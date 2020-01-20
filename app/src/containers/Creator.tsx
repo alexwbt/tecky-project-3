@@ -34,7 +34,7 @@ interface ICreatorProps {
 
     mode: "edit" | "audit";
 
-    editProblem: (problem: IProblemState) => void;
+    editProblem: (problem: IProblemState, mode: "edit" | "audit") => void;
     getProblem: (id: number) => void;
     getCategories: () => void;
     getDifficulties: () => void;
@@ -134,7 +134,7 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
 
     componentDidUpdate() {
         if (this.state.saving) {
-            this.props.editProblem(this.props.problem);
+            this.props.editProblem(this.props.problem, this.props.mode);
             this.setState({ ...this.state, saving: false });
         }
         if (this.state.canvas.terrainSize < 8 && this.props.problem.canvas.terrainSize
@@ -173,7 +173,8 @@ class Creator extends React.Component<ICreatorProps, ICreatorStates> {
                     name: tab as string,
                     active: this.state.currentTab === tab,
                     callback: this.selectTab.bind(this, tab)
-                }))} buttons={[
+                }))} buttons={
+                    [
                     {
                         name: "Save",
                         callback: this.editProblem.bind(this)
@@ -339,7 +340,9 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    editProblem: (problem: IProblemState) => dispatch(editProblem(problem)),
+    editProblem: (problem: IProblemState, mode: "edit" | "audit") => {
+        dispatch(editProblem(problem, mode))
+    },
     getProblem: (id: number) => dispatch(getProblemAsCreator(id)),
     getCategories: () => dispatch(getCategoriesThunk()),
     getDifficulties: () => dispatch(getDifficultiesThunk()),

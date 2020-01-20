@@ -14,6 +14,8 @@ export interface IProblemInfo extends IProblem {
     maxUsedBlocks: number;
     maxMoveTimes: number;
     deduction: IProblemDeduction[];
+
+    reason: string;
 }
 
 export interface IProblemStatus {
@@ -26,3 +28,9 @@ export interface IProblemDeduction {
     deduct: number;
 }
 
+export enum ProblemStatus {
+    WorkInProgress = 1,
+    ReadyToAudit = 2,
+    Rejected = 3,
+    Published = 4,
+}

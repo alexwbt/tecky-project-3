@@ -103,7 +103,7 @@ export default class ProblemRouter {
             maxMoveTimes: problem.maxMoveTimes,
             deduction: problem.deduction
         };
-        const success = await this.service.editProblem(
+        const response = await this.service.editProblem(
             req.user["id"],
             pid,
             title,
@@ -115,16 +115,10 @@ export default class ProblemRouter {
             game
         );
 
-        if (success) {
-            res.status(200).json({
-                success: true,
-                message: "Successfully Saved"
-            });
+        if (response && response.success) {
+            res.status(200).json(response);
         } else {
-            res.status(400).json({
-                success: false,
-                message: "You are not the creator of this challenge."
-            });
+            res.status(400).json(response);
         }
     };
 
@@ -198,6 +192,7 @@ export default class ProblemRouter {
                     difficultyID: info.difficulty_id,
                     statusID: info.status_id,
                     score: info.score,
+                    reason: info.reason,
                     ...content
                 }
             });

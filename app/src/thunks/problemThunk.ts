@@ -28,7 +28,7 @@ export function createProblem() {
     };
 }
 
-export function editProblem(problem: IProblemState) {
+export function editProblem(problem: IProblemState, mode: "edit" | "audit") {
     return async (dispatch: Dispatch<ProblemActions>) => {
         try {
             let formData = new FormData();
@@ -56,7 +56,14 @@ export function editProblem(problem: IProblemState) {
                 }
             }
 
-            const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
+            let link = "";
+            if (mode === "edit") {
+                link = `${REACT_APP_API_SERVER}/problem`
+            } else {
+                link = `${REACT_APP_API_SERVER}/audit`
+            }
+
+            const res = await fetch(link, {
                 method: "PUT",
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,

@@ -11,7 +11,7 @@ export default class Character {
     public fakeY: number;
 
     public collected: Obj[] = [];
-    
+
     private movedTime = 0;
 
     private standOffset = {
@@ -45,10 +45,12 @@ export default class Character {
     }
 
     move(dir: number) {
-        this.movedTime++;
-        this.moveTo.push(dir);
-        this.fakeX += EIGHT[dir][0];
-        this.fakeY += EIGHT[dir][1];
+        if (dir !== null) {
+            this.movedTime++;
+            this.moveTo.push(dir);
+            this.fakeX += EIGHT[dir][0];
+            this.fakeY += EIGHT[dir][1];
+        }
     }
 
     getMovedTime() {

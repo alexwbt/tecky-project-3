@@ -32,6 +32,8 @@ const initialState: IProblemState = {
     deduction: ([] as IProblemDeduction[]),
     image: "",
 
+    reason: "",
+
     // Editor
     canvas: {},
     code: "",
@@ -83,6 +85,8 @@ const problemReducer = (state: IProblemState = initialState, action: ProblemActi
                 maxMoveTimes: action.maxMoveTimes,
                 deduction: action.deduction,
                 image: action.image,
+
+                reason: action.reason,
             };
         case "SET_CANVAS_CONTENT":
             return {

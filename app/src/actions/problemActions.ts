@@ -45,6 +45,8 @@ export function setDescription(description: IProblemInfo) {
         maxMoveTimes: description.maxMoveTimes,
         deduction: description.deduction,
         image: description.image,
+
+        reason: description.reason,
     };
 }
 

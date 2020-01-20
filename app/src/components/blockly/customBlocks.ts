@@ -40,14 +40,10 @@ Blockly.Blocks['movePlayer'] = {
         this.appendValueInput('VALUE')
             .setCheck('Number')
             .appendField("Player");
-        this.appendDummyInput()
-            .appendField('Move')
-            .appendField(new Blockly.FieldDropdown([
-                ['up', 'UP'],
-                ['down', 'DOWN'],
-                ['left', 'LEFT'],
-                ['right', 'RIGHT']
-            ]), 'DIR');
+        this.appendValueInput('DIR')
+            .setCheck('Direction')
+            .appendField("move");
+        this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
         this.setColour(160);
@@ -56,15 +52,8 @@ Blockly.Blocks['movePlayer'] = {
 
 Blockly.JavaScript['movePlayer'] = function (block: any) {
     const player = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER);
-    const dir = block.getFieldValue('DIR');
-    let dirNum = -1;
-    switch (dir) {
-        case "UP": dirNum = 2; break;
-        case "DOWN": dirNum = 3; break;
-        case "LEFT": dirNum = 0; break;
-        case "RIGHT": dirNum = 1; break;
-    }
-    return `this.getPlayer(${player}).move(${dirNum});\n`;
+    const dir = Blockly.JavaScript.valueToCode(block, 'DIR', Blockly.JavaScript.ORDER_MEMBER);
+    return `this.getPlayer(${player}).move(${dir});\n`;
 };
 
 Blockly.Blocks['isRoad'] = {
@@ -72,14 +61,10 @@ Blockly.Blocks['isRoad'] = {
         this.appendValueInput('VALUE')
             .setCheck('Number')
             .appendField("Player");
-        this.appendDummyInput()
-            .appendField(new Blockly.FieldDropdown([
-                ['up', 'UP'],
-                ['down', 'DOWN'],
-                ['left', 'LEFT'],
-                ['right', 'RIGHT']
-            ]), 'DIR')
-            .appendField('is road');
+        this.appendValueInput('DIR')
+            .setCheck('Direction')
+            .appendField("is road");
+        this.setInputsInline(true);
         this.setOutput(true, 'Boolean');
         this.setColour(160);
     }
@@ -87,6 +72,26 @@ Blockly.Blocks['isRoad'] = {
 
 Blockly.JavaScript['isRoad'] = function (block: any) {
     const player = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER);
+    const dir = Blockly.JavaScript.valueToCode(block, 'DIR', Blockly.JavaScript.ORDER_MEMBER);
+    return [`this.getContent().isRoad(this.getPlayer(${player}), ${dir})`, Blockly.JavaScript.ORDER_MEMBER];
+};
+
+
+Blockly.Blocks['playerDir'] = {
+    init: function () {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldDropdown([
+                ['up', 'UP'],
+                ['down', 'DOWN'],
+                ['left', 'LEFT'],
+                ['right', 'RIGHT']
+            ]), 'DIR');
+        this.setOutput(true, 'Direction');
+        this.setColour(160);
+    }
+};
+
+Blockly.JavaScript['playerDir'] = function (block: any) {
     const dir = block.getFieldValue('DIR');
     let dirNum = -1;
     switch (dir) {
@@ -95,5 +100,27 @@ Blockly.JavaScript['isRoad'] = function (block: any) {
         case "LEFT": dirNum = 0; break;
         case "RIGHT": dirNum = 1; break;
     }
-    return [`this.getContent().isRoad(this.getPlayer(${player}), ${dirNum})`, Blockly.JavaScript.ORDER_MEMBER];
+    return [dirNum, Blockly.JavaScript.ORDER_MEMBER];
+};
+
+
+Blockly.Blocks['turnDir'] = {
+    init: function () {
+        this.appendValueInput('DIR')
+            .setCheck('Direction')
+            .appendField("turn");
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldDropdown([
+                ['left', 'LEFT'],
+                ['right', 'RIGHT']
+            ]), 'TURN_TO');
+        this.setOutput(true, 'Direction');
+        this.setColour(160);
+    }
+};
+
+Blockly.JavaScript['turnDir'] = function (block: any) {
+    const turnTo = block.getFieldValue('TURN_TO');
+    const dir = Blockly.JavaScript.valueToCode(block, 'DIR', Blockly.JavaScript.ORDER_MEMBER);
+    return [`this.turnDir(${dir}, ${turnTo === "RIGHT"})`, Blockly.JavaScript.ORDER_MEMBER];
 };
