@@ -85,7 +85,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                 <div className="row">
                     <div className="col-12 text-center mt-4">
                         <img
-                            src="https://cdn.shopify.com/s/files/1/0150/0643/3380/files/patrick.png?7948"
+                            src="https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"
                             width="180"
                             className="rounded-circle shadow"
                             style={{ border: "5px solid white" }}

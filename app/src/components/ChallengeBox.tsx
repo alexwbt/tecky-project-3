@@ -22,7 +22,7 @@ const ChallengeBox: React.FC<IChallengeBoxProps> = (props: IChallengeBoxProps) =
             className="w-100 challenge-box"
             src={`${process.env.REACT_APP_CHALLENGE_IMAGE_LINK}/${props.id}.png`}
             onError={(event) => {
-                event.currentTarget.src = "https://cdn.shopify.com/s/files/1/0150/0643/3380/files/patrick.png?7948";
+                event.currentTarget.src = "https://centralcoastdentalimplants.com/wp-content/uploads/2016/10/orionthemes-placeholder-image-750x750.jpg";
             }}
             alt="problem-icon" />
         <div className="challenge-box-des">
