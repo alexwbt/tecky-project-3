@@ -45,7 +45,7 @@ export default class Character {
     }
 
     move(dir: number) {
-        if (dir !== null) {
+        if (typeof dir === "number") {
             this.movedTime++;
             this.moveTo.push(dir);
             this.fakeX += EIGHT[dir][0];
