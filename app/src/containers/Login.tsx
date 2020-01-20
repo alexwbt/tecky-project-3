@@ -4,7 +4,9 @@ import { FormGroup } from "react-bootstrap";
 import { ReduxThunkDispatch, IRootState } from "../store";
 import { connect } from "react-redux";
 import { login, loginFacebook, register } from "../thunks/authThunks";
-import ReactFacebookLogin,{ ReactFacebookLoginInfo } from  "react-facebook-login";
+import ReactFacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
+import { faFacebook } from "@fortawesome/free-brands-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface ILoginProps {
     message: string;
@@ -139,21 +141,17 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                 Register
             </button>
 
-            < br/>
-            <FormGroup>
-                <div className="fb-button">
-                    <ReactFacebookLogin
-                        appId={process.env.REACT_APP_FACEBOOK_APP_ID || ''}
-                        autoLoad={false}
-                        fields="name,email,birthday"
-                        cssClass="btn FbButton"
-                        onClick={this.fBOnCLick}
-                        callback={this.fBCallback}
-                    />
-                </div>
-            </FormGroup>
+            <ReactFacebookLogin
+                appId={process.env.REACT_APP_FACEBOOK_APP_ID || ''}
+                autoLoad={false}
+                fields="name,email,birthday"
+                cssClass="btn p-1 px-2 text-white bg-primary d-block mt-1"
+                textButton="Facebook Login"
+                icon={<FontAwesomeIcon icon={faFacebook} className="mr-2" />}
+                onClick={this.fBOnCLick}
+                callback={this.fBCallback} />
         </>
-    } 
+    }
 
     renderRegisterForm() {
         return <>
@@ -265,7 +263,7 @@ const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
         dispatch(login(username, password)),
     register: (email: string, username: string, password: string, cpassword: string, year: number) =>
         dispatch(register(email, username, password, cpassword, year)),
-    loginFacebook: (accessToken:string) => dispatch(loginFacebook(accessToken))
+    loginFacebook: (accessToken: string) => dispatch(loginFacebook(accessToken))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
