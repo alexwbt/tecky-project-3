@@ -52,14 +52,14 @@ interface IProfileState {
     currentTab: Tab;
 }
 
-type Tab = "Info" | "Posts" | "Solved";
+type Tab = "Posts" | "Solved";
 
 class Profile extends React.Component<IProfileProps, IProfileState> {
 
     constructor(props: IProfileProps) {
         super(props);
         this.state = {
-            currentTab: "Info"
+            currentTab: "Posts"
         };
     }
 
@@ -109,27 +109,21 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                         </div>
                     </div>
 
+                    <div className="col-12 p-2 text-center">
+                        {this.props.username && <h6>username: {this.props.username}</h6>}
+                        {this.props.email && <h6>email: {this.props.email}</h6>}
+                        {this.props.location && <h6>location: {this.props.location}</h6>}
+                    </div>
+
                     {/* Tab */}
                     <TabSelect tabs={[
-                        "Info" as Tab,
                         "Posts" as Tab,
                         "Solved" as Tab
                     ].map(tab => ({
                         name: tab,
                         active: this.state.currentTab === tab,
                         callback: this.selectTab.bind(this, tab)
-                    }))} color="light" color2="info" className="mt-4 mx-auto text-center rounded-pill" />
-                </div>
-
-                {/* Info Tab */}
-                <div className="row pt-2 justify-content-center">
-                    {
-                        this.state.currentTab === "Info" && <div className="col-6 p-2 text-center">
-                            <h6>username: {this.props.username}</h6>
-                            <h6>email: {this.props.email}</h6>
-                            <h6>location: {this.props.location}</h6>
-                        </div>
-                    }
+                    }))} color="light" color2="info" className="mt-2 mx-auto text-center rounded-pill" />
                 </div>
 
                 {/* Posts Tab */}

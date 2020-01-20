@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { getProfile } from "../thunks/profileThunks";
 import { IRootState, ReduxThunkDispatch } from "../store";
 import { toast } from "react-toastify";
+import { push } from "connected-react-router";
 
 
 interface IProfileProps {
@@ -21,6 +22,7 @@ interface IProfileProps {
         name: string;
     }[];
     getProfile: (username: string) => void;
+    open: (path: string) => void;
 }
 
 interface IProfileState {
@@ -79,10 +81,9 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
     render() {
         return <div className="d-flex flex-column vh-100">
             <NavBar />
-            <div className="container bg-white border shadow flex-grow-1" style={{overflow: "auto"}}>
+            <div className="container bg-white border shadow flex-grow-1" style={{ overflow: "auto" }}>
                 <div className="row p-2">
-                    {/* userInfo */}
-                    <div className="ml-5 mt-2 rounded-pill" style={{ minWidth: 300, background: "rgba(240, 240, 240)" }}>
+                    <div className="ml-5 mt-3 rounded-pill" style={{ minWidth: 300, background: "rgba(240, 240, 240)" }}>
                         <img
                             src="https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"
                             width="130"
@@ -96,7 +97,6 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                         </div>
                     </div>
 
-                    {/* SearchBar */}
                     <div className="col d-flex align-items-end px-5">
                         <input
                             className="rounded-pill border p-2 pl-4 w-100"
@@ -107,9 +107,8 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                 </div>
 
                 <div className="row justify-content-center">
-                    <div className="col-11 p-2 text-center">
-                        {/* rankingTable */}
-                        <Table bordered striped hover responsive="lg" size="sm">
+                    <div className="col-11 p-2 pt-4 text-center">
+                        <Table hover responsive="lg" size="sm">
                             <thead>
                                 <tr>
                                     <th className="border-0">Rank</th>
@@ -133,12 +132,13 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                                             }
                                         }
                                         return { ...user, score };
-                                    }).sort((a, b) => b.score - a.score).filter(p => p.score > 0).map((user, i) => <tr key={i}>
-                                        <td>{this.state.rankingList.findIndex((u: any) => u.username === user.username) + 1}</td>
-                                        <td>{user.username}</td>
-                                        <td>{user.experience}</td>
-                                        <td>{user.name}</td>
-                                    </tr>)
+                                    }).sort((a, b) => b.score - a.score).filter(p => p.score > 0).map((user, i) =>
+                                        <tr key={i} onClick={() => this.props.open("/profile/" + user.username)}>
+                                            <td className="py-3">{this.state.rankingList.findIndex((u: any) => u.username === user.username) + 1}</td>
+                                            <td className="py-3">{user.username}</td>
+                                            <td className="py-3">{user.experience}</td>
+                                            <td className="py-3">{user.name}</td>
+                                        </tr>)
                                 }
                             </tbody>
                         </Table>
@@ -156,7 +156,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
-    getProfile: (username: string) => dispatch(getProfile(username))
+    getProfile: (username: string) => dispatch(getProfile(username)),
+    open: (path: string) => dispatch(push(path))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeaderBoard);
