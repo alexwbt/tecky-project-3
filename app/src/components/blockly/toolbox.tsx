@@ -4,7 +4,9 @@ import { Block, Value, Shadow, Field } from "./BlocklyComponent";
 export const blocklyBlocks: BlockList = {
     "Player": [
         "movePlayer",
-        "isRoad"
+        "isRoad",
+        "playerDir",
+        "turnDir"
     ],
     "Logic": [
         "controls_if",
@@ -90,12 +92,22 @@ export const getBlock = (block: string) => {
                         <Field name="NUM">0</Field>
                     </Shadow>
                 </Value>
+                <Value name="DIR">
+                    <Shadow type="playerDir">
+                        <Field name="DIR">UP</Field>
+                    </Shadow>
+                </Value>
             </Block>;
         case "isRoad":
             return <Block type="isRoad">
                 <Value name="VALUE">
                     <Shadow type="math_number">
                         <Field name="NUM">0</Field>
+                    </Shadow>
+                </Value>
+                <Value name="DIR">
+                    <Shadow type="playerDir">
+                        <Field name="DIR">UP</Field>
                     </Shadow>
                 </Value>
             </Block>;
