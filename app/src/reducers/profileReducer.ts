@@ -1,6 +1,5 @@
 import ProfileActions from "../actions/profileActions";
 
-
 export interface IProfileState {
     username: string;
     email: string;
@@ -53,6 +52,11 @@ const profileReducer = (state: IProfileState = initialState, action: ProfileActi
                 postsRecord: action.postsRecord,
                 solvedRecord: action.solvedRecord
             }
+            case "LOAD_POST_RECORD":
+                return {
+                    ...state,
+                    postsRecord: action.postsRecord,
+                }
         default:
             return state;
     }

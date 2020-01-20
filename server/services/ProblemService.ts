@@ -1,7 +1,7 @@
 import * as Knex from "knex";
 import Tables from "../tables";
 import { MongoClient, Db } from "mongodb";
-
+import UserService from "../services/UserService"; 
 
 export interface IProblem {
     title: string;
@@ -30,7 +30,7 @@ export default class ProblemService {
 
     private mongodb: Db;
 
-    constructor(private knex: Knex, mongodb: Promise<Db>) {
+    constructor(private knex: Knex, mongodb: Promise<Db>, private userService: UserService) {
         mongodb.then((db: Db) => {
             this.mongodb = db;
         });
@@ -113,6 +113,9 @@ export default class ProblemService {
         return statuses;
     }
 
+    async deletePost(problem_id: number) {
+        await this.knex(Tables.PROBLEM).where({id: problem_id}).update({status_id: 5});
+    }
 }
 
 

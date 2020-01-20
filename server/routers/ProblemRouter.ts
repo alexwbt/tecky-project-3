@@ -19,6 +19,7 @@ export default class ProblemRouter {
         router.get("/creator/:problemID", isLoggedIn, catcher(this.getProblemAsCreator));
         router.get("/:problemID", catcher(this.getProblem));
         router.get("/", catcher(this.getProblemList));
+        router.delete("/", isLoggedIn, catcher(this.deleteProblem));
         return router;
     }
 
@@ -252,4 +253,14 @@ export default class ProblemRouter {
             statuses
         });
     };
+
+    private deleteProblem = async (req:Request, res:Response) => {
+        const problemID = req.body.problemID;
+        await this.service.deletePost(problemID);
+        const postsRecord = await this.userService.getOwnPostsRecord(req.user["id"]);
+        res.json({
+            success: true,
+            postsRecord
+        })
+    } 
 }

@@ -4,7 +4,7 @@ import TabSelect from "../components/TabSelect";
 import DifficultyBox from "../components/DifficultyBox";
 import { push } from "connected-react-router";
 import { connect } from "react-redux";
-import { getProfile } from "../thunks/profileThunks";
+import { getProfile , deletePost} from "../thunks/profileThunks";
 import { Button, Table } from "react-bootstrap";
 import { getDifficultiesThunk } from "../thunks/difficultyThunks";
 import { IRootState, ReduxThunkDispatch } from "../store";
@@ -40,7 +40,8 @@ interface IProfileProps {
     }[];
     getProfile: (username: string) => void;
     getDifficulties: () => void;
-    open: (path: string) => void
+    open: (path: string) => void;
+    deletePost: (problemID: number) => void
 }
 
 interface IProfileState {
@@ -72,6 +73,12 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     private openEditor = (id: number) => {
         console.log(id);
         this.props.open(`/challenge/edit/${id}`)
+    }
+    
+    private deletePost = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
+        event.preventDefault();
+        event.stopPropagation();
+        this.props.deletePost(id);
     }
 
     render() {
@@ -155,7 +162,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                                                 <td>{post.statusName}</td>
                                                 <td>{post.created_at.substr(0, 10)}</td>
                                                 <td>{post.updated_at.substr(0, 10)}</td>
-                                                <td><Button variant="info">Delete</Button></td>
+                                                <td><Button variant="info" onClick={(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => this.deletePost(event, post.problemID)}>Delete</Button></td>
                                             </tr>)
                                     }
                                 </tbody>
@@ -212,6 +219,7 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
     getProfile: (username: string) => dispatch(getProfile(username)),
+    deletePost: (problemID: number) => dispatch(deletePost(problemID)),
     getDifficulties: () => dispatch(getDifficultiesThunk()),
     open: (path: string) => dispatch(push(path))
 });

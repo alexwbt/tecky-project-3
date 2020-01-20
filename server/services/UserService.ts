@@ -96,7 +96,8 @@ export default class UserService {
             (`${Tables.PROBLEM}.id as problemID`,`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}_id`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
             .from(`${Tables.PROBLEM}`)
             .leftJoin(`${Tables.PROBLEM_STATUS}`,`problem.status_id`,`=`,`${Tables.PROBLEM_STATUS}.id`)
-            .where(`${Tables.PROBLEM}.user_id`,id));
+            .where(`${Tables.PROBLEM}.user_id`,id)
+            .andWhere(`${Tables.PROBLEM}.status_id`,`<>`, 5));
         }
 
     async getSolvedRecord(id: number) {
