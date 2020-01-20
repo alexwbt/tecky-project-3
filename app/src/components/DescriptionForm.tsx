@@ -1,11 +1,11 @@
 import React from "react";
-import { Container, Form, Modal, Button } from "react-bootstrap";
+import { Container, Form, Modal, Button, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 import ReactCrop, { Crop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
-import { IProblemInfo, IProblemStatus } from "../models/Problem";
+import { IProblemInfo, IProblemStatus, ProblemStatus } from "../models/Problem";
 import { IRootState, ReduxThunkDispatch } from '../store';
 import { connect } from "react-redux";
 import { changed, setDescription } from "../actions/problemActions";
@@ -60,6 +60,8 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
     }
 
     private inputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        console.log(event.target.name, event.target.value);
+        
         let value: string | number = event.target.value;
         if (event.target.type === 'number') {
             value = Math.max(Number(value), Number(event.target.getAttribute("min")))
@@ -72,6 +74,14 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
         // this.setState({ ...this.state, [event.target.name]: event.target.value });
         this.props.changed();
     };
+
+    private onStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        this.props.setDescription({
+            ...this.props,
+            statusID: parseInt(event.target.value)
+        });
+        this.props.changed();
+    }
 
     private handleErrorOnUploadedImg = () => {
         this.setState({
@@ -211,8 +221,6 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
         }
     }
 
-    
-
     renderRequirement(categoryID: number) {
         switch (categoryID) {
             case 1:
@@ -251,7 +259,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             min="0"
                             required
                             // value={this.props.deduction[0] ? (this.props.deduction[0].deduct !== 0 ? Number(this.props.deduction[0].deduct).toString() : "") : ""}
-                            value={this.props.deduction[0]  ? this.props.deduction[0].deduct.toString() : "0" }
+                            value={this.props.deduction[0] ? this.props.deduction[0].deduct.toString() : "0"}
                             onChange={this.deductionChange} />
                     </Form.Group>
 
@@ -263,7 +271,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             min="0"
                             required
                             // value={this.props.deduction[1] ? (this.props.deduction[1].deduct !== 0 ? Number(this.props.deduction[1].deduct).toString() : "") : ""}
-                            value={this.props.deduction[1]  ? this.props.deduction[1].deduct.toString() : "0" }
+                            value={this.props.deduction[1] ? this.props.deduction[1].deduct.toString() : "0"}
                             onChange={this.deductionChange} />
                     </Form.Group>
 
@@ -275,7 +283,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                             min="0"
                             required
                             // value={this.props.deduction[2] ? (this.props.deduction[2].deduct !== 0 ? Number(this.props.deduction[2].deduct).toString() : "") : ""}
-                            value={this.props.deduction[2]  ? this.props.deduction[2].deduct.toString() : "0" }
+                            value={this.props.deduction[2] ? this.props.deduction[2].deduct.toString() : "0"}
                             onChange={this.deductionChange} />
                     </Form.Group>
                 </>
@@ -332,6 +340,14 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
 
     render() {
         return <Container className="shadow" style={{ overflowY: "auto", height: this.props.height, padding: "20px 75px 50% 75px" }}>
+            {
+                this.props.statusID === ProblemStatus.Rejected && this.props.mode === "edit" &&
+                <Alert variant="danger">
+                    <Alert.Heading>Rejected Reason</Alert.Heading>
+                    <p>{this.props.reason}</p>
+                </Alert>
+            }
+
             <Form className="pb-3" id="descForm">
                 <h2 className="pt-3">Information</h2>
                 <Form.Group controlId="formTitle">
@@ -366,10 +382,10 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                                 {
                                     ((this.props.image && this.state.imageCropCompleted) || (this.state.showUploadedImg)) &&
                                     <img
-                                    src={this.props.image ? this.props.image : `${process.env.REACT_APP_CHALLENGE_IMAGE_LINK}/${this.props.pid}.png`}
-                                    onError={this.handleErrorOnUploadedImg}
-                                    className="imageSize imagePreview"
-                                    alt="cropped" />
+                                        src={this.props.image ? this.props.image : `${process.env.REACT_APP_CHALLENGE_IMAGE_LINK}/${this.props.pid}.png`}
+                                        onError={this.handleErrorOnUploadedImg}
+                                        className="imageSize imagePreview"
+                                        alt="cropped" />
                                 }
                                 {
 
@@ -451,7 +467,7 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
 
                 <Form.Group controlId="formStatus">
                     <Form.Label>Status:</Form.Label>
-                    <Form.Control name="statusID" as="select" value={this.props.statusID.toString()} onChange={this.inputChange}>
+                    <Form.Control name="statusID" as="select" value={this.props.statusID.toString()} onChange={this.onStatusChange}>
                         {
                             this.getSelectableStatuses().map(status =>
                                 <option key={status.id} value={status.id}>{status.name}</option>
@@ -459,6 +475,21 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
                         }
                     </Form.Control>
                 </Form.Group>
+
+                {
+                    this.props.statusID === ProblemStatus.Rejected && this.props.mode === "audit" &&
+                    <Form.Group controlId="formRejectedReason">
+                        <Form.Label>Rejected Reason:</Form.Label>
+                        <Form.Control
+                            name="reason"
+                            as="textarea"
+                            rows="3"
+                            placeholder="Reason"
+                            required
+                            value={this.props.reason}
+                            onChange={this.inputChange} />
+                    </Form.Group>
+                }
             </Form>
         </Container>
     }
@@ -476,6 +507,8 @@ const mapStateToProps = (state: IRootState) => ({
     maxMoveTimes: state.problem.maxMoveTimes,
     deduction: state.problem.deduction,
     image: state.problem.image,
+
+    reason: state.problem.reason,
 
     categories: state.category.list,
     difficulties: state.difficulty.list,

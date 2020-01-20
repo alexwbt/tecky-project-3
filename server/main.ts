@@ -13,8 +13,6 @@ import * as multer from 'multer';
 
 // middleware
 import { isLoggedIn } from "./passport";
-import { isAdmin } from "./middleware";
-
 // Body Parser
 import * as bodyParser from "body-parser";
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -92,9 +90,9 @@ app.use("/progress", progressRouter.router());
 import AuditService from "./services/AuditService";
 import AuditRouter from "./routers/AuditRouter";
 
-export const auditService = new AuditService(knex);
-const auditRouter = new AuditRouter(auditService, userService);
-app.use("/audit", isLoggedIn , isAdmin, auditRouter.router());
+export const auditService = new AuditService(knex, mongodb);
+const auditRouter = new AuditRouter(auditService, problemService, uploadChallengeImage);
+app.use("/audit", isLoggedIn, auditRouter.router());
 
 // run server
 app.listen(PORT, () => {
