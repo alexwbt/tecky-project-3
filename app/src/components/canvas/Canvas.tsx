@@ -223,10 +223,10 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
                     getContent: () => this.content,
                     turnDir: (dir: number, right: boolean) => {
                         switch (dir) {
-                            case 0: return right ? 3 : 2;
-                            case 1: return right ? 2 : 3;
-                            case 2: return right ? 0 : 1;
-                            case 3: return right ? 1 : 0;
+                            case 0: return right ? 2 : 3;
+                            case 1: return right ? 3 : 2;
+                            case 2: return right ? 1 : 0;
+                            case 3: return right ? 0 : 1;
                         }
                     }
                 }, code);
