@@ -1,6 +1,6 @@
 import * as Knex from "knex";
 import Tables from "../tables";
-import UserService from "../services/UserService"; 
+import UserService from "../services/UserService";
 import { Db } from "mongodb";
 import { Audit } from "./AuditService";
 
@@ -81,7 +81,7 @@ export default class ProblemService {
                     message: "This challenge is auditing or published. You are not allowed to edit."
                 };
             }
-            
+
             await trx(Tables.PROBLEM).where({ user_id, id }).update({
                 title, description, category_id, difficulty_id, status_id, score
             });
@@ -128,9 +128,10 @@ export default class ProblemService {
     }
 
     async getProblemList() {
-        const problems = await this.knex(Tables.PROBLEM).select([`id`, "title", "difficulty_id", "created_at", "updated_at", "user_id"])
+        const problems = await this.knex(Tables.PROBLEM)
+            .select([`id`, "title", "difficulty_id", "created_at", "updated_at", "user_id"])
             .orderBy("created_at")
-        // .where({ status_id : 4 });
+            .where({ status_id: 4 });
         for (let i = 0; i < problems.length; i++) {
             problems[i].rating = await this.getProblemRating(problems[i].id);
         }
@@ -166,7 +167,7 @@ export default class ProblemService {
     }
 
     async deletePost(problem_id: number) {
-        await this.knex(Tables.PROBLEM).where({id: problem_id}).update({status_id: 5});
+        await this.knex(Tables.PROBLEM).where({ id: problem_id }).update({ status_id: 5 });
     }
 }
 
