@@ -1,12 +1,9 @@
 import UserService from "../services/UserService";
-import * as jwtSimple from "jwt-simple";
-import jwt from "../jwt";
 import fetch from "node-fetch";
 import { Router, Request, Response } from "express";
 import { catcher } from "../middleware";
 import { getToken, isLoggedIn } from "../passport";
 import { checkPassword, hashPassword } from "../hash";
-
 
 export default class UserRouter {
 
@@ -14,7 +11,7 @@ export default class UserRouter {
 
     router() {
         const router = Router();
-        router.post("/login", catcher(this.login)); 
+        router.post("/login", catcher(this.login));
         router.post("/login/facebook", catcher(this.loginFacebook));
         router.post("/register", catcher(this.register));
         router.get("/profile/:username", catcher(this.getProfile));
@@ -71,43 +68,33 @@ export default class UserRouter {
         });
     };
 
-    private loginFacebook = async (req:Request,res:Response)=>{
-        try{
-            if(!req.body.accessToken){
-                res.status(401).json({msg:"Wrong Access Token!"});
+    private loginFacebook = async (req: Request, res: Response) => {
+        try {
+            if (!req.body.accessToken) {
+                res.status(401).json({ msg: "Wrong Access Token!" });
                 return;
             }
-            const {accessToken} = req.body;
-            const fetchResponse =await fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email,birthday`);
+            const { accessToken } = req.body;
+            const fetchResponse = await fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email,birthday`);
             const result = await fetchResponse.json();
-            if(result.error){
-                res.status(401).json({msg:"Wrong Access Token!"});
-                return ;
+            if (result.error) {
+                res.status(401).json({ msg: "Wrong Access Token!" });
+                return;
             }
-            console.log(result);
             const userId = await this.service.getUserIdWithEmail(result.email);
             let user = await this.service.getUserWithUsername(result.email.split("@")[0]);
             if (user || userId) {
-                res.status(400).json({
-                    success: false,
-                    message: "Email or Username has been taken"
+                res.status(200).json({
+                    success: true,
+                    token: getToken(user.id, user.username),
+                    role: (await this.service.getProfileWithId(user.id)).role_id
                 });
-                return;
             } else {
                 user = await this.service.register(result.email, result.email.split("@")[0], await hashPassword("123"), new Date(result.birthday).getFullYear());
             }
-            const payload = {
-                id: user.id,
-                username: user.username
-            };
-            res.status(200).json({
-                success: true,
-                token: getToken(user.id, user.username),
-                role: (await this.service.getProfileWithId(user.id)).role_id
-            });
-        }catch(e){
+        } catch (e) {
             console.log(e);
-            res.status(500).json({msg:e.toString()})
+            res.status(500).json({ msg: e.toString() })
         }
     }
 
@@ -206,7 +193,7 @@ export default class UserRouter {
             });
             return;
         }
-        
+
         res.status(200).json({
             success: true,
             username: user.username,
