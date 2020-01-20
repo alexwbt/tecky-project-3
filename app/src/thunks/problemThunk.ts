@@ -4,6 +4,7 @@ import { IProblemState } from "../reducers/problemReducer";
 import { setSaved } from "../actions/problemActions";
 import { toast } from "react-toastify";
 import { push } from "connected-react-router";
+import ProfileActions, { loadPostRecord } from "../actions/profileActions";
 
 
 const { REACT_APP_API_SERVER } = process.env;
@@ -75,6 +76,33 @@ export function editProblem(problem: IProblemState, mode: "edit" | "audit") {
             dispatch(setSaved(res.status === 200 && result.success, result.message));
             if (res.status !== 200 || !result.success) {
                 toast.error("Failed to save changes. (" + result.message + ")");
+            }
+        } catch (err) {
+            toast.error(err.message);
+        }
+    };
+}
+
+
+
+export function deletePost (problemID: number) {
+    return async (dispatch: Dispatch<ProfileActions>) => {
+        try {
+            const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ problemID })
+            });
+            const result = await res.json();
+
+            if (res.status === 200 && result.success) {
+                dispatch(loadPostRecord(result.postsRecord))
+                toast.success("Deleted problem");
+            } else {
+                toast.error(result.message);
             }
         } catch (err) {
             toast.error(err.message);

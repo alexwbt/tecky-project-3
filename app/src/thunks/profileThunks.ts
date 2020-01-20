@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import ProfileActions, { loadProfile, loadPostRecord } from "../actions/profileActions";
+import ProfileActions, { loadProfile } from "../actions/profileActions";
 import { push } from "connected-react-router";
 import { toast } from "react-toastify";
 
@@ -42,31 +42,6 @@ export function submitProgress(problemID: number, score: number) {
 
             if (res.status === 200 && result.success) {
                 toast.success(`+ ${result.experience} exp`);
-            } else {
-                toast.error(result.message);
-            }
-        } catch (err) {
-            toast.error(err.message);
-        }
-    };
-}
-
-export function deletePost (problemID: number) {
-    return async (dispatch: Dispatch<ProfileActions>) => {
-        try {
-            const res = await fetch(`${REACT_APP_API_SERVER}/problem`, {
-                method: "DELETE",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({ problemID })
-            });
-            const result = await res.json();
-
-            if (res.status === 200 && result.success) {
-                dispatch(loadPostRecord(result.postsRecord))
-                toast.success(`deleted`);
             } else {
                 toast.error(result.message);
             }

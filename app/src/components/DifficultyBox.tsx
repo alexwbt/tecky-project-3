@@ -13,7 +13,7 @@ const DifficultyBox: React.FC<IDifficultyBoxProps> = (props: IDifficultyBoxProps
     const list = useSelector((state: IRootState) => state.difficulty.list);
     const diff = list.find(dif => dif.id === props.difficultyID);
     
-    return <div className={"d-inline-block px-2 rounded-pill mt-2 h5 text-center text-monospace " + (diff ? bg[diff.id - 1] : "")}>
+    return <div className={"d-inline-block px-2 rounded-pill mt-2 h6 text-center text-monospace " + (diff ? bg[diff.id - 1] : "")}>
         {diff?.name}
     </div>
 };

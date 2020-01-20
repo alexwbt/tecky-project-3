@@ -19,6 +19,7 @@ export interface IProfileState {
         updated_at: string;
     }[];
     solvedRecord: {
+        problemID: number;
         title: string;
         difficulty_id: number;
         score: number;

@@ -4,10 +4,13 @@ import TabSelect from "../components/TabSelect";
 import DifficultyBox from "../components/DifficultyBox";
 import { push } from "connected-react-router";
 import { connect } from "react-redux";
-import { getProfile , deletePost} from "../thunks/profileThunks";
+import { getProfile } from "../thunks/profileThunks";
 import { Button, Table } from "react-bootstrap";
 import { getDifficultiesThunk } from "../thunks/difficultyThunks";
 import { IRootState, ReduxThunkDispatch } from "../store";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { deletePost } from "../thunks/problemThunk";
 
 interface IProfileProps {
     match: {
@@ -33,6 +36,7 @@ interface IProfileProps {
         updated_at: string;
     }[];
     solvedRecord: {
+        problemID: number;
         title: string;
         difficulty_id: number;
         score: number;
@@ -70,15 +74,8 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
         this.setState({ ...this.state, currentTab: tab });
     }
 
-    private openEditor = (id: number) => {
-        console.log(id);
-        this.props.open(`/challenge/edit/${id}`)
-    }
-    
-    private deletePost = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
-        event.preventDefault();
-        event.stopPropagation();
-        this.props.deletePost(id);
+    private open = (id: number, editor: boolean) => {
+        this.props.open(`/challenge/${editor ? "edit" : "solve"}/${id}`)
     }
 
     render() {
@@ -86,9 +83,9 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
         if (this.props.level) {
             expbar = this.props.level.exp / this.props.level.req * 100;
         }
-        return <>
+        return <div className="d-flex flex-column vh-100">
             <NavBar />
-            <div className="container bg-white border shadow" style={{ height: "100vh", overflow: "auto" }}>
+            <div className="container bg-white flex-grow-1" style={{ overflow: "auto" }}>
                 <div className="row">
                     <div className="col-12 text-center mt-4">
                         <img
@@ -139,30 +136,39 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                 <div className="row pt-2 justify-content-center">
                     {
                         this.state.currentTab === "Posts" && <div className="col-10 p-2 text-center">
-                            <h6>Posts Challenge</h6>
-                            <Table striped bordered hover responsive="lg" size="sm" style={{ marginTop: "5px" }}>
+                            <Table hover responsive="lg" size="sm">
                                 <thead>
                                     <tr>
-                                        <th></th>
-                                        <th>Title</th>
-                                        <th>Difficulty</th>
-                                        <th>Status</th>
-                                        <th>Created at</th>
-                                        <th>Last edit</th>
-                                        <th>Delete?</th>
+                                        <th className="border-0">Title</th>
+                                        <th className="border-0">Difficulty</th>
+                                        <th className="border-0">Status</th>
+                                        <th className="border-0">Created at</th>
+                                        <th className="border-0">Last edit</th>
+                                        <th className="border-0"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         this.props.postsRecord.map((post, i) =>
-                                            <tr key={i} onClick={() => this.openEditor(post.problemID)}>
-                                                <td>{i + 1}</td>
-                                                <td>{post.title}</td>
+                                            <tr key={i} onClick={() => this.open(post.problemID, true)}>
+                                                <td className="align-middle">{post.title}</td>
                                                 <td className="text-white"><DifficultyBox difficultyID={post.difficulty_id} /></td>
-                                                <td>{post.statusName}</td>
-                                                <td>{post.created_at.substr(0, 10)}</td>
-                                                <td>{post.updated_at.substr(0, 10)}</td>
-                                                <td><Button variant="info" onClick={(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => this.deletePost(event, post.problemID)}>Delete</Button></td>
+                                                <td className="align-middle">{post.statusName}</td>
+                                                <td className="align-middle">{post.created_at.substr(0, 10)}</td>
+                                                <td className="align-middle">{post.updated_at.substr(0, 10)}</td>
+                                                <td className="align-middle">
+                                                    <Button
+                                                        variant="link"
+                                                        onClick={(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+                                                            if (window.confirm("Are you sure you want to delete this challenge?")) {
+                                                                this.props.deletePost(post.problemID);
+                                                            }
+                                                            event.preventDefault();
+                                                            event.stopPropagation();
+                                                        }}>
+                                                        <FontAwesomeIcon icon={faTrashAlt} />
+                                                    </Button>
+                                                </td>
                                             </tr>)
                                     }
                                 </tbody>
@@ -175,26 +181,24 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                 <div className="row pt-2 justify-content-center">
                     {
                         this.state.currentTab === "Solved" && <div className="col-10 p-2 text-center">
-                            <h6>Solved Challenge</h6>
-                            <Table striped bordered hover responsive="lg" size="sm">
+                            <Table hover responsive="lg" size="sm">
                                 <thead>
                                     <tr>
-                                        <th></th>
-                                        <th>Title</th>
-                                        <th>Difficulty</th>
-                                        <th>Score</th>
-                                        <th>Submit Date</th>
+                                        <th className="border-0">Title</th>
+                                        <th className="border-0">Difficulty</th>
+                                        <th className="border-0">Score</th>
+                                        <th className="border-0">Submit Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        this.props.solvedRecord.map((solved, i) => <tr key={i}>
-                                            <td>{i + 1}</td>
-                                            <td>{solved.title}</td>
-                                            <td className="text-white"><DifficultyBox difficultyID={solved.difficulty_id} /></td>
-                                            <td>{solved.score}</td>
-                                            <td>{solved.created_at.substr(0, 10)}</td>
-                                        </tr>)
+                                        this.props.solvedRecord.map((solved, i) =>
+                                            <tr key={i} onClick={() => this.open(solved.problemID, false)}>
+                                                <td className="align-middle">{solved.title}</td>
+                                                <td className="text-white"><DifficultyBox difficultyID={solved.difficulty_id} /></td>
+                                                <td className="align-middle">{solved.score}</td>
+                                                <td className="align-middle">{solved.created_at.substr(0, 10)}</td>
+                                            </tr>)
                                     }
                                 </tbody>
                             </Table>
@@ -202,7 +206,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                     }
                 </div>
             </div>
-        </>
+        </div>
     }
 
 }

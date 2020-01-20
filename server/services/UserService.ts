@@ -83,25 +83,25 @@ export default class UserService {
     //with public records only
     async getPublishedPostsRecord(id: number) {
         return (await this.knex.select
-            (`${Tables.PROBLEM}.id as problemID`,`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}_id`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
+            (`${Tables.PROBLEM}.id as problemID`, `${Tables.PROBLEM}.title`, `${Tables.DIFFICULTY}_id`, `${Tables.PROBLEM_STATUS}.name as statusName`, `${Tables.PROBLEM}.created_at`, `${Tables.PROBLEM}.updated_at`)
             .from(`${Tables.PROBLEM}`)
-            .leftJoin(`${Tables.PROBLEM_STATUS}`,`problem.status_id`,`=`,`${Tables.PROBLEM_STATUS}.id`)
-            .where(`${Tables.PROBLEM}.user_id`,id)
-            .andWhere(`${Tables.PROBLEM_STATUS}.id`,4));
-        }
+            .leftJoin(`${Tables.PROBLEM_STATUS}`, `problem.status_id`, `=`, `${Tables.PROBLEM_STATUS}.id`)
+            .where(`${Tables.PROBLEM}.user_id`, id)
+            .andWhere(`${Tables.PROBLEM_STATUS}.id`, 4));
+    }
 
     //with all status posted records
-    async getOwnPostsRecord(id:number) { 
+    async getOwnPostsRecord(id: number) {
         return (await this.knex.select
-            (`${Tables.PROBLEM}.id as problemID`,`${Tables.PROBLEM}.title`,`${Tables.DIFFICULTY}_id`,`${Tables.PROBLEM_STATUS}.name as statusName`,`${Tables.PROBLEM}.created_at`,`${Tables.PROBLEM}.updated_at`)
+            (`${Tables.PROBLEM}.id as problemID`, `${Tables.PROBLEM}.title`, `${Tables.DIFFICULTY}_id`, `${Tables.PROBLEM_STATUS}.name as statusName`, `${Tables.PROBLEM}.created_at`, `${Tables.PROBLEM}.updated_at`)
             .from(`${Tables.PROBLEM}`)
-            .leftJoin(`${Tables.PROBLEM_STATUS}`,`problem.status_id`,`=`,`${Tables.PROBLEM_STATUS}.id`)
-            .where(`${Tables.PROBLEM}.user_id`,id)
-            .andWhere(`${Tables.PROBLEM}.status_id`,`<>`, 5));
-        }
+            .leftJoin(`${Tables.PROBLEM_STATUS}`, `problem.status_id`, `=`, `${Tables.PROBLEM_STATUS}.id`)
+            .where(`${Tables.PROBLEM}.user_id`, id)
+            .andWhere(`${Tables.PROBLEM}.status_id`, `<>`, 5));
+    }
 
     async getSolvedRecord(id: number) {
-        return (await this.knex.select("progress.user_id", "title", "problem.difficulty_id", "progress.score", "progress.created_at")
+        return (await this.knex.select("problem.id as problemID", "progress.user_id", "title", "problem.difficulty_id", "progress.score", "progress.created_at")
             .from("progress")
             .leftJoin("problem", function () { this.on("problem_id", "=", "problem.id") })
             .leftJoin("difficulty", function () { this.on("difficulty_id", "=", "difficulty.id") })
