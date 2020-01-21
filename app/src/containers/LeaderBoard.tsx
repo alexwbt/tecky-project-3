@@ -42,7 +42,7 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
         this.state = {
             rankingList: [],
             search: "",
-            userRank: 0
+            userRank: -1
         };
     }
 
@@ -53,8 +53,12 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
         if (username) {
             this.props.getProfile(username);
         }
+    }
 
-        this.getRankingList();
+    componentDidUpdate() {
+        if (this.state.userRank < 0) {
+            this.getRankingList();
+        }
     }
 
     private async getRankingList() {
@@ -90,7 +94,7 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                             className="rounded-circle d-inline-block"
                             style={{ border: "5px solid white" }}
                             alt="user-icon" />
-                        <div className="pl-3 pr-5 d-inline-block align-top">
+                        <div className="pt-3 pl-3 pr-5 d-inline-block align-top">
                             <h2 className="my-0 text-monospace">{this.props.username}</h2>
                             <h6 className="my-0 text-monospace text-warning pl-1">Lvl. {this.props.level?.lvl}</h6>
                             <h2 className="my-0 text-monospace text-warning">Rank.{this.state.userRank}</h2>
