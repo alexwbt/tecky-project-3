@@ -26,7 +26,6 @@ const App: React.FC = () => {
     const authenticated = useSelector((state: IRootState) => state.auth.authenticated);
 
     useEffect(() => {
-        console.log("useEffect() is called");
         if (authenticated === null) {
             dispatch(restoreLoginThunk());
         }

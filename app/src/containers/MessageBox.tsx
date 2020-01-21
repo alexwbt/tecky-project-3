@@ -13,8 +13,6 @@ interface IMessageBoxProps {
 
 class MessageBox extends React.Component<IMessageBoxProps, {}>{
     private handleClose = () => {
-        console.log("handleClose");
-        
         this.props.hideMessageBox();
     }
 

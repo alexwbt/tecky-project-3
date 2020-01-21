@@ -214,7 +214,6 @@ class Canvas extends React.Component<ICanvasProps, ICanvasState> {
             this.blockCount = workspace.getAllBlocks().filter((block: any) => !block.isShadow_).length;
 
             const code = BlocklyJS.workspaceToCode(workspace);
-            console.log(code);
             try {
                 (function (code: string) {
                     eval(code);
