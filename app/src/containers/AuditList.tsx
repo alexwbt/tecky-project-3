@@ -1,7 +1,6 @@
 import React from "react";
-// import React, { ChangeEvent } from "react";
 import NavBar from "../components/NavBar";
-import { Form, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { push } from "connected-react-router";
 import { connect } from "react-redux";
