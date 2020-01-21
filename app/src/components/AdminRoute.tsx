@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { IRootState } from '../store';
 
 interface IAdminRouteProps extends RouteProps {
-    authenticated: boolean;
+    authenticated: boolean | null;
     role: number;
     componentProps?: any;
 }
 
 const AdminRoute = ({ component, authenticated, role, componentProps, ...rest }: IAdminRouteProps) => {
     const Component = component;
-    if (Component == null) {
+    if (Component == null || authenticated === null) {
         return null;
     }
     let render: (props: any) => JSX.Element;

@@ -19,6 +19,7 @@ export default class UserRouter {
         router.get("/auditList", catcher(this.getProfile));
         router.get("/role", isLoggedIn, catcher(this.getRole));
         router.get("/rankingList", isLoggedIn, catcher(this.getRankingList));
+        router.get("/restoreLogin", isLoggedIn, catcher(this.restoreLogin));
         return router;
     }
 
@@ -36,6 +37,20 @@ export default class UserRouter {
             role: user.role_id
         });
     };
+
+    private restoreLogin = async (req: Request, res: Response) => {
+        if (req.user["id"] && req.user["username"]) {
+            const user = await this.service.getUserWithId(req.user["id"]);
+            if (user) {
+                res.status(200).json({
+                    success: true,
+                    username: user.username,
+                    token: getToken(user.id, user.username),
+                    role: (await this.service.getProfileWithId(user.id)).role_id
+                });
+            }
+        }
+    }
 
     private login = async (req: Request, res: Response) => {
         const { username, password } = req.body;

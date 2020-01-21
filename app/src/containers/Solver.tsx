@@ -20,7 +20,7 @@ interface ISolverProps {
             problemId: number;
         };
     };
-    authenticated: boolean;
+    authenticated: boolean | null;
     problem: IProblemState;
     getProblem: (id: number) => void;
 }

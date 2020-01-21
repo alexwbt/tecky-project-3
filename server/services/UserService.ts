@@ -33,8 +33,8 @@ export default class UserService {
         return (await this.knex(Tables.PROFILE).select("user_id").where("email", email))[0];
     }
 
-    async getUsernameWithId(id: number) {
-        return (await this.knex(Tables.USER).select("username").where({ id }))[0];
+    async getUserWithId(id: number) {
+        return (await this.knex(Tables.USER).select().where({ id }))[0];
     }
 
     async getUserRoleID(id: number): Promise<number> {
