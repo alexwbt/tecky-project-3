@@ -2,14 +2,14 @@ import AuthActions from "../actions/authActions";
 
 
 export interface IAuthState {
-    authenticated: boolean;
+    authenticated: boolean | null;
     error: boolean;
     message: string;
     role: number;
 }
 
 const initialState: IAuthState = {
-    authenticated: !!localStorage.getItem("token"),
+    authenticated: null,
     error: false,
     message: "",
     role: 0

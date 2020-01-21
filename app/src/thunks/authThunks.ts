@@ -6,6 +6,36 @@ import { toast } from "react-toastify";
 
 const { REACT_APP_API_SERVER } = process.env;
 
+export function restoreLoginThunk() {
+    return async (dispatch: Dispatch<AuthActions>) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.log("no token");
+            
+            dispatch(loginFailed("Please login!"));
+            dispatch(push("/login"));
+            return;
+        }
+        const res = await fetch(`${REACT_APP_API_SERVER}/user/restoreLogin`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        });
+        const result = await res.json();
+        if (res.status === 200 && result.success) {
+            console.log("result.success");
+
+            localStorage.setItem('token', result.token);
+            localStorage.setItem('username', result.username);
+            dispatch(loginSuccess(result.role));
+            // dispatch(push("/"));
+        } else {
+            console.log(result.message);
+            dispatch(loginFailed(result.message));
+        }
+    }
+}
+
 export function login(username: string, password: string) {
     return async (dispatch: Dispatch<AuthActions>) => {
         try {

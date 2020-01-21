@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { IRootState } from '../store';
 
 interface IPrivateRouteProps extends RouteProps {
-    authenticated: boolean;
+    authenticated: boolean | null;
     componentProps?: any;
 }
 
 const PrivateRoute = ({ component, authenticated, componentProps, ...rest }: IPrivateRouteProps) => {
     const Component = component;
-    if (Component == null) {
+    if (Component == null || authenticated === null) {
         return null;
     }
     let render: (props: any) => JSX.Element;
