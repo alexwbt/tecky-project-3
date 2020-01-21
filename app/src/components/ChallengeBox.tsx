@@ -39,8 +39,8 @@ const ChallengeBox: React.FC<IChallengeBoxProps> = (props: IChallengeBoxProps) =
             <DifficultyBox difficultyID={props.difficulty_id} />
             <div className="d-inline-block text-right" style={{ position: "absolute", bottom: 5, right: 10 }}>
                 <div>created by: {props.user}</div>
-                <div>created: {props.created_at.substr(0, 10)}</div>
-                <div>last edit: {props.updated_at.substr(0, 10)}</div>
+                {/* <div>created: {props.created_at.substr(0, 10)}</div>
+                <div>last edit: {props.updated_at.substr(0, 10)}</div> */}
             </div>
         </div>
     </button>
