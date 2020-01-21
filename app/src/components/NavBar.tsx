@@ -50,10 +50,14 @@ const NavBar: React.FC<INavbarProps> = (props) => {
                                 Leader Board
                             </Link>
                             <button
-                                onClick={() => dispatch(createProblem())}
+                                onClick={() => {
+                                    if (window.confirm("Are you sure you want to create a challenge?")) {
+                                        dispatch(createProblem());
+                                    }
+                                }}
                                 className={`btn btn-dark rounded-0 text-white`}>
                                 Create Challenge
-                    </button>
+                            </button>
                         </>
                     }
                     {
