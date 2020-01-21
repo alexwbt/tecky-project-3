@@ -10,6 +10,7 @@ export function restoreLoginThunk() {
     return async (dispatch: Dispatch<AuthActions>) => {
         const token = localStorage.getItem("token");
         if (!token) {
+            dispatch(loginFailed(""));
             return;
         }
         const res = await fetch(`${REACT_APP_API_SERVER}/user/restoreLogin`, {
@@ -19,14 +20,11 @@ export function restoreLoginThunk() {
         });
         const result = await res.json();
         if (res.status === 200 && result.success) {
-            console.log("result.success");
-
             localStorage.setItem('token', result.token);
             localStorage.setItem('username', result.username);
             dispatch(loginSuccess(result.role));
             // dispatch(push("/"));
         } else {
-            console.log(result.message);
             dispatch(loginFailed(result.message));
         }
     }
