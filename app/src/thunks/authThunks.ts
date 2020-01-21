@@ -10,7 +10,6 @@ export function restoreLoginThunk() {
     return async (dispatch: Dispatch<AuthActions>) => {
         const token = localStorage.getItem("token");
         if (!token) {
-            dispatch(push("/"));
             return;
         }
         const res = await fetch(`${REACT_APP_API_SERVER}/user/restoreLogin`, {
