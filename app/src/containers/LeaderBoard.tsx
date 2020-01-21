@@ -113,7 +113,7 @@ class LeaderBoard extends React.Component<IProfileProps, IProfileState> {
                                 <tr>
                                     <th className="border-0">Rank</th>
                                     <th className="border-0">Username</th>
-                                    <th className="border-0">Level</th>
+                                    <th className="border-0">Exp</th>
                                     <th className="border-0">Location</th>
                                 </tr>
                             </thead>
