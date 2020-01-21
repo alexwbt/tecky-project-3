@@ -110,9 +110,9 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                     </div>
 
                     <div className="col-12 p-2 text-center">
-                        {this.props.username && <h6>username: {this.props.username}</h6>}
-                        {this.props.email && <h6>email: {this.props.email}</h6>}
-                        {this.props.location && <h6>location: {this.props.location}</h6>}
+                        {this.props.username && <h6>Username: {this.props.username}</h6>}
+                        {this.props.email && <h6>Email: {this.props.email}</h6>}
+                        {this.props.location && <h6>Location: {this.props.location}</h6>}
                     </div>
 
                     {/* Tab */}
