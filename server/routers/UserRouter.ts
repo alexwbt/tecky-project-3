@@ -84,32 +84,27 @@ export default class UserRouter {
     };
 
     private loginFacebook = async (req: Request, res: Response) => {
-        try {
-            if (!req.body.accessToken) {
-                res.status(401).json({ msg: "Wrong Access Token!" });
-                return;
-            }
-            const { accessToken } = req.body;
-            const fetchResponse = await fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email,birthday`);
-            const result = await fetchResponse.json();
-            if (result.error) {
-                res.status(401).json({ msg: "Wrong Access Token!" });
-                return;
-            }
-            const userId = await this.service.getUserIdWithEmail(result.email);
-            let user = await this.service.getUserWithUsername(result.email.split("@")[0]);
-            if (user || userId) {
-                res.status(200).json({
-                    success: true,
-                    token: getToken(user.id, user.username),
-                    role: (await this.service.getProfileWithId(user.id)).role_id
-                });
-            } else {
-                user = await this.service.register(result.email, result.email.split("@")[0], await hashPassword("123"), new Date(result.birthday).getFullYear());
-            }
-        } catch (e) {
-            console.log(e);
-            res.status(500).json({ msg: e.toString() })
+        if (!req.body.accessToken) {
+            res.status(401).json({ msg: "Wrong Access Token!" });
+            return;
+        }
+        const { accessToken } = req.body;
+        const fetchResponse = await fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email,birthday`);
+        const result = await fetchResponse.json();
+        if (result.error) {
+            res.status(401).json({ msg: "Wrong Access Token!" });
+            return;
+        }
+        const userId = await this.service.getUserIdWithEmail(result.email);
+        let user = await this.service.getUserWithUsername(result.email.split("@")[0]);
+        if (user || userId) {
+            res.status(200).json({
+                success: true,
+                token: getToken(user.id, user.username),
+                role: (await this.service.getProfileWithId(user.id)).role_id
+            });
+        } else {
+            user = await this.service.register(result.email, result.email.split("@")[0], await hashPassword("123"), new Date(result.birthday).getFullYear());
         }
     }
 

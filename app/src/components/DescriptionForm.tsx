@@ -60,8 +60,6 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
     }
 
     private inputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        console.log(event.target.name, event.target.value);
-
         let value: string | number = event.target.value;
         if (event.target.type === 'number') {
             value = Math.max(Number(value), Number(event.target.getAttribute("min")))
@@ -156,7 +154,6 @@ class DescriptionForm extends React.Component<IDescriptionFormProps, IDescriptio
         const scaleY = image.naturalHeight / image.height;
 
         if (crop.width !== undefined && crop.height !== undefined && crop.x !== undefined && crop.y !== undefined) {
-            console.log("crop true");
             canvas.width = crop.width;
             canvas.height = crop.height;
             const ctx = canvas.getContext('2d');

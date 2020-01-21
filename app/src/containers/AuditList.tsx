@@ -1,7 +1,6 @@
 import React from "react";
-// import React, { ChangeEvent } from "react";
 import NavBar from "../components/NavBar";
-import { Form, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { push } from "connected-react-router";
 import { connect } from "react-redux";
@@ -61,67 +60,59 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
     }
 
     render() {
-        return <>
-            <div>
-                <NavBar />
-                <div className="container" style={{ height: "100vh" }}>
-                    <div style={{ marginTop: "30px" }}>
-                        <Form inline>
-                            {/* Search Bar */}
-                            <input
-                                className="rounded-pill border p-2 pl-4 w-50 mx-3"
-                                placeholder="Search username..."
-                                value={this.state.search}
-                                onChange={(event) => this.setState({ search: event.target.value })}
-                            />
-                        </Form>
-                    </div>
+        return <div className="d-flex flex-column vh-100">
+            <NavBar />
 
-                    {/* audit list table */}
-                    <div className="row text-center" style={{ marginTop: "25px" }}>
-                        <Table bordered hover style={{ backgroundColor: "white", borderRadius: "10px", width: "100%", marginLeft: "15px", marginRight: "15px" }}>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Challenge</th>
-                                    <th>Create user</th>
-                                    <th>Difficulty</th>
-                                    <th>Category</th>
-                                    <th>Status</th>
-                                    <th>Submit Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    this.state.auditList && this.state.auditList.map(audit => {
-                                        if (!this.state.search) {
-                                            return { ...audit, score:1 };
+            <div className="container-xl flex-grow-1" style={{ overflowY: "auto", overflowX: "hidden" }}>
+                {/* Search Bar */}
+                <input
+                    className="rounded-pill border p-2 pl-4 w-100 mt-4"
+                    placeholder="Search username..."
+                    value={this.state.search}
+                    onChange={(event) => this.setState({ search: event.target.value })}
+                />
+                {/* audit list table */}
+                <div className="text-center">
+                    <Table hover className="bg-light rounded-lg my-4">
+                        <thead>
+                            <tr>
+                                <th className="border-0">Challenge</th>
+                                <th className="border-0">Create user</th>
+                                <th className="border-0">Difficulty</th>
+                                <th className="border-0">Category</th>
+                                <th className="border-0">Status</th>
+                                <th className="border-0">Submit Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                this.state.auditList && this.state.auditList.map(audit => {
+                                    if (!this.state.search) {
+                                        return { ...audit, score: 1 };
+                                    }
+                                    const title = audit.username.toLowerCase();
+                                    const search = this.state.search.toLowerCase();
+                                    let score = 0;
+                                    for (let i = 0; i < title.length; i++) {
+                                        if (search.includes(title[i])) {
+                                            score++;
                                         }
-                                        const title = audit.username.toLowerCase();
-                                        const search = this.state.search.toLowerCase();
-                                        let score = 0;
-                                        for (let i = 0; i < title.length; i++) {
-                                            if (search.includes(title[i])) {
-                                                score++;
-                                            }
-                                        }
-                                        return { ...audit, score };
-                                    }).sort((a, b) => b.score - a.score).filter(p => p.score > 0).map((audit, i) => <tr key={i} onClick={() => this.openEditor(audit.problemID)}>
-                                        <td>{i + 1}</td>
-                                        <td>{audit.title}</td>
-                                        <td>{audit.username}</td>
-                                        <td>{audit.diffName}</td>
-                                        <td>{audit.cateName}</td>
-                                        <td>{audit.statusName}</td>
-                                        <td>{audit.created_at.substr(0, 10)}</td>
-                                    </tr>)
-                                }
-                            </tbody>
-                        </Table>
-                    </div>
+                                    }
+                                    return { ...audit, score };
+                                }).sort((a, b) => b.score - a.score).filter(p => p.score > 0).map((audit, i) => <tr key={i} onClick={() => this.openEditor(audit.problemID)}>
+                                    <td>{audit.title}</td>
+                                    <td>{audit.username}</td>
+                                    <td>{audit.diffName}</td>
+                                    <td>{audit.cateName}</td>
+                                    <td>{audit.statusName}</td>
+                                    <td>{audit.created_at.substr(0, 10)}</td>
+                                </tr>)
+                            }
+                        </tbody>
+                    </Table>
                 </div>
             </div>
-        </>
+        </div>
     }
 }
 
