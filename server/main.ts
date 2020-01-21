@@ -11,6 +11,10 @@ const PORT = 8080;
 // Multer
 import * as multer from 'multer';
 
+// AWS
+import * as aws from "aws-sdk";
+import * as multerS3 from "multer-s3";
+
 // middleware
 import { isLoggedIn } from "./passport";
 // Body Parser
@@ -62,9 +66,7 @@ const difficultyRouter = new DifficultyRouter(difficultyService);
 app.use("/difficulty", difficultyRouter.router());
 
 
-import ProblemService from "./services/ProblemService";
-import ProblemRouter from "./routers/ProblemRouter";
-
+let uploadChallengeImage;
 const problemImageStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, `${__dirname}/uploads/image/challenge/`);
@@ -74,7 +76,41 @@ const problemImageStorage = multer.diskStorage({
         cb(null, `${problem.pid}.${file.mimetype.split('/')[1]}`);
     }
 })
-const uploadChallengeImage = multer({ storage: problemImageStorage })
+
+if (process.env.NODE_ENV === "production") {
+    const s3 = new aws.S3({
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        region: process.env.AWS_REGION
+    });
+    uploadChallengeImage = multer({
+        storage: multerS3({
+            s3: s3,
+            bucket: 'cdn.blockdojo.xyz',
+            metadata: (req, file, cb) => {
+                cb(null, { fieldName: file.fieldname });
+            },
+            key: (req, file, cb) => {
+                const problem = JSON.parse(req["body"].problem)
+                cb(null, `${problem.pid}.${file.mimetype.split('/')[1]}`);
+            }
+        })
+    })
+} else {
+    const problemImageStorage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, `${__dirname}/uploads/image/challenge/`);
+        },
+        filename: function (req, file, cb) {
+            const problem = JSON.parse(req["body"].problem)
+            cb(null, `${problem.pid}.${file.mimetype.split('/')[1]}`);
+        }
+    })
+    uploadChallengeImage = multer({ storage: problemImageStorage })
+}
+
+import ProblemService from "./services/ProblemService";
+import ProblemRouter from "./routers/ProblemRouter";
 
 export const problemService = new ProblemService(knex, mongodb, userService);
 const problemRouter = new ProblemRouter(problemService, userService, uploadChallengeImage);
