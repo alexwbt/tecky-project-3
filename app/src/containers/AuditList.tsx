@@ -87,7 +87,7 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
                         </thead>
                         <tbody>
                             {
-                                Array(100).fill(0).map(() => this.state.auditList && this.state.auditList.map(audit => {
+                                this.state.auditList && this.state.auditList.map(audit => {
                                     if (!this.state.search) {
                                         return { ...audit, score: 1 };
                                     }
@@ -107,7 +107,7 @@ class AuditList extends React.Component<IAuditListProps, IAuditListState> {
                                     <td>{audit.cateName}</td>
                                     <td>{audit.statusName}</td>
                                     <td>{audit.created_at.substr(0, 10)}</td>
-                                </tr>))
+                                </tr>)
                             }
                         </tbody>
                     </Table>
