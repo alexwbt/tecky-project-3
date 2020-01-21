@@ -144,7 +144,8 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                 appId={process.env.REACT_APP_FACEBOOK_APP_ID || ''}
                 autoLoad={false}
                 fields="name,email,birthday"
-                cssClass="btn p-1 px-2 text-white bg-primary d-block mt-1"
+                cssClass="btn p-1 px-2 text-white d-block mt-1"
+                buttonStyle={{backgroundColor: "#3b5998"}}
                 textButton="Facebook Login"
                 icon={<FontAwesomeIcon icon={faFacebook} className="mr-2" />}
                 onClick={this.fBOnCLick}
