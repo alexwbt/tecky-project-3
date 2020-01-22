@@ -82,5 +82,5 @@ react-deploy:
   only:
     - production
   script:
-    - aws s3 sync ~/project/tecky-project-3//build s3://${BUCKET_NAME} --delete
+    - aws s3 sync app/build s3://${BUCKET_NAME} --delete
     - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths "/*"
