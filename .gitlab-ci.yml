@@ -66,7 +66,8 @@ server-deploy:
   script:
     - ssh ubuntu@${SERVER_HOSTNAME} 
         "cd ~/project/tecky-project-3/server;
-          git pull origin master;
+          git checkout production;
+          git pull origin production;
           sudo yarn install;
           sudo yarn knex migrate:latest --env production;
           sudo forever restart index.js;"
