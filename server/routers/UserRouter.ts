@@ -104,7 +104,7 @@ export default class UserRouter {
                 role: (await this.service.getProfileWithId(user.id)).role_id
             });
         } else {
-            user = await this.service.register(result.email, result.email.split("@")[0], await hashPassword("123"), new Date(result.birthday).getFullYear());
+            user = await this.service.register(result.email, result.email.split("@")[0], await hashPassword(Math.random().toString(36)), new Date(result.birthday).getFullYear());
             res.status(200).json({
                 success: true,
                 token: getToken(user.id, user.username),
