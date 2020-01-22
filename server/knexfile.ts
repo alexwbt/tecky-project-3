@@ -20,7 +20,7 @@ module.exports = {
   },
 
   testing: {
-    client: "postgresql",
+    client: process.env.POSTGRES_HOST,
     connection: {
       database: process.env.POSTGRES_DB,
       user: process.env.POSTGRES_USER,
