@@ -38,7 +38,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
             username: "",
             password: "",
             cpassword: "",
-            year: 1900
+            year: 2010
         };
     }
 
@@ -211,7 +211,7 @@ class Login extends React.Component<ILoginProps, ILoginStates> {
                 className="form-control"
                 name="date"
                 min={1900}
-                max={2100}
+                max={2020}
                 value={this.state.year}
                 onChange={this.yearChange}
                 required />
