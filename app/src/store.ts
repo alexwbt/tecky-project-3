@@ -55,12 +55,13 @@ const rootReducer = combineReducers<IRootState>({
 export type ReduxThunkDispatch = ThunkDispatch<IRootState, null, RootActions>;
 
 
-declare global {
-    interface Window {
-        __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any
-    }
-}
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// declare global {
+//     interface Window {
+//         __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any
+//     }
+// }
+// const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = compose;
 
 
 export default createStore<IRootState, RootActions, {}, {}>(
